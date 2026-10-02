@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-acceso="publico">
 <div class="app">
   <header class="pagehead">
     <div class="top">
@@ -20,7 +20,7 @@
         <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
         <span>La Cueva<br>del Narrador</span>
       </div>
-      <div class="avatar" aria-label="Tu perfil">M</div>
+      <div class="avatar" aria-label="Tu perfil" data-solo="socio" hidden></div>
     </div>
     <h1>Sobre el club</h1>
     <p class="sub">Escribimos, aprendemos y nos reímos juntos.</p>
@@ -62,27 +62,22 @@
     </section>
   </main>
 
-  <nav class="nav" aria-label="Navegación principal">
+  <nav class="nav visitante" aria-label="Navegación principal">
     <a href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
-    <a href="calendario.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a>
-    <a href="curso.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/></svg>Curso</a>
-    <a href="biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Biblioteca</a>
-    <a href="mas.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
+    <a href="retos.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>Retos</a>
+    <a href="acceso.html" class="acceso"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>Acceso</a>
+    <a href="nuestra-biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Nuestra biblioteca</a>
+    <a href="mas.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
   </nav>
 </div>
 <script>
 if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js"));
 </script>
 <script src="tipos.js"></script>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
 <script>
-const ACT=[
-  ["clase","Clases","Sesiones sobre técnica y oficio, donde entre todos vemos cómo se construye una historia: personajes, worldbuilding, la raya de diálogo, los adverbios, las figuras literarias, cómo escribir una sinopsis o una propuesta literaria, y mucho más."],
-  ["marketing","Clases de marketing","Todo lo que un escritor necesita para darse a conocer: crear un perfil de Instagram, entender el algoritmo, construir comunidad, abrir tu perfil de autor en Amazon y desarrollar tu marca personal."],
-  ["sesion","Sesiones de escritura conjunta","Nos juntamos a escribir, cada uno con su proyecto personal o con el común, y compartimos dudas y preguntas según van surgiendo. También hay ratos para leer."],
-  ["invitado","Charlas con invitados","Viene alguien del mundo del libro (un autor o autora conocidos, una editorial, un librero, una correctora) y nos cuenta su experiencia para ayudarnos."],
-  ["reto","Retos","Cada mes publicamos en Instagram un reto de escritura, normalmente ligado a lo que hemos visto en las clases y en las clases de marketing, para ponerlo en práctica."]
-];
-document.getElementById("actividades").innerHTML=ACT.map(a=>'<article class="act"><span class="tp" style="background:'+tipo(a[0]).c+'" aria-hidden="true"></span><div><h3>'+a[1]+'</h3><p>'+a[2]+'</p></div></article>').join("");
+document.getElementById("actividades").innerHTML=ACTIVIDADES.map(a=>'<article class="act"><span class="tp" style="background:'+tipo(a[0]).c+'" aria-hidden="true"></span><div><h3>'+a[1]+'</h3><p>'+a[2]+'</p></div></article>').join("");
 </script>
 </body>
 </html>

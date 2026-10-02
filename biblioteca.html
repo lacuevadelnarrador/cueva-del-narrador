@@ -20,7 +20,7 @@
         <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
         <span>La Cueva<br>del Narrador</span>
       </div>
-      <div class="avatar" aria-label="Tu perfil">M</div>
+      <div class="avatar" aria-label="Tu perfil"></div>
     </div>
     <h1>Biblioteca</h1>
     <p class="sub">Los libros del club y las lecturas que nos recomendamos.</p>
@@ -45,7 +45,7 @@
   </main>
 
   <nav class="nav" aria-label="Navegación principal">
-    <a href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="inicio.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
     <a href="calendario.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a>
     <a href="curso.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/></svg>Curso</a>
     <a href="biblioteca.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Biblioteca</a>
@@ -53,9 +53,11 @@
   </nav>
 </div>
 <script src="tipos.js"></script>
-<script src="libros.js"></script>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
 <script>
-const esc=t=>String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let BIBLIOTECA=[], RECOMENDADOS=[], cargado=false;
+const esc=Cueva.esc;
 const norm=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 
 let pestana=(location.hash==='#recomendados')?'recomendados':'biblioteca';
@@ -69,14 +71,15 @@ function pintarTabs(){
 }
 
 function pintarGeneros(){
-  const gs=['Todos',...new Set(datos().map(l=>l.genero).filter(Boolean))].sort((a,b)=>a==='Todos'?-1:b==='Todos'?1:a.localeCompare(b,'es'));
+  const gs=['Todos',...new Set(datos().flatMap(l=>l.generos))].sort((a,b)=>a==='Todos'?-1:b==='Todos'?1:a.localeCompare(b,'es'));
   if(!gs.includes(genero)) genero='Todos';
   document.getElementById('generos').innerHTML=gs.map(g=>'<button class="chip'+(g===genero?' on':'')+'" data-g="'+esc(g)+'" aria-pressed="'+(g===genero)+'">'+esc(g)+'</button>').join('');
 }
 
 function pintarLista(){
+  if(!cargado) return; // mientras carga (o si falla), la lista muestra el aviso
   const q=norm(texto);
-  const lista=datos().filter(l=>(genero==='Todos'||l.genero===genero)
+  const lista=datos().filter(l=>(genero==='Todos'||l.generos.includes(genero))
     &&(!q||norm(l.titulo).includes(q)||norm(l.autor).includes(q))
     &&(!(pestana==='biblioteca'&&soloDisp)||l.disponible));
   document.getElementById('cuenta').textContent=lista.length+(lista.length===1?' libro':' libros');
@@ -85,7 +88,9 @@ function pintarLista(){
     const portada=l.portada?'<img class="portada" src="'+esc(l.portada)+'" alt="Portada de '+esc(l.titulo)+'">':'<div class="portada" style="background:'+c+';color:'+t+'" aria-hidden="true">'+esc(l.titulo.charAt(0))+'</div>';
     const estado=(pestana==='biblioteca')?'<span class="estado '+(l.disponible?'ok':'no')+'">'+(l.disponible?'Disponible':'Prestado')+'</span>':'';
     const por=(pestana==='recomendados'&&l.recomienda)?'<p class="por">Recomienda: '+esc(l.recomienda)+'</p>':'';
-    return '<article class="libro">'+portada+'<div class="info"><h3>'+esc(l.titulo)+'</h3><p class="autor">'+esc(l.autor)+'</p><div class="meta">'+(l.genero?'<span class="tag">'+esc(l.genero)+'</span>':'')+estado+'</div>'+por+(l.nota?'<p class="nota">'+esc(l.nota)+'</p>':'')+'</div></article>';
+    const tags=l.generos.map(g=>'<span class="tag">'+esc(g)+'</span>').join('')+(l.temporada?'<span class="tag temp">'+esc(l.temporada)+'</span>':'');
+    const enlace=l.enlace?'<a class="elink" href="'+esc(l.enlace)+'" target="_blank" rel="noopener">Ver el libro</a>':'';
+    return '<article class="libro">'+portada+'<div class="info"><h3>'+esc(l.titulo)+'</h3><p class="autor">'+esc(l.autor)+'</p><div class="meta">'+tags+estado+'</div>'+por+(l.nota?'<p class="nota">'+esc(l.nota)+'</p>':'')+enlace+'</div></article>';
   }).join(''):'<p class="empty">No hay libros que coincidan con la búsqueda.</p>';
 }
 
@@ -96,6 +101,18 @@ document.getElementById('q').addEventListener('input',e=>{texto=e.target.value;p
 document.getElementById('solo').addEventListener('change',e=>{soloDisp=e.target.checked;pintarLista();});
 document.getElementById('generos').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;genero=b.dataset.g;pintarGeneros();pintarLista();});
 todo();
+// Libros y recomendaciones solo se leen con sesión de socio. "Disponible" sale de libros.prestado.
+const generosDe=l=>(Array.isArray(l.generos)?l.generos:[]).filter(Boolean);
+Cueva.cargar(document.getElementById('lista'),
+  ()=>Cueva.privada().then(({sb})=>Promise.all([
+    sb.from('libros').select('titulo,autor,generos,portada_url,prestado').order('titulo'),
+    sb.from('recomendaciones').select('titulo,autor,generos,recomendado_por,detalles,enlace,temporada,portada_url,alta').order('alta',{ascending:false,nullsFirst:false})
+  ])).then(([l,r])=>({error:l.error||r.error,data:[l.data||[],r.data||[]]})),
+  ([libros,recos])=>{
+    BIBLIOTECA=libros.map(l=>({titulo:l.titulo||'',autor:l.autor||'',generos:generosDe(l),disponible:!l.prestado,portada:Cueva.urlSegura(l.portada_url)}));
+    RECOMENDADOS=recos.map(l=>({titulo:l.titulo||'',autor:l.autor||'',generos:generosDe(l),recomienda:l.recomendado_por,nota:l.detalles,enlace:Cueva.urlSegura(l.enlace),temporada:l.temporada,portada:Cueva.urlSegura(l.portada_url)}));
+    cargado=true; todo();
+  });
 if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
 </script>
 </body>

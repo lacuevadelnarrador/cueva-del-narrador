@@ -284,6 +284,44 @@ a.item::after{content:"";flex:none;width:8px;height:8px;border-right:2px solid v
 .pagehead h1.largo{font-size:clamp(26px,8.2vw,36px)}
 .texto p.izq{text-align:left}
 
+/* ---------- Carga, errores y acceso de socios ---------- */
+.cargando{animation:latir 1s ease-in-out infinite alternate}
+@keyframes latir{to{opacity:.5}}
+.fallo{font-style:normal;color:var(--ink);border-color:#C8553D}
+.fallo p{margin-bottom:12px}
+.shelf>.empty{flex:1}
+.tag.temp{border-style:dashed}
+.libro .elink{margin-top:2px}
+button.item{width:100%;font:inherit;text-align:left;cursor:pointer}
+.btn:disabled{opacity:.6;cursor:default}
+.campo{display:grid;gap:6px;margin-bottom:12px}
+.campo label{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:13px;color:var(--muted)}
+.campo .codigo{text-align:center;font-family:'Oswald',sans-serif;font-size:26px;letter-spacing:.25em;padding:8px 12px}
+.ayuda{font-size:14px;color:var(--muted);margin-bottom:14px}
+.acceso .btn{width:100%}
+.acciones{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;margin-top:8px}
+.enlace{min-height:44px;background:none;border:0;padding:0 4px;color:var(--link);font-family:'Lora',serif;font-size:14px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.enlace:disabled{color:var(--muted);text-decoration:none;cursor:default}
+.msg{background:var(--bg);border-left:5px solid var(--aqua);border-radius:0 var(--r-s) var(--r-s) 0;padding:10px 14px;font-size:15px;margin-bottom:14px}
+.msg.err{border-left-color:#C8553D}
+
+/* ---------- Nuestra biblioteca (pública): fichas en dos columnas ---------- */
+.rejilla{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.rejilla>.empty{grid-column:1/-1}
+.ficha{background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh1);padding:12px;min-width:0}
+.ficha .cover{width:100%;height:auto;aspect-ratio:2/3;font-size:44px;line-height:1;margin-bottom:12px}
+.ficha img.cover{display:block;object-fit:cover;padding:0}
+.ficha h3{font-size:17px;text-transform:none;font-weight:700;line-height:1.25;margin-bottom:2px;overflow-wrap:anywhere}
+.ficha .autor{font-size:14px;color:var(--muted)}
+
+/* ---------- Barra del visitante: pestañas alineadas arriba y "Acceso" destacado en ámbar ---------- */
+/* Texto #14262A sobre #FFBA55 = 9,6:1 */
+.nav.visitante a{justify-content:flex-start;text-align:center}
+.nav a.acceso{background:var(--amber);border-radius:16px;margin:-12px 4px 0;padding-top:8px;font-weight:700;box-shadow:0 0 0 4px var(--nav),0 8px 16px rgba(0,0,0,.35)}
+.nav a.acceso,.nav a.acceso.on,.nav a.acceso:hover,.nav a.acceso.on:hover{color:#14262A}
+.nav a.acceso.on svg{background:rgba(20,38,42,.16)}
+.nav a.acceso:focus-visible{outline-color:#fff;outline-offset:2px;box-shadow:0 0 0 4px var(--nav),0 8px 16px rgba(0,0,0,.35)}
+
 /* ---------- Respuesta al puntero (solo ratón/trackpad) ---------- */
 @media (hover:hover){
   .btn:hover{filter:brightness(1.08);box-shadow:var(--sh2)}

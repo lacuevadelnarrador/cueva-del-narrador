@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Acceso socios · La Cueva del Narrador</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#528A93">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="pagehead">
+    <div class="top">
+      <div class="brand">
+        <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
+        <span>La Cueva<br>del Narrador</span>
+      </div>
+    </div>
+    <h1>Acceso socios</h1>
+    <p class="sub">Entra con tu correo, sin contraseña.</p>
+  </header>
+
+  <main>
+    <section class="card acceso" aria-label="Entrar">
+      <p class="msg" id="msg" role="alert" hidden></p>
+
+      <form id="paso-correo" novalidate hidden>
+        <div class="campo">
+          <label for="correo">Tu correo</label>
+          <input class="buscador" id="correo" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" placeholder="nombre@correo.com" required>
+        </div>
+        <p class="ayuda">Te enviaremos un código por correo para entrar.</p>
+        <button class="btn" type="submit" id="enviar">Enviar código</button>
+      </form>
+
+      <form id="paso-codigo" novalidate hidden>
+        <div class="campo">
+          <label for="codigo">Código que te ha llegado por correo</label>
+          <input class="buscador codigo" id="codigo" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6,10}" required>
+        </div>
+        <button class="btn" type="submit" id="entrar">Entrar</button>
+        <div class="acciones">
+          <button class="enlace" type="button" id="reenviar">Reenviar código</button>
+          <button class="enlace" type="button" id="otro">Usar otro correo</button>
+        </div>
+      </form>
+
+      <button class="btn" type="button" id="reintentar" hidden>Reintentar</button>
+    </section>
+
+    <section class="card texto" aria-label="Si no eres socio">
+      <p>Esta zona es para los socios y socias del club: calendario, apuntes del curso y biblioteca.</p>
+      <p class="izq">¿Todavía no eres del club? Mira <a href="index.html">cómo apuntarte</a>.</p>
+    </section>
+  </main>
+
+  <nav class="nav visitante" aria-label="Navegación principal">
+    <a href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="retos.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>Retos</a>
+    <a href="acceso.html" class="acceso on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>Acceso</a>
+    <a href="nuestra-biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Nuestra biblioteca</a>
+    <a href="mas.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
+  </nav>
+</div>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script>
+(function(){
+  const el=id=>document.getElementById(id);
+  const PRIVADAS=['inicio.html','calendario.html','curso.html','biblioteca.html'];
+  const params=new URLSearchParams(location.search);
+  const volver=PRIVADAS.includes(params.get('volver'))?params.get('volver'):'inicio.html';
+
+  // El mismo aviso para cualquier correo: no revelamos quién es socio y quién no.
+  const AVISO_CODIGO='Si tu correo está registrado, recibirás un código en unos instantes. Si no te llega, escríbenos.';
+  const SIN_RED='No hay conexión con el servidor. Comprueba tu internet y vuelve a intentarlo.';
+  const DEMASIADOS='Demasiados intentos. Espera unos minutos antes de volver a probar.';
+  const ESPERA_REENVIO=60; // segundos entre un envío y el siguiente, igual para todos
+
+  let correo='', reloj=null;
+
+  function mensaje(texto,esError){
+    const m=el('msg');
+    m.textContent=texto||''; m.hidden=!texto; m.className='msg'+(esError?' err':'');
+  }
+  function paso(n){
+    el('paso-correo').hidden=n!==1;
+    el('paso-codigo').hidden=n!==2;
+    el('reintentar').hidden=n!==3;
+    if(n===1) el('correo').focus();
+    if(n===2){ el('codigo').value=''; el('codigo').focus(); }
+  }
+  function ocupar(boton,texto){
+    const antes=boton.textContent;
+    boton.disabled=true; boton.textContent=texto;
+    return ()=>{ boton.disabled=false; boton.textContent=antes; };
+  }
+  function cuentaAtras(){
+    const b=el('reenviar'); let s=ESPERA_REENVIO;
+    clearInterval(reloj);
+    b.disabled=true; b.textContent='Reenviar código ('+s+' s)';
+    reloj=setInterval(()=>{
+      s--;
+      if(s<=0){ clearInterval(reloj); b.disabled=false; b.textContent='Reenviar código'; }
+      else b.textContent='Reenviar código ('+s+' s)';
+    },1000);
+  }
+
+  // Pide el código. Devuelve 'ok', 'red', 'limite' o 'formato'.
+  // Cualquier otra respuesta de Supabase (correo no registrado, envío fallido, etc.) cuenta como 'ok'
+  // a propósito: así la pantalla se comporta igual exista o no el correo.
+  async function pedirCodigo(){
+    let error=null;
+    try{
+      const sb=await Cueva.cliente();
+      ({error}=await sb.auth.signInWithOtp({email:correo,options:{shouldCreateUser:false}}));
+    }catch(e){ error=e; }
+    if(!error) return 'ok';
+    if(Cueva.esErrorDeRed(error)) return 'red';
+    if(error.code==='over_request_rate_limit') return 'limite';
+    if(error.code==='validation_failed'||error.code==='email_address_invalid') return 'formato';
+    return 'ok';
+  }
+
+  async function enviar(boton){
+    const libre=ocupar(boton,'Enviando…');
+    mensaje('');
+    const r=await pedirCodigo();
+    libre();
+    if(r==='red') return mensaje(SIN_RED,true);
+    if(r==='limite') return mensaje(DEMASIADOS,true);
+    if(r==='formato') return mensaje('Escribe un correo válido.',true);
+    paso(2); cuentaAtras(); mensaje(AVISO_CODIGO);
+  }
+
+  el('paso-correo').addEventListener('submit',e=>{
+    e.preventDefault();
+    correo=el('correo').value.trim().toLowerCase();
+    if(!correo||!el('correo').checkValidity()){ mensaje('Escribe un correo válido.',true); el('correo').focus(); return; }
+    enviar(el('enviar'));
+  });
+  el('reenviar').addEventListener('click',()=>enviar(el('reenviar')));
+  el('otro').addEventListener('click',()=>{ clearInterval(reloj); mensaje(''); paso(1); });
+
+  // El código es numérico; la longitud la decide Supabase (aceptamos de 6 a 10 dígitos).
+  el('codigo').addEventListener('input',e=>{ e.target.value=e.target.value.replace(/\D/g,'').slice(0,10); });
+  el('paso-codigo').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const token=el('codigo').value.replace(/\D/g,'');
+    if(!/^\d{6,10}$/.test(token)){ mensaje('Escribe el código numérico que te ha llegado por correo.',true); el('codigo').focus(); return; }
+    const libre=ocupar(el('entrar'),'Comprobando…');
+    mensaje('');
+    let error=null;
+    try{
+      const sb=await Cueva.cliente();
+      ({error}=await sb.auth.verifyOtp({email:correo,token,type:'email'}));
+    }catch(err){ error=err; }
+    libre();
+    if(error){
+      if(Cueva.esErrorDeRed(error)) return mensaje(SIN_RED,true);
+      if(error.status===429||error.code==='over_request_rate_limit') return mensaje(DEMASIADOS,true);
+      if(error.status>=500) return mensaje('No hemos podido comprobar el código. Inténtalo de nuevo dentro de un momento.',true);
+      el('codigo').select();
+      return mensaje('Código incorrecto o caducado. Revísalo o pide uno nuevo.',true);
+    }
+    comprobarCuenta();
+  });
+
+  // Con sesión iniciada: solo se entra si existe el perfil y está activo.
+  async function comprobarCuenta(){
+    paso(0); mensaje('Comprobando tu cuenta…');
+    try{
+      const sb=await Cueva.cliente();
+      const {data,error}=await sb.auth.getSession();
+      if(error) throw error;
+      if(!data.session){ await Cueva.salir(); mensaje(''); paso(1); return; }
+      const perfil=await Cueva.perfilActivo(sb,data.session.user.id);
+      if(!perfil){
+        await Cueva.salir();
+        paso(1); mensaje('Tu cuenta aún no está activada.',true);
+        return;
+      }
+      Cueva.guardarInicial(perfil.nombre);
+      location.replace(volver);
+    }catch(e){
+      console.error(e);
+      mensaje(Cueva.esErrorDeRed(e)?SIN_RED:'No hemos podido comprobar tu cuenta. Inténtalo de nuevo dentro de un momento.',true);
+      paso(3);
+    }
+  }
+  el('reintentar').addEventListener('click',comprobarCuenta);
+
+  if(Cueva.haySesionLocal()){
+    comprobarCuenta();
+  }else{
+    paso(1);
+    const motivo=params.get('motivo');
+    if(motivo==='privado') mensaje('Esta sección es solo para socios. Entra con tu correo para continuar.');
+    if(motivo==='inactiva') mensaje('Tu cuenta aún no está activada.',true);
+  }
+})();
+if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+</script>
+</body>
+</html>

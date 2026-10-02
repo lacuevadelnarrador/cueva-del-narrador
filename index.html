@@ -3,7 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>La Cueva del Narrador</title>
+<title>La Cueva del Narrador · Club de escritura en Sevilla</title>
+<meta name="description" content="Club de escritura en Sevilla. Creamos, aprendemos y escribimos juntos.">
+<script>
+// Si ya hay sesión de socio guardada, la portada pública sobra: vamos al inicio de socios.
+// ("cueva-sesion" es la misma clave que usa auth.js.)
+try { if (localStorage.getItem('cueva-sesion')) location.replace('inicio.html' + location.hash); } catch (e) {}
+</script>
 <meta name="theme-color" content="#528A93">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="mobile-web-app-capable" content="yes">
@@ -15,7 +21,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-acceso="publico">
 <div class="app">
   <header class="hero">
     <div class="top">
@@ -23,7 +29,7 @@
         <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
         <span>La Cueva<br>del Narrador</span>
       </div>
-      <div class="avatar" aria-label="Tu perfil">M</div>
+      <div class="avatar" aria-label="Tu perfil" data-solo="socio" hidden></div>
     </div>
     <p class="tagline">Club de escritura en Sevilla</p>
     <p class="sub">Creamos, aprendemos y escribimos juntos.</p>
@@ -41,76 +47,78 @@
   </header>
 
   <main>
-    <section id="eventos">
-      <div class="sec-head"><h2>Próximos eventos</h2><a href="calendario.html">Ver calendario</a></div>
-      <div id="proximos"></div>
+    <section aria-label="Cómo apuntarse">
+      <div class="sec-head"><h2>¿Quieres escribir con nosotros?</h2></div>
+      <div class="card texto">
+        <p>Apúntate a través del <b>enlace de la descripción de nuestro perfil de Instagram</b>.</p>
+        <p>Las plazas son limitadas. No hay ningún requisito de entrada, solo que queden plazas: si quieres saber si las hay o tienes cualquier duda, escríbenos un mensaje por Instagram.</p>
+        <a class="btn" href="https://www.instagram.com/lacuevadelnarrador/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".6" fill="currentColor"/></svg>Ir a nuestro Instagram</a>
+      </div>
     </section>
 
-    <section id="biblioteca">
-      <div class="sec-head"><h2>Nuestra biblioteca</h2><a href="biblioteca.html">Ver todos</a></div>
-      <div class="shelf" id="est-biblioteca"></div>
+    <section aria-label="Cuándo y dónde">
+      <div class="sec-head"><h2>Cuándo y dónde</h2></div>
+      <div class="card">
+        <div class="dato"><small>Cuándo</small><b>Miércoles no festivos, de 18:00 a 20:00</b></div>
+        <div class="dato"><small>Dónde</small><b>Centro Cívico de Sevilla Este</b></div>
+      </div>
     </section>
 
-    <section id="recomendados">
-      <div class="sec-head"><h2>Libros recomendados por nuestros socios</h2><a href="biblioteca.html#recomendados">Ver más</a></div>
-      <div class="shelf" id="est-recomendados"></div>
+    <section aria-label="Quiénes somos">
+      <div class="sec-head"><h2>Quiénes somos</h2></div>
+      <div class="card texto">
+        <p><b>Somos un club donde compartimos experiencias de escritura y aprendemos entre todos.</b></p>
+        <p>Damos clases, pero sin ser profesores expertos: cada uno aporta lo que sabe y todos aprendemos de todos. Somos un grupo de amigos que se enseña, escribe junto y crece como escritor en el mundo literario. Y por el camino, nos reímos mucho.</p>
+      </div>
     </section>
 
-    <section class="note">
-      <h3>Apuntes de la clase</h3>
-      <p>Adverbios, diálogos y pequeños vicios que pueden estar ensuciando tu texto.</p>
-      <a class="btn" href="curso.html">Leer apuntes</a>
+    <section aria-label="Qué hacemos">
+      <div class="sec-head"><h2>Qué hacemos</h2></div>
+      <div id="actividades"></div>
+    </section>
+
+    <section aria-label="Detrás de la Cueva">
+      <div class="sec-head"><h2>Detrás de la Cueva</h2></div>
+      <div class="card texto">
+        <p>Los fundadores de La Cueva del Narrador somos <a href="https://www.instagram.com/rafaelevelasco/" target="_blank" rel="noopener">@rafaelevelasco</a> y <a href="https://www.instagram.com/yeray.universe/" target="_blank" rel="noopener">@yeray.universe</a>.</p>
+        <p><a href="https://www.instagram.com/nenamoni92/" target="_blank" rel="noopener">@nenamoni92</a> es nuestra mano derecha: nos ayuda con las redes sociales, el marketing, la corrección y un poco de todo lo demás.</p>
+      </div>
     </section>
   </main>
 
-  <nav class="nav" aria-label="Navegación principal">
+  <nav class="nav visitante" aria-label="Navegación principal">
     <a href="index.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
-    <a href="calendario.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a>
-    <a href="curso.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/></svg>Curso</a>
-    <a href="biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Biblioteca</a>
+    <a href="retos.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>Retos</a>
+    <a href="acceso.html" class="acceso"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>Acceso</a>
+    <a href="nuestra-biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Nuestra biblioteca</a>
     <a href="mas.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
   </nav>
 </div>
 <script src="tipos.js"></script>
-<script src="eventos.js"></script>
-<script src="libros.js"></script>
-<script src="retos.js"></script>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
 <script>
 (function(){
-  const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  const esc=t=>String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const esc=Cueva.esc;
+  const el=id=>document.getElementById(id);
   const h=new Date();
   const hoy=h.getFullYear()+'-'+String(h.getMonth()+1).padStart(2,'0')+'-'+String(h.getDate()).padStart(2,'0');
-  const proximos=EVENTOS.filter(e=>e.fecha>=hoy).sort((x,y)=>(x.fecha+(x.hora||'')).localeCompare(y.fecha+(y.hora||''))).slice(0,3);
-  document.getElementById('proximos').innerHTML=proximos.length?proximos.map(e=>{
-    const t=tipo(e.tipo), p=e.fecha.split('-').map(Number);
-    return '<article class="event"><div class="date" style="background:'+t.c+';color:'+t.t+'"><b>'+String(p[2]).padStart(2,'0')+'</b><small>'+MES[p[1]-1]+'</small></div><div><h3>'+esc(e.titulo)+'</h3><p>'+t.n+(e.hora?' · '+esc(e.hora)+' h':'')+(e.lugar?' · '+esc(e.lugar):'')+'</p></div></article>';
-  }).join(''):'<p class="empty">No hay eventos próximos. Vuelve pronto.</p>';
 
-  // Últimos libros añadidos (los más recientes primero)
-  const MAX=6;
-  const masNuevos=lista=>lista.map((l,i)=>({l,i})).sort((x,y)=>(y.l.alta||'').localeCompare(x.l.alta||'')||y.i-x.i).map(o=>o.l);
-  function estante(id,libros,vacio,conRecomienda){
-    document.getElementById(id).innerHTML=libros.length?libros.slice(0,MAX).map(l=>{
-      const c=colorPortada(l.titulo);
-      const portada=l.portada?'<img class="cover" src="'+esc(l.portada)+'" alt="Portada de '+esc(l.titulo)+'" style="width:100%;object-fit:cover;padding:0">':'<div class="cover" style="background:'+c[0]+';color:'+c[1]+'">'+esc(l.titulo)+'</div>';
-      return '<div class="book">'+portada+'<p>'+esc(l.autor)+'</p>'+(conRecomienda&&l.recomienda?'<p class="by">Recomienda: '+esc(l.recomienda)+'</p>':'')+'</div>';
-    }).join(''):'<p class="empty">'+vacio+'</p>';
-  }
-  estante('est-biblioteca',masNuevos(BIBLIOTECA.filter(l=>l.disponible)),'Ahora mismo no hay libros disponibles.',false);
-  estante('est-recomendados',masNuevos(RECOMENDADOS),'Todavía no hay recomendaciones. ¡Sé el primero en recomendar un libro!',true);
+  el('actividades').innerHTML=ACTIVIDADES.map(a=>'<article class="act"><span class="tp" style="background:'+tipo(a[0]).c+'" aria-hidden="true"></span><div><h3>'+a[1]+'</h3><p>'+a[2]+'</p></div></article>').join('');
 
-  // Reto actual: el más reciente cuya fecha de inicio ya ha llegado
+  // Reto actual: el más reciente cuya fecha de inicio ya ha llegado. La tabla retos se lee sin sesión.
   const fechaL=f=>new Date(f+'T12:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'long'});
-  const reto=RETOS.slice().sort((x,y)=>y.inicio.localeCompare(x.inicio)).find(r=>r.inicio<=hoy);
-  if(reto){
-    document.getElementById('reto-titulo').textContent=reto.palabras?'Escribe '+reto.palabras+' palabras':'Escribe tu texto';
-    document.getElementById('reto-regla').textContent=(reto.incluir||[]).length?'Tu texto tiene que incluir:':'';
-    document.getElementById('reto-lista').innerHTML=(reto.incluir||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
-    document.getElementById('reto-plazo').textContent=reto.plazo?(reto.plazo>=hoy?'Plazo: hasta el '+fechaL(reto.plazo)+'.':'El plazo terminó el '+fechaL(reto.plazo)+'.'):'';
-  }else{
-    document.getElementById('reto-titulo').textContent='Muy pronto, nuevo reto';
+  function pintarReto(reto,aviso){
+    el('reto-titulo').textContent=aviso?'Reto del mes':reto?(reto.palabras?'Escribe '+reto.palabras+' palabras':'Escribe tu texto'):'Muy pronto, nuevo reto';
+    el('reto-regla').textContent=aviso||(reto&&(reto.incluir||[]).length?'Tu texto tiene que incluir:':'');
+    el('reto-lista').innerHTML=reto?(reto.incluir||[]).map(x=>'<li>'+esc(x)+'</li>').join(''):'';
+    el('reto-plazo').textContent=reto&&reto.plazo?(reto.plazo>=hoy?'Plazo: hasta el '+fechaL(reto.plazo)+'.':'El plazo terminó el '+fechaL(reto.plazo)+'.'):'';
   }
+  pintarReto(null,'Cargando…');
+  Cueva.cliente()
+    .then(sb=>sb.from('retos').select('inicio,plazo,palabras,incluir').lte('inicio',hoy).order('inicio',{ascending:false}).limit(1))
+    .then(r=>{ if(r.error) throw r.error; pintarReto(r.data[0]||null); })
+    .catch(e=>{ console.error(e); pintarReto(null,Cueva.mensaje(e)); });
 })();
 </script>
 <script>

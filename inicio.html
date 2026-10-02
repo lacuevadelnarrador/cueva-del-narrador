@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inicio · La Cueva del Narrador</title>
+<meta name="theme-color" content="#528A93">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="La Cueva">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="hero">
+    <div class="top">
+      <div class="brand">
+        <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
+        <span>La Cueva<br>del Narrador</span>
+      </div>
+      <div class="avatar" aria-label="Tu perfil"></div>
+    </div>
+    <p class="tagline">Club de escritura en Sevilla</p>
+    <p class="sub">Creamos, aprendemos y escribimos juntos.</p>
+    <section class="arch" id="reto" aria-label="Reto del mes">
+      <span class="tag">Reto del mes</span>
+      <h1 id="reto-titulo"></h1>
+      <p class="rule" id="reto-regla"></p>
+      <ul class="words" id="reto-lista"></ul>
+      <div class="deadline">
+        <p id="reto-plazo"></p>
+        <a class="btn" href="https://www.instagram.com/lacuevadelnarrador/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".6" fill="currentColor"/></svg>Súbelo a Instagram y etiquétanos</a>
+        <a class="vermas" href="retos.html">Ver todos los retos</a>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section id="eventos">
+      <div class="sec-head"><h2>Próximos eventos</h2><a href="calendario.html">Ver calendario</a></div>
+      <div id="proximos"></div>
+    </section>
+
+    <section id="biblioteca">
+      <div class="sec-head"><h2>Nuestra biblioteca</h2><a href="biblioteca.html">Ver todos</a></div>
+      <div class="shelf" id="est-biblioteca"></div>
+    </section>
+
+    <section id="recomendados">
+      <div class="sec-head"><h2>Libros recomendados por nuestros socios</h2><a href="biblioteca.html#recomendados">Ver más</a></div>
+      <div class="shelf" id="est-recomendados"></div>
+    </section>
+
+    <section class="note">
+      <h3>Apuntes de la clase</h3>
+      <p>Adverbios, diálogos y pequeños vicios que pueden estar ensuciando tu texto.</p>
+      <a class="btn" href="curso.html">Leer apuntes</a>
+    </section>
+  </main>
+
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="inicio.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="calendario.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a>
+    <a href="curso.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/></svg>Curso</a>
+    <a href="biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Biblioteca</a>
+    <a href="mas.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
+  </nav>
+</div>
+<script src="tipos.js"></script>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script>
+(function(){
+  const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const esc=Cueva.esc;
+  const el=id=>document.getElementById(id);
+  const h=new Date();
+  const hoy=h.getFullYear()+'-'+String(h.getMonth()+1).padStart(2,'0')+'-'+String(h.getDate()).padStart(2,'0');
+  const MAX=6;
+
+  function pintarEventos(filas){
+    const proximos=filas.map(e=>Object.assign({},e,{hora:e.hora?String(e.hora).slice(0,5):''}))
+      .sort((x,y)=>(x.fecha+x.hora).localeCompare(y.fecha+y.hora)).slice(0,3);
+    el('proximos').innerHTML=proximos.length?proximos.map(e=>{
+      const t=tipo(e.tipo), p=e.fecha.split('-').map(Number);
+      return '<article class="event"><div class="date" style="background:'+t.c+';color:'+t.t+'"><b>'+String(p[2]).padStart(2,'0')+'</b><small>'+MES[p[1]-1]+'</small></div><div><h3>'+esc(e.titulo)+'</h3><p>'+t.n+(e.hora?' · '+esc(e.hora)+' h':'')+(e.lugar?' · '+esc(e.lugar):'')+'</p></div></article>';
+    }).join(''):'<p class="empty">No hay eventos próximos. Vuelve pronto.</p>';
+  }
+
+  // Últimos libros añadidos (los más recientes primero). Usa portada_url si existe; si no, el bloque de color.
+  function estante(id,libros,vacio,conRecomienda){
+    el(id).innerHTML=libros.length?libros.map(l=>{
+      const titulo=l.titulo||'', c=colorPortada(titulo), img=Cueva.urlSegura(l.portada_url);
+      const portada=img?'<img class="cover" src="'+esc(img)+'" alt="Portada de '+esc(titulo)+'" style="width:100%;object-fit:cover;padding:0">':'<div class="cover" style="background:'+c[0]+';color:'+c[1]+'">'+esc(titulo)+'</div>';
+      return '<div class="book">'+portada+'<p>'+esc(l.autor)+'</p>'+(conRecomienda&&l.recomendado_por?'<p class="by">Recomienda: '+esc(l.recomendado_por)+'</p>':'')+'</div>';
+    }).join(''):'<p class="empty">'+vacio+'</p>';
+  }
+
+  // Reto actual: el más reciente cuya fecha de inicio ya ha llegado
+  const fechaL=f=>new Date(f+'T12:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'long'});
+  function pintarReto(reto,aviso){
+    el('reto-titulo').textContent=aviso?'Reto del mes':reto?(reto.palabras?'Escribe '+reto.palabras+' palabras':'Escribe tu texto'):'Muy pronto, nuevo reto';
+    el('reto-regla').textContent=aviso||(reto&&(reto.incluir||[]).length?'Tu texto tiene que incluir:':'');
+    el('reto-lista').innerHTML=reto?(reto.incluir||[]).map(x=>'<li>'+esc(x)+'</li>').join(''):'';
+    el('reto-plazo').textContent=reto&&reto.plazo?(reto.plazo>=hoy?'Plazo: hasta el '+fechaL(reto.plazo)+'.':'El plazo terminó el '+fechaL(reto.plazo)+'.'):'';
+  }
+
+  const recientes={ascending:false,nullsFirst:false};
+  function iniciar(){
+    const zonas=['proximos','est-biblioteca','est-recomendados'].map(el);
+    zonas.forEach(z=>Cueva.cargando(z));
+    pintarReto(null,'Cargando…');
+    Cueva.privada().then(({sb})=>{
+      Cueva.cargar(zonas[0],()=>sb.from('eventos').select('fecha,hora,titulo,tipo,lugar').gte('fecha',hoy).order('fecha').limit(20),pintarEventos);
+      Cueva.cargar(zonas[1],()=>sb.from('libros').select('titulo,autor,portada_url').eq('prestado',false).order('alta',recientes).limit(MAX),
+        d=>estante('est-biblioteca',d,'Ahora mismo no hay libros disponibles.',false));
+      Cueva.cargar(zonas[2],()=>sb.from('recomendaciones').select('titulo,autor,portada_url,recomendado_por').order('alta',recientes).limit(MAX),
+        d=>estante('est-recomendados',d,'Todavía no hay recomendaciones. ¡Sé el primero en recomendar un libro!',true));
+      sb.from('retos').select('inicio,plazo,palabras,incluir').lte('inicio',hoy).order('inicio',{ascending:false}).limit(1)
+        .then(r=>{ if(r.error) throw r.error; pintarReto(r.data[0]||null); })
+        .catch(e=>{ console.error(e); pintarReto(null,Cueva.mensaje(e)); });
+    }).catch(e=>{
+      zonas.forEach(z=>Cueva.error(z,e,iniciar));
+      pintarReto(null,Cueva.mensaje(e));
+    });
+  }
+  iniciar();
+})();
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js"));
+}
+</script>
+</body>
+</html>

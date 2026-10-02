@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nuestra biblioteca · La Cueva del Narrador</title>
+<meta name="theme-color" content="#528A93">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-acceso="publico">
+<div class="app">
+  <header class="pagehead">
+    <div class="top">
+      <div class="brand">
+        <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
+        <span>La Cueva<br>del Narrador</span>
+      </div>
+      <div class="avatar" aria-label="Tu perfil" data-solo="socio" hidden></div>
+    </div>
+    <h1 class="largo">Nuestra biblioteca</h1>
+    <p class="sub">Los libros del club.</p>
+  </header>
+
+  <main>
+    <section aria-label="Filtros">
+      <input class="buscador" id="q" type="search" placeholder="Buscar por título o autor" aria-label="Buscar por título o autor">
+      <div class="chips" id="generos" aria-label="Filtrar por género"></div>
+    </section>
+
+    <section aria-label="Libros del club" aria-live="polite">
+      <p class="cuenta" id="cuenta"></p>
+      <div class="rejilla" id="lista"></div>
+    </section>
+  </main>
+
+  <nav class="nav visitante" aria-label="Navegación principal">
+    <a href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="retos.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>Retos</a>
+    <a href="acceso.html" class="acceso"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>Acceso</a>
+    <a href="nuestra-biblioteca.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Nuestra biblioteca</a>
+    <a href="mas.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
+  </nav>
+</div>
+<script src="tipos.js"></script>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script>
+const esc=Cueva.esc;
+// Página pública: se lee sin sesión. El rol anónimo solo tiene permiso sobre estas cinco columnas,
+// así que NO añadas otras ni uses select('*'): la petición fallaría.
+const COLUMNAS='id,titulo,autor,generos,portada_url';
+
+const norm=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+
+let LIBROS=[], cargado=false;
+let genero='Todos', texto='';
+
+function pintarGeneros(){
+  const gs=['Todos',...new Set(LIBROS.flatMap(l=>l.generos))].sort((a,b)=>a==='Todos'?-1:b==='Todos'?1:a.localeCompare(b,'es'));
+  if(!gs.includes(genero)) genero='Todos';
+  const fila=document.getElementById('generos'), desplazado=fila.scrollLeft; // al repintar, la fila no vuelve al principio
+  fila.innerHTML=gs.map(g=>'<button class="chip'+(g===genero?' on':'')+'" data-g="'+esc(g)+'" aria-pressed="'+(g===genero)+'">'+esc(g)+'</button>').join('');
+  fila.scrollLeft=desplazado;
+}
+
+function pintarLista(){
+  if(!cargado) return; // mientras carga (o si falla), la lista muestra el aviso
+  const q=norm(texto);
+  const lista=LIBROS.filter(l=>(genero==='Todos'||l.generos.includes(genero))
+    &&(!q||norm(l.titulo).includes(q)||norm(l.autor).includes(q)));
+  document.getElementById('cuenta').textContent=lista.length+(lista.length===1?' libro':' libros');
+  document.getElementById('lista').innerHTML=lista.length?lista.map(l=>{
+    const [c,t]=colorPortada(l.titulo);
+    const portada=l.portada?'<img class="cover" src="'+esc(l.portada)+'" alt="Portada de '+esc(l.titulo)+'" loading="lazy">':'<div class="cover" style="background:'+c+';color:'+t+'" aria-hidden="true">'+esc(Array.from(l.titulo)[0]||'')+'</div>';
+    const generos=l.generos.map(g=>'<span class="tag">'+esc(g)+'</span>').join('');
+    return '<article class="ficha">'+portada+'<h3>'+esc(l.titulo)+'</h3><p class="autor">'+esc(l.autor)+'</p>'+(generos?'<div class="meta">'+generos+'</div>':'')+'</article>';
+  }).join(''):'<p class="empty">'+(LIBROS.length?'No hay libros que coincidan con la búsqueda.':'Todavía no hay libros en nuestra biblioteca. Vuelve pronto.')+'</p>';
+}
+
+document.getElementById('q').addEventListener('input',e=>{texto=e.target.value;pintarLista();});
+document.getElementById('generos').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;genero=b.dataset.g;pintarGeneros();pintarLista();});
+pintarGeneros();
+
+Cueva.cargar(document.getElementById('lista'),
+  ()=>Cueva.cliente().then(sb=>sb.from('libros').select(COLUMNAS).order('id',{ascending:false})),
+  filas=>{
+    LIBROS=filas.map(l=>({titulo:l.titulo||'',autor:l.autor||'',generos:(Array.isArray(l.generos)?l.generos:[]).filter(Boolean),portada:Cueva.urlSegura(l.portada_url)}));
+    cargado=true; pintarGeneros(); pintarLista();
+  });
+if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+</script>
+</body>
+</html>
