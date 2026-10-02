@@ -20,7 +20,7 @@
         <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
         <span>La Cueva<br>del Narrador</span>
       </div>
-      <div class="avatar" aria-label="Tu perfil">M</div>
+      <div class="avatar" aria-label="Tu perfil"></div>
     </div>
     <h1>Calendario</h1>
     <p class="sub">Clases, charlas, retos y encuentros del curso.</p>
@@ -47,7 +47,7 @@
   </main>
 
   <nav class="nav" aria-label="Navegación principal">
-    <a href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="inicio.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
     <a href="calendario.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a>
     <a href="curso.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/></svg>Curso</a>
     <a href="biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Biblioteca</a>
@@ -55,14 +55,16 @@
   </nav>
 </div>
 <script src="tipos.js"></script>
-<script src="eventos.js"></script>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
 <script>
+let EVENTOS=[], cargado=false;
 const MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const DIAS=['dom','lun','mar','mié','jue','vie','sáb'];
 const hoy=new Date();
 let anio=hoy.getFullYear(), mes=hoy.getMonth(), sel=null;
 
-const esc=t=>String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const esc=Cueva.esc;
 const clave=(a,m,d)=>a+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
 const partes=f=>{const p=f.split('-').map(Number);return {a:p[0],m:p[1]-1,d:p[2]};};
 const orden=(x,y)=>(x.fecha+(x.hora||'')).localeCompare(y.fecha+(y.hora||''));
@@ -99,6 +101,7 @@ function pintar(){
   const tl=document.getElementById('titulo-lista');
   if(sel){const p=partes(sel);tl.textContent=p.d+' de '+MESES[p.m];} else tl.textContent='Eventos de '+MESES[mes].toLowerCase();
   document.getElementById('ver-mes').hidden=!sel;
+  if(!cargado) return; // mientras carga (o si falla), la lista muestra el aviso
   document.getElementById('lista').innerHTML=lista.length?lista.map(e=>{
     const p=partes(e.fecha), t=tipo(e.tipo);
     const dia=DIAS[new Date(p.a,p.m,p.d).getDay()];
@@ -114,6 +117,13 @@ document.getElementById('ver-mes').addEventListener('click',()=>{sel=null;pintar
 document.getElementById('prev').addEventListener('click',()=>{mes--;if(mes<0){mes=11;anio--;}sel=null;pintar();});
 document.getElementById('next').addEventListener('click',()=>{mes++;if(mes>11){mes=0;anio++;}sel=null;pintar();});
 pintarLeyenda(); pintar();
+// Los eventos solo se leen con sesión de socio. La hora llega como "19:30:00" y se muestra "19:30".
+Cueva.cargar(document.getElementById('lista'),
+  ()=>Cueva.privada().then(({sb})=>sb.from('eventos').select('fecha,hora,titulo,tipo,lugar,detalle').order('fecha')),
+  filas=>{
+    EVENTOS=filas.filter(e=>e.fecha).map(e=>Object.assign({},e,{hora:e.hora?String(e.hora).slice(0,5):''}));
+    cargado=true; pintar();
+  });
 if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
 </script>
 </body>

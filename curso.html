@@ -20,7 +20,7 @@
         <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
         <span>La Cueva<br>del Narrador</span>
       </div>
-      <div class="avatar" aria-label="Tu perfil">M</div>
+      <div class="avatar" aria-label="Tu perfil"></div>
     </div>
     <h1>Curso</h1>
     <p class="sub">Charlas y apuntes de todos los cursos del club.</p>
@@ -42,7 +42,7 @@
   </main>
 
   <nav class="nav" aria-label="Navegación principal">
-    <a href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="inicio.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
     <a href="calendario.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a>
     <a href="curso.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/></svg>Curso</a>
     <a href="biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Biblioteca</a>
@@ -50,13 +50,15 @@
   </nav>
 </div>
 <script src="tipos.js"></script>
-<script src="curso.js"></script>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
 <script>
-const esc=t=>String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let CURSOS=[];
+const esc=Cueva.esc;
 const norm=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 const fechaBonita=f=>f?new Date(f+'T12:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}):'';
 
-let cursoId=CURSOS[0].id, filtroTipo='todos', texto='';
+let cursoId=null, filtroTipo='todos', texto='';
 const cursoActual=()=>CURSOS.find(c=>c.id===cursoId)||CURSOS[0];
 
 function pintarTabs(){
@@ -84,14 +86,26 @@ function pintarLista(){
       :'<div class="doc off"><span class="fmt">'+esc(d.formato)+'</span><span class="dn">'+esc(d.nombre)+'</span><span class="pend">Pronto</span></div>').join('');
     const meta=[fechaBonita(c.fecha),c.ponente].filter(Boolean).map(esc).join(' · ');
     return '<details class="charla"><summary><span class="tp" style="background:'+t.c+'" aria-hidden="true"></span><span class="st"><b>'+esc(c.titulo)+'</b><small>'+esc(t.n)+(meta?' · '+meta:'')+'</small></span></summary><div class="cuerpo">'+(c.tema?'<p class="tema">'+esc(c.tema)+'</p>':'')+(docs?'<div class="docs">'+docs+'</div>':'<p class="empty">Todavía no hay documentos de esta charla.</p>')+'</div></details>';
-  }).join(''):'<p class="empty">No hay charlas que coincidan con la búsqueda.</p>';
+  }).join(''):'<p class="empty">'+(cursoActual().charlas.length?'No hay charlas que coincidan con la búsqueda.':'Todavía no hay charlas en este curso.')+'</p>';
 }
 
-function todo(){pintarTabs();pintarTipos();pintarLista();}
+function todo(){
+  if(!CURSOS.length){document.getElementById('cuenta').textContent='';document.getElementById('lista').innerHTML='<p class="empty">Todavía no hay cursos publicados.</p>';return;}
+  pintarTabs();pintarTipos();pintarLista();
+}
 document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;cursoId=b.dataset.id;filtroTipo='todos';todo();});
 document.getElementById('tipos').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;filtroTipo=b.dataset.t;pintarTipos();pintarLista();});
-document.getElementById('q').addEventListener('input',e=>{texto=e.target.value;pintarLista();});
-todo();
+document.getElementById('q').addEventListener('input',e=>{texto=e.target.value;if(CURSOS.length)pintarLista();});
+// Cursos, charlas y documentos solo se leen con sesión de socio. documentos.url es el enlace a Drive.
+Cueva.cargar(document.getElementById('lista'),
+  ()=>Cueva.privada().then(({sb})=>sb.from('cursos').select('id,codigo,nombre,periodo,charlas(titulo,fecha,tipo,ponente,tema,documentos(nombre,formato,url))').order('codigo',{ascending:false})),
+  filas=>{
+    CURSOS=filas.map(c=>({id:String(c.id),nombre:c.nombre||c.codigo||'Curso',periodo:c.periodo||'',
+      charlas:(c.charlas||[]).map(ch=>Object.assign({},ch,{titulo:ch.titulo||'',
+        documentos:(ch.documentos||[]).map(d=>({nombre:d.nombre,formato:d.formato,enlace:Cueva.urlSegura(d.url)}))}))}));
+    cursoId=CURSOS.length?CURSOS[0].id:null;
+    todo();
+  });
 if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
 </script>
 </body>
