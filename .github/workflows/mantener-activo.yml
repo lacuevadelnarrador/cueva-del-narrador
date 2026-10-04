@@ -1,0 +1,40 @@
+name: Mantener Supabase despierto
+
+# Dos veces por semana hace una consulta mínima a la base de datos para que Supabase
+# no pause el proyecto por inactividad. Además, si hace más de 45 días que no hay
+# actividad en el repositorio, añade un commit vacío para que GitHub no desactive
+# este aviso programado (lo hace en los repositorios públicos tras 60 días sin actividad).
+
+on:
+  schedule:
+    - cron: "17 6 * * 1,4"   # lunes y jueves, 06:17 UTC
+  workflow_dispatch:          # permite lanzarlo a mano desde la pestaña Actions
+
+permissions:
+  contents: write
+
+jobs:
+  mantener-activo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Consulta mínima a la base de datos
+        run: |
+          curl --fail --silent --show-error --max-time 30 \
+            "https://vxzvpucuthpvmdgmwgdk.supabase.co/rest/v1/retos?select=id&limit=1" \
+            -H "apikey: sb_publishable_KhvF6520KIMWbOmx4X7lxw_weL10duP"
+          echo
+
+      - name: Commit vacío si hace más de 45 días de la última actividad
+        run: |
+          ultimo=$(git log -1 --format=%ct)
+          ahora=$(date +%s)
+          dias=$(( (ahora - ultimo) / 86400 ))
+          echo "Días desde el último commit: $dias"
+          if [ "$dias" -ge 45 ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit --allow-empty -m "chore: mantener activos los avisos programados"
+            git push
+          fi
