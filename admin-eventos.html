@@ -30,6 +30,8 @@
   <main>
     <a class="volver" href="admin.html">&#8249; Volver al panel</a>
 
+    <p class="pista">Los retos se gestionan en <a href="admin-retos.html" style="color:var(--link);text-decoration:underline;text-underline-offset:3px">Administración &gt; Retos</a> y aparecen solos en el calendario el día de inicio.</p>
+
     <section id="vista-lista" aria-label="Lista de eventos">
       <div class="barra-admin">
         <div class="chips" id="filtro" role="group" aria-label="Qué eventos mostrar">
@@ -96,14 +98,10 @@
 const esc=Admin.esc, el=id=>document.getElementById(id), form=el('form');
 let EVENTOS=[], filtro='proximos', editando=null;
 
-el('tipo').innerHTML='<option value="">Elige un tipo</option>'+Object.entries(TIPOS).map(([k,t])=>'<option value="'+esc(k)+'">'+esc(t.n)+'</option>').join('');
-// Todos los campos son obligatorios, salvo la hora de los retos (se publican en Instagram y no tienen hora).
-function reglaHora(){
-  form.elements.hora.required=form.elements.tipo.value!=='reto';
-  Admin.obligatorios(form);
-}
-el('tipo').addEventListener('change',reglaHora);
-reglaHora();
+// Los retos no se crean aquí: salen de la tabla retos (Administración > Retos).
+el('tipo').innerHTML='<option value="">Elige un tipo</option>'+Object.entries(TIPOS).filter(([k])=>k!=='reto').map(([k,t])=>'<option value="'+esc(k)+'">'+esc(t.n)+'</option>').join('');
+// Todos los campos son obligatorios, también la hora.
+Admin.obligatorios(form);
 
 const orden=(a,b)=>(a.fecha+(a.hora||'')).localeCompare(b.fecha+(b.hora||''));
 function pintar(){
@@ -123,7 +121,7 @@ function pintar(){
 function cargarLista(){
   Cueva.cargar(el('lista'),
     ()=>Admin.iniciar().then(sb=>sb.from('eventos').select('id,fecha,hora,titulo,tipo,lugar,detalle').order('fecha').order('hora',{nullsFirst:true})),
-    filas=>{EVENTOS=filas.filter(e=>e.fecha);el('anadir').hidden=false;pintar();});
+    filas=>{EVENTOS=filas.filter(e=>e.fecha&&e.tipo!=='reto');el('anadir').hidden=false;pintar();});
 }
 
 function abrirForm(ev){
@@ -132,7 +130,6 @@ function abrirForm(ev){
   el('borrar').hidden=!ev;
   Admin.rellenar(form,ev?{titulo:ev.titulo,fecha:ev.fecha,hora:Admin.hora(ev.hora),tipo:TIPOS[ev.tipo]?ev.tipo:'',lugar:ev.lugar,detalle:ev.detalle}
     :{titulo:'',fecha:'',hora:'',tipo:'',lugar:'',detalle:''});
-  reglaHora();
   Admin.abrir('vista-form');
 }
 
@@ -152,7 +149,6 @@ form.addEventListener('submit',async e=>{
   e.preventDefault();
   if(!Admin.validar(form)) return;
   const v=n=>form.elements[n].value;
-  // Una hora vacía se guarda como null.
   const fila={titulo:Admin.texto(v('titulo')),fecha:v('fecha'),hora:Admin.texto(v('hora')),tipo:Admin.texto(v('tipo')),lugar:Admin.texto(v('lugar')),detalle:Admin.texto(v('detalle'))};
   const sb=Admin.sb(), id=editando&&editando.id;
   const ok=await Admin.escribir(form,

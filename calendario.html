@@ -105,7 +105,7 @@ function pintar(){
   document.getElementById('lista').innerHTML=lista.length?lista.map(e=>{
     const p=partes(e.fecha), t=tipo(e.tipo);
     const dia=DIAS[new Date(p.a,p.m,p.d).getDay()];
-    return '<article class="ev"><div class="date" style="background:'+t.c+';color:'+t.t+'"><b>'+String(p.d).padStart(2,'0')+'</b><small>'+dia+'</small></div><div><h3>'+esc(e.titulo)+'</h3><p>'+(e.hora?esc(e.hora)+' h':'')+(e.lugar?' · '+esc(e.lugar):'')+'</p>'+(e.detalle?'<p>'+esc(e.detalle)+'</p>':'')+'<span class="badge"><i style="background:'+t.c+'"></i>'+t.n+'</span></div></article>';
+    return '<article class="ev"><div class="date" style="background:'+t.c+';color:'+t.t+'"><b>'+String(p.d).padStart(2,'0')+'</b><small>'+dia+'</small></div><div><h3>'+esc(e.titulo)+'</h3><p>'+[e.hora&&e.hora+' h',e.lugar].filter(Boolean).map(esc).join(' · ')+'</p>'+(e.detalle?'<p>'+esc(e.detalle)+'</p>':'')+'<span class="badge"><i style="background:'+t.c+'"></i>'+t.n+'</span></div></article>';
   }).join(''):'<p class="empty">'+(sel?'Ese día no hay nada previsto.':'Este mes no hay eventos programados.')+'</p>';
 }
 
@@ -117,11 +117,23 @@ document.getElementById('ver-mes').addEventListener('click',()=>{sel=null;pintar
 document.getElementById('prev').addEventListener('click',()=>{mes--;if(mes<0){mes=11;anio--;}sel=null;pintar();});
 document.getElementById('next').addEventListener('click',()=>{mes++;if(mes>11){mes=0;anio++;}sel=null;pintar();});
 pintarLeyenda(); pintar();
-// Los eventos solo se leen con sesión de socio. La hora llega como "19:30:00" y se muestra "19:30".
+// Los retos salen de la tabla retos: cada uno se pinta solo el día de inicio, sin hora.
+// Las fechas son texto 'AAAA-MM-DD' y se leen por partes, así que la zona horaria no las mueve.
+const comoEvento=r=>{
+  const p=r.plazo?partes(r.plazo):null;
+  return {fecha:r.inicio,hora:'',titulo:r.titulo||tipo('reto').n,tipo:'reto',lugar:'Instagram',
+    detalle:p?'Plazo: hasta el '+p.d+' de '+MESES[p.m].toLowerCase()+'.':''};
+};
+// Los datos solo se leen con sesión de socio. La hora llega como "19:30:00" y se muestra "19:30".
+// Los eventos de tipo reto se ignoran: los retos vienen solo de la tabla retos.
 Cueva.cargar(document.getElementById('lista'),
-  ()=>Cueva.privada().then(({sb})=>sb.from('eventos').select('fecha,hora,titulo,tipo,lugar,detalle').order('fecha')),
-  filas=>{
-    EVENTOS=filas.filter(e=>e.fecha).map(e=>Object.assign({},e,{hora:e.hora?String(e.hora).slice(0,5):''}));
+  ()=>Cueva.privada().then(({sb})=>Promise.all([
+    sb.from('eventos').select('fecha,hora,titulo,tipo,lugar,detalle').order('fecha'),
+    sb.from('retos').select('titulo,mes,inicio,plazo,palabras,incluir,nota').order('inicio')
+  ])).then(([ev,re])=>({error:ev.error||re.error,data:{eventos:ev.data||[],retos:re.data||[]}})),
+  ({eventos,retos})=>{
+    EVENTOS=eventos.filter(e=>e.fecha&&e.tipo!=='reto').map(e=>Object.assign({},e,{hora:e.hora?String(e.hora).slice(0,5):''}))
+      .concat(retos.filter(r=>r.inicio).map(comoEvento));
     cargado=true; pintar();
   });
 if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));

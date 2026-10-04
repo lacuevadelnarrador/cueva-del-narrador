@@ -83,8 +83,10 @@
   const hoy=h.getFullYear()+'-'+String(h.getMonth()+1).padStart(2,'0')+'-'+String(h.getDate()).padStart(2,'0');
   const MAX=6;
 
-  function pintarEventos(filas){
-    const proximos=filas.map(e=>Object.assign({},e,{hora:e.hora?String(e.hora).slice(0,5):''}))
+  // Eventos futuros + retos que empiezan hoy o después (los retos salen solo de la tabla retos).
+  function pintarEventos({eventos,retos}){
+    const proximos=eventos.filter(e=>e.tipo!=='reto').map(e=>Object.assign({},e,{hora:e.hora?String(e.hora).slice(0,5):''}))
+      .concat(retos.map(r=>({fecha:r.inicio,hora:'',titulo:r.titulo||tipo('reto').n,tipo:'reto',lugar:'Instagram'})))
       .sort((x,y)=>(x.fecha+x.hora).localeCompare(y.fecha+y.hora)).slice(0,3);
     el('proximos').innerHTML=proximos.length?proximos.map(e=>{
       const t=tipo(e.tipo), p=e.fecha.split('-').map(Number);
@@ -116,7 +118,10 @@
     zonas.forEach(z=>Cueva.cargando(z));
     pintarReto(null,'Cargando…');
     Cueva.privada().then(({sb})=>{
-      Cueva.cargar(zonas[0],()=>sb.from('eventos').select('fecha,hora,titulo,tipo,lugar').gte('fecha',hoy).order('fecha').limit(20),pintarEventos);
+      Cueva.cargar(zonas[0],()=>Promise.all([
+        sb.from('eventos').select('fecha,hora,titulo,tipo,lugar').gte('fecha',hoy).order('fecha').limit(20),
+        sb.from('retos').select('titulo,inicio').gte('inicio',hoy).order('inicio').limit(3)
+      ]).then(([ev,re])=>({error:ev.error||re.error,data:{eventos:ev.data||[],retos:re.data||[]}})),pintarEventos);
       Cueva.cargar(zonas[1],()=>sb.from('libros').select('titulo,autor,portada_url').eq('prestado',false).order('alta',recientes).limit(MAX),
         d=>estante('est-biblioteca',d,'Ahora mismo no hay libros disponibles.',false));
       Cueva.cargar(zonas[2],()=>sb.from('recomendaciones').select('titulo,autor,portada_url,recomendado_por').order('alta',recientes).limit(MAX),
