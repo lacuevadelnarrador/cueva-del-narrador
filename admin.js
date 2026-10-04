@@ -62,7 +62,9 @@ const Admin = (function () {
     mostrar(id);
   }
   // Vuelve a la vista anterior (como el botón "atrás").
-  function cerrar() {
+  // Con form: solo si ese formulario sigue a la vista (si durante la espera se pulsó "atrás", ya no hay que volver).
+  function cerrar(form) {
+    if (form && !visible(form)) return;
     if (history.state && history.state.vista) history.back();
     else mostrar(vistas()[0].id);
   }
@@ -75,13 +77,20 @@ const Admin = (function () {
   document.addEventListener('click', e => { if (e.target.closest('[data-cancelar]')) cerrar(); });
 
   // ---------- Formularios ----------
+  // Grupos de opciones: radios (una opción) o casillas (varias). Se tratan como un solo campo dentro de su <fieldset>.
+  const enGrupo = el => el.type === 'radio' || el.type === 'checkbox';
+  const delGrupo = el => [...el.form.querySelectorAll('input[name="' + el.name + '"]')];
+
+  // datos: { nombreDelCampo: valor }. En un grupo de casillas, el valor es la lista de opciones marcadas.
   function rellenar(form, datos) {
     limpiar(form);
     Object.entries(datos).forEach(([k, v]) => {
       const el = form.elements[k];
       if (!el) return;
-      if (el instanceof RadioNodeList || (el.length && el[0] && el[0].type === 'radio')) {
-        [...el].forEach(r => { r.checked = v != null && r.value === String(v); });
+      const grupo = el instanceof RadioNodeList ? [...el] : enGrupo(el) ? [el] : null;
+      if (grupo) {
+        const marcados = (Array.isArray(v) ? v : v == null ? [] : [v]).map(String);
+        grupo.forEach(r => { r.checked = marcados.includes(r.value); });
       } else {
         el.value = v == null ? '' : v;
       }
@@ -94,7 +103,9 @@ const Admin = (function () {
   }
 
   function marcar(el, mensaje) {
-    const id = el.type === 'radio' ? el.name : (el.id || el.name);
+    const caja = enGrupo(el) && el.closest('fieldset');
+    // En un grupo, el id del error sale del <fieldset> (si tiene id) para no repetirse entre formularios de la misma página.
+    const id = enGrupo(el) ? ((caja && caja.id) || el.name) : (el.id || el.name);
     const dentro = el.closest('.campo, .opciones') || el.parentNode;
     let p = dentro.querySelector('.error-campo');
     if (!p) {
@@ -102,7 +113,7 @@ const Admin = (function () {
       p.className = 'error-campo'; p.id = id + '-error';
       dentro.appendChild(p);
     }
-    const objetivos = el.type === 'radio' ? [...el.form.querySelectorAll('input[name="' + el.name + '"]')] : [el];
+    const objetivos = enGrupo(el) ? delGrupo(el) : [el];
     objetivos.forEach(o => {
       const desc = (o.getAttribute('aria-describedby') || '').split(' ').filter(x => x && x !== p.id);
       if (mensaje) { o.setAttribute('aria-invalid', 'true'); desc.push(p.id); } else o.removeAttribute('aria-invalid');
@@ -116,6 +127,9 @@ const Admin = (function () {
   // aria-required="true". Añade también la línea "* obligatorio" al formulario.
   // Hay que volver a llamarla si cambia qué campos son obligatorios (por ejemplo, la hora de un evento tipo reto);
   // entonces se quita también el error de un campo vacío que ha dejado de ser obligatorio.
+  // En un grupo de casillas obligatorio (hay que marcar al menos una), el asterisco va en el <legend>. aria-required
+  // no está permitido en un grupo de casillas, así que la obligación se explica con una pista enlazada al <fieldset>.
+  // Si las casillas se pintan después (por ejemplo, al cargar de la base de datos), hay que volver a llamarla.
   function obligatorios(form) {
     if (!form.querySelector('.leyenda-obligatorio')) {
       const p = document.createElement('p');
@@ -125,42 +139,48 @@ const Admin = (function () {
     }
     [...form.elements].forEach(el => {
       if (!el.name || !/^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) return;
-      const radio = el.type === 'radio';
+      const radio = enGrupo(el);
       const grupo = radio ? el.closest('fieldset') : null;
       const etiqueta = radio ? grupo && grupo.querySelector('legend') : form.querySelector('label[for="' + el.id + '"]');
-      const destino = radio ? grupo : el;
-      if (!etiqueta || !destino) return;
+      const destino = el.type === 'checkbox' ? null : radio ? grupo : el;
+      if (!etiqueta || (!destino && el.type !== 'checkbox')) return;
       let ast = etiqueta.querySelector('.ast');
       if (el.required && !ast) {
         ast = document.createElement('span');
         ast.className = 'ast'; ast.setAttribute('aria-hidden', 'true'); ast.textContent = ' *';
         etiqueta.appendChild(ast);
       } else if (!el.required && ast) ast.remove();
-      if (el.required) destino.setAttribute('aria-required', 'true'); else destino.removeAttribute('aria-required');
+      if (destino) { if (el.required) destino.setAttribute('aria-required', 'true'); else destino.removeAttribute('aria-required'); }
       if (!el.required && !radio && !el.value.trim() && el.getAttribute('aria-invalid')) marcar(el, '');
     });
   }
 
-  // Revisa los campos antes de enviar: obligatorios, fechas, horas, números enteros y enlaces https://.
+  // Revisa los campos antes de enviar: obligatorios, fechas, horas, números, enlaces https:// y longitud máxima.
+  // Los números son enteros, salvo que el campo tenga un step con decimales (step="0.01": hasta 2 decimales).
   // extra() puede devolver errores propios: { nombreDelCampo: 'mensaje' }. Devuelve true si todo está bien.
   function validar(form, extra) {
     const errores = {};
     const radios = new Set();
     [...form.elements].forEach(el => {
       if (!el.name || el.disabled || !/^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) return;
-      if (el.type === 'radio') {
+      if (enGrupo(el)) {
         if (radios.has(el.name)) return;
         radios.add(el.name);
-        if (el.required && !form.querySelector('input[name="' + el.name + '"]:checked')) errores[el.name] = 'Elige una opción.';
+        const grupo = delGrupo(el);
+        if (grupo.some(r => r.required) && !grupo.some(r => r.checked)) errores[el.name] = el.type === 'radio' ? 'Elige una opción.' : 'Elige al menos una opción.';
         return;
       }
       const v = el.value.trim();
+      const decimales = el.type === 'number' ? ((el.getAttribute('step') || '').split('.')[1] || '').length : 0;
+      const numero = decimales ? new RegExp('^\\d+(\\.\\d{1,' + decimales + '})?$') : /^\d+$/;
       let m = '';
       if (el.validity && el.validity.badInput) m = el.type === 'number' ? 'Escribe un número.' : el.type === 'time' ? 'La hora no es válida.' : 'La fecha no es válida.';
       else if (el.required && !v) m = 'Este campo es obligatorio.';
       else if (v && el.type === 'date' && !partes(v)) m = 'La fecha no es válida.';
       else if (v && el.type === 'time' && !/^\d{2}:\d{2}(:\d{2})?$/.test(v)) m = 'La hora no es válida.';
-      else if (v && el.type === 'number' && (!/^\d+$/.test(v) || (el.min !== '' && +v < +el.min))) m = 'Escribe un número entero' + (el.min !== '' ? ' igual o mayor que ' + el.min : '') + '.';
+      else if (v && el.type === 'number' && decimales && (!numero.test(v) || (el.min !== '' && +v < +el.min))) m = 'Escribe un número' + (el.min !== '' ? ' igual o mayor que ' + el.min : '') + ', con ' + decimales + (decimales === 1 ? ' decimal' : ' decimales') + ' como máximo.';
+      else if (v && el.type === 'number' && (!numero.test(v) || (el.min !== '' && +v < +el.min))) m = 'Escribe un número entero' + (el.min !== '' ? ' igual o mayor que ' + el.min : '') + '.';
+      else if (el.maxLength > 0 && v.length > el.maxLength) m = 'Escribe ' + el.maxLength + ' caracteres como máximo (ahora hay ' + v.length + ').';
       else if (v && el.type === 'url' && !/^https:\/\/[^\s/]+\.[^\s]+$/i.test(v)) m = 'El enlace tiene que empezar por https:// (por ejemplo, https://drive.google.com/...).';
       if (m) errores[el.name] = m;
     });
@@ -193,7 +213,9 @@ const Admin = (function () {
     p.setAttribute('role', esError ? 'alert' : 'status');
   }
 
+  // Un error puede traer ya su texto para el usuario ({ mensaje: '...' }), por ejemplo los de la subida de portadas.
   function mensajeError(e) {
+    if (e && e.mensaje) return e.mensaje;
     if (e && e.sinFilas) return 'No se ha hecho ningún cambio: no tienes permiso para esta operación o el elemento ya no existe. Recarga la página y vuelve a intentarlo.';
     if (Cueva.esErrorDeRed(e)) return 'No hay conexión con el servidor. Comprueba tu internet y vuelve a intentarlo.';
     const c = e && e.code;
@@ -204,29 +226,74 @@ const Admin = (function () {
     return 'No se ha podido completar la operación. Inténtalo de nuevo dentro de un momento.';
   }
 
+  // ¿Está el formulario a la vista? (no lo está si su vista se ha ocultado, por ejemplo con el botón "atrás")
+  const visible = form => !form.closest('[hidden]');
+
+  // Error de una operación: en el formulario y, si ya no está a la vista, también como aviso flotante.
+  function fallo(form, e) {
+    const m = mensajeError(e);
+    estado(form, m, true);
+    if (!visible(form)) Cueva.aviso(m, 'err');
+  }
+
+  // ---------- Bloqueo durante una operación ----------
+  // Desactiva todos los controles del formulario (también Cancelar) y deja inerte el resto de la página
+  // (pestañas, listas, barra inferior...), para que no se pueda cambiar de registro mientras se guarda.
+  // Si se intenta salir de la página, el navegador pide confirmación. Devuelve la función que lo deshace.
+  // Se puede anidar: el formulario se desbloquea cuando se deshace el último bloqueo.
+  let bloqueos = 0;
+  window.addEventListener('beforeunload', e => { if (bloqueos) { e.preventDefault(); e.returnValue = ''; } });
+  function bloquear(form) {
+    if (form._bloqueo) { form._bloqueo.n++; return form._bloqueo.soltar; }
+    bloqueos++;
+    const activo = document.activeElement;
+    const controles = [...form.querySelectorAll('button, input, select, textarea')].filter(c => !c.disabled);
+    controles.forEach(c => { c.disabled = true; });
+    const inertes = [];
+    for (let n = form; n.parentElement && n !== document.body; n = n.parentElement) {
+      [...n.parentElement.children].forEach(h => {
+        if (h !== n && !h.inert && h.id !== 'avisos' && !/^(SCRIPT|DIALOG)$/.test(h.tagName)) { h.inert = true; inertes.push(h); }
+      });
+    }
+    form.setAttribute('aria-busy', 'true');
+    const b = {
+      n: 1,
+      soltar() {
+        if (--b.n > 0) return;
+        form._bloqueo = null; bloqueos--;
+        controles.forEach(c => { c.disabled = false; });
+        inertes.forEach(h => { h.inert = false; });
+        form.removeAttribute('aria-busy');
+        if (activo && form.contains(activo) && visible(form) && (document.activeElement === document.body || !document.activeElement)) activo.focus({ preventScroll: true });
+      }
+    };
+    b.soltar = b.soltar.bind(b);
+    form._bloqueo = b;
+    return b.soltar;
+  }
+
   // Lanza una escritura (insertar, editar o borrar) que termina en .select().
-  // Mientras dura, desactiva los botones del formulario (evita los dobles envíos).
+  // Mientras dura, el formulario y la página quedan bloqueados (evita los dobles envíos y los cambios de registro).
   // Si la base de datos no devuelve ninguna fila (RLS lo ha impedido sin dar error), se trata como error.
+  // consulta puede ser una función async con varios pasos que devuelva { data, error } o lance un error.
+  // Sin textoOk no se muestra el aviso de éxito.
   // Devuelve las filas afectadas, o null si ha fallado (el error queda escrito en el formulario).
   async function escribir(form, consulta, textoOk) {
-    const botones = [...form.querySelectorAll('button')].filter(b => !b.disabled);
-    botones.forEach(b => { b.disabled = true; });
-    form.setAttribute('aria-busy', 'true');
+    const soltar = bloquear(form);
     estado(form, 'Guardando…');
     try {
       const r = await consulta();
       if (r.error) throw r.error;
       if (!Array.isArray(r.data) || r.data.length === 0) throw { sinFilas: true };
       estado(form, '');
-      Cueva.aviso(textoOk, 'ok');
+      if (textoOk) Cueva.aviso(textoOk, 'ok');
       return r.data;
     } catch (e) {
       console.error(e);
-      estado(form, mensajeError(e), true);
+      fallo(form, e);
       return null;
     } finally {
-      botones.forEach(b => { b.disabled = false; });
-      form.removeAttribute('aria-busy');
+      soltar();
     }
   }
 
@@ -258,5 +325,5 @@ const Admin = (function () {
     });
   }
 
-  return { esc, iniciar, sb, hoy, fecha, dia, diaSemana, mes, hora, texto, agrupar, abrir, cerrar, mostrar, rellenar, limpiar, obligatorios, validar, estado, escribir, confirmar, aviso: Cueva.aviso };
+  return { esc, iniciar, sb, hoy, fecha, dia, diaSemana, mes, hora, texto, agrupar, abrir, cerrar, mostrar, visible, rellenar, limpiar, obligatorios, validar, estado, mensajeError, fallo, bloquear, escribir, confirmar, aviso: Cueva.aviso };
 })();

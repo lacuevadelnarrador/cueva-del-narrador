@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Libros · Administración · La Cueva del Narrador</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#528A93">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="pagehead">
+    <div class="top">
+      <div class="brand">
+        <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
+        <span>La Cueva<br>del Narrador</span>
+      </div>
+      <div class="avatar" aria-label="Tu perfil"></div>
+    </div>
+    <h1>Libros</h1>
+    <p class="sub">Biblioteca del club, préstamos y recomendados.</p>
+  </header>
+
+  <main>
+    <a class="volver" href="admin.html">&#8249; Volver al panel</a>
+
+    <section id="vista-lista" aria-label="Libros">
+      <div class="tabs" id="tabs" role="tablist" aria-label="Secciones">
+        <button type="button" class="tab" role="tab" id="tab-biblioteca" aria-controls="panel-biblioteca" aria-selected="true">Biblioteca del club</button>
+        <button type="button" class="tab" role="tab" id="tab-recomendados" aria-controls="panel-recomendados" aria-selected="false" tabindex="-1">Recomendados</button>
+      </div>
+
+      <div id="panel-biblioteca" role="tabpanel" aria-labelledby="tab-biblioteca" class="panel-admin">
+        <input class="buscador" id="q-libros" type="search" placeholder="Buscar por título o autor" aria-label="Buscar libros por título o autor" autocomplete="off">
+        <div class="chips" id="filtro" role="group" aria-label="Filtrar por estado">
+          <button type="button" class="chip on" data-f="todos" aria-pressed="true">Todos</button>
+          <button type="button" class="chip" data-f="prestados" aria-pressed="false">Prestados</button>
+          <button type="button" class="chip" data-f="disponibles" aria-pressed="false">Disponibles</button>
+        </div>
+        <div class="barra-admin">
+          <p class="cuenta" id="cuenta-libros" aria-live="polite"></p>
+          <button type="button" class="btn" id="anadir-libro" hidden>+ Añadir libro</button>
+        </div>
+        <div id="lista-libros"></div>
+      </div>
+
+      <div id="panel-recomendados" role="tabpanel" aria-labelledby="tab-recomendados" class="panel-admin" hidden>
+        <input class="buscador" id="q-recos" type="search" placeholder="Buscar por título o autor" aria-label="Buscar recomendados por título o autor" autocomplete="off">
+        <div class="barra-admin">
+          <p class="cuenta" id="cuenta-recos" aria-live="polite"></p>
+          <button type="button" class="btn" id="anadir-reco" hidden>+ Añadir</button>
+        </div>
+        <div id="lista-recos"></div>
+      </div>
+    </section>
+
+    <section id="vista-libro" hidden>
+      <form class="card formulario" id="form-libro" novalidate>
+        <h2 id="libro-titulo" tabindex="-1" data-foco>Nuevo libro</h2>
+        <p class="msg" data-estado hidden></p>
+        <div class="campo">
+          <label for="l-codigo">Código</label>
+          <input class="entrada" id="l-codigo" type="text" readonly aria-describedby="l-codigo-pista">
+          <p class="pista" id="l-codigo-pista">Se asigna solo al guardar: el siguiente número libre.</p>
+        </div>
+        <div class="campo">
+          <label for="l-titulo">Título</label>
+          <input class="entrada" id="l-titulo" name="titulo" type="text" required autocomplete="off">
+        </div>
+        <div class="campo">
+          <label for="l-autor">Autor</label>
+          <input class="entrada" id="l-autor" name="autor" type="text" list="autores" required autocomplete="off">
+        </div>
+        <fieldset class="opciones" id="l-generos" aria-describedby="l-generos-pista">
+          <legend>Géneros</legend>
+          <p class="pista" id="l-generos-pista">Marca al menos uno.</p>
+          <div class="etiquetas"></div>
+        </fieldset>
+        <div class="campo nuevo-genero" data-nuevo-genero>
+          <label for="l-nuevo-genero">¿Falta un género? Añádelo</label>
+          <div class="en-linea">
+            <input class="entrada" id="l-nuevo-genero" type="text" autocomplete="off" maxlength="40">
+            <button type="button" class="btn sec">Añadir</button>
+          </div>
+          <p class="error-campo" id="l-nuevo-genero-error" hidden></p>
+        </div>
+        <fieldset class="opciones" id="l-origen" role="radiogroup">
+          <legend>Origen</legend>
+          <label class="opcion"><input type="radio" name="origen" value="Autor" required> Lo cede la autora o el autor</label>
+          <label class="opcion"><input type="radio" name="origen" value="Club" required> Lo compra el club</label>
+        </fieldset>
+        <div class="campo">
+          <label for="l-coste">Coste (€)</label>
+          <input class="entrada" id="l-coste" name="coste" type="number" inputmode="decimal" min="0" step="0.01" required aria-describedby="l-coste-pista">
+          <p class="pista" id="l-coste-pista">0 si lo cede la autora o el autor.</p>
+        </div>
+        <div class="campo campo-portada" id="l-portada-campo">
+          <label for="l-portada">Portada</label>
+          <div class="portada-caja">
+            <div data-previa></div>
+            <p class="pista" data-info aria-live="polite"></p>
+          </div>
+          <input class="entrada" id="l-portada" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="l-portada-pista">
+          <p class="pista" id="l-portada-pista">JPG, PNG o WebP. Se ajusta sola a 360 px de ancho. Mejor si es vertical.</p>
+          <p class="msg aviso" data-aviso role="status" hidden></p>
+          <button type="button" class="btn sec" data-quitar hidden>Quitar portada</button>
+        </div>
+        <div class="botones-form">
+          <button type="submit" class="btn">Guardar</button>
+          <button type="button" class="btn sec" data-cancelar>Cancelar</button>
+          <button type="button" class="btn peligro" id="borrar-libro" hidden>Borrar</button>
+        </div>
+
+        <div class="subseccion" id="prestamos" aria-labelledby="prestamos-titulo">
+          <div class="barra-admin">
+            <h3 id="prestamos-titulo">Préstamos</h3>
+            <button type="button" class="btn" id="prestar" hidden>Prestar</button>
+            <button type="button" class="btn" id="devolver" hidden>Devolver</button>
+          </div>
+          <p id="prestamo-estado"></p>
+          <h4 class="grupo">Historial</h4>
+          <ol class="historial" id="historial"></ol>
+        </div>
+        <p class="pista subseccion" id="prestamos-nuevo">Guarda el libro para poder prestarlo.</p>
+      </form>
+    </section>
+
+    <section id="vista-prestar" hidden>
+      <form class="card formulario" id="form-prestar" novalidate>
+        <h2 tabindex="-1" data-foco>Prestar libro</h2>
+        <p class="pista de-charla" id="prestar-libro"></p>
+        <p class="msg" data-estado hidden></p>
+        <div class="campo">
+          <label for="p-solicitante">Solicitante</label>
+          <input class="entrada" id="p-solicitante" name="solicitante" type="text" list="solicitantes" required autocomplete="off" aria-describedby="p-solicitante-pista">
+          <p class="pista" id="p-solicitante-pista">Si ya ha pedido libros antes, elige su nombre de la lista para no escribirlo de otra forma.</p>
+        </div>
+        <div class="campo">
+          <label for="p-fecha_inicio">Fecha de inicio</label>
+          <input class="entrada" id="p-fecha_inicio" name="fecha_inicio" type="date" required>
+        </div>
+        <div class="botones-form">
+          <button type="submit" class="btn">Prestar</button>
+          <button type="button" class="btn sec" data-cancelar>Cancelar</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="vista-devolver" hidden>
+      <form class="card formulario" id="form-devolver" novalidate>
+        <h2 tabindex="-1" data-foco>Devolver libro</h2>
+        <p class="pista de-charla" id="devolver-info"></p>
+        <p class="msg" data-estado hidden></p>
+        <div class="campo">
+          <label for="d-fecha_fin">Fecha de devolución</label>
+          <input class="entrada" id="d-fecha_fin" name="fecha_fin" type="date" required>
+        </div>
+        <div class="botones-form">
+          <button type="submit" class="btn">Registrar devolución</button>
+          <button type="button" class="btn sec" data-cancelar>Cancelar</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="vista-reco" hidden>
+      <form class="card formulario" id="form-reco" novalidate>
+        <h2 id="reco-titulo" tabindex="-1" data-foco>Nuevo recomendado</h2>
+        <p class="msg" data-estado hidden></p>
+        <div class="campo">
+          <label for="r-titulo">Título</label>
+          <input class="entrada" id="r-titulo" name="titulo" type="text" required autocomplete="off">
+        </div>
+        <div class="campo">
+          <label for="r-autor">Autor</label>
+          <input class="entrada" id="r-autor" name="autor" type="text" list="autores" required autocomplete="off">
+        </div>
+        <fieldset class="opciones" id="r-generos" aria-describedby="r-generos-pista">
+          <legend>Géneros</legend>
+          <p class="pista" id="r-generos-pista">Marca al menos uno.</p>
+          <div class="etiquetas"></div>
+        </fieldset>
+        <div class="campo nuevo-genero" data-nuevo-genero>
+          <label for="r-nuevo-genero">¿Falta un género? Añádelo</label>
+          <div class="en-linea">
+            <input class="entrada" id="r-nuevo-genero" type="text" autocomplete="off" maxlength="40">
+            <button type="button" class="btn sec">Añadir</button>
+          </div>
+          <p class="error-campo" id="r-nuevo-genero-error" hidden></p>
+        </div>
+        <div class="campo">
+          <label for="r-recomendado_por">Recomendado por</label>
+          <input class="entrada" id="r-recomendado_por" name="recomendado_por" type="text" list="recomendadores" required autocomplete="off">
+        </div>
+        <div class="campo">
+          <label for="r-enlace">Enlace</label>
+          <input class="entrada" id="r-enlace" name="enlace" type="url" inputmode="url" required autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="https://..." aria-describedby="r-enlace-pista">
+          <p class="pista" id="r-enlace-pista">Tiene que empezar por https://</p>
+        </div>
+        <div class="campo">
+          <label for="r-temporada">Temporada</label>
+          <select class="entrada" id="r-temporada" name="temporada" required></select>
+        </div>
+        <div class="campo">
+          <label for="r-detalles">Detalles</label>
+          <textarea class="entrada" id="r-detalles" name="detalles" maxlength="200" required aria-describedby="r-detalles-cuenta"></textarea>
+          <p class="pista contador" id="r-detalles-cuenta">0 / 200 caracteres</p>
+        </div>
+        <div class="campo campo-portada" id="r-portada-campo">
+          <label for="r-portada">Portada</label>
+          <div class="portada-caja">
+            <div data-previa></div>
+            <p class="pista" data-info aria-live="polite"></p>
+          </div>
+          <input class="entrada" id="r-portada" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="r-portada-pista">
+          <p class="pista" id="r-portada-pista">JPG, PNG o WebP. Se ajusta sola a 360 px de ancho. Mejor si es vertical.</p>
+          <p class="msg aviso" data-aviso role="status" hidden></p>
+          <button type="button" class="btn sec" data-quitar hidden>Quitar portada</button>
+        </div>
+        <div class="botones-form">
+          <button type="submit" class="btn">Guardar</button>
+          <button type="button" class="btn sec" data-cancelar>Cancelar</button>
+          <button type="button" class="btn peligro" id="borrar-reco" hidden>Borrar</button>
+        </div>
+      </form>
+    </section>
+
+    <datalist id="autores"></datalist>
+    <datalist id="solicitantes"></datalist>
+    <datalist id="recomendadores"></datalist>
+  </main>
+
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="inicio.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="calendario.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a>
+    <a href="curso.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/></svg>Curso</a>
+    <a href="biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Biblioteca</a>
+    <a href="mas.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
+  </nav>
+</div>
+<script src="tipos.js"></script>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script src="admin.js"></script>
+<script src="admin-portadas.js"></script>
+<script>
+// LIBROS: biblioteca del club (libros, libros_internos, lecturas) y recomendados (recomendaciones).
+// - libros.prestado lo calcula un disparador de la base de datos a partir de lecturas: aquí NUNCA se escribe.
+// - Los códigos (Lib-001, Lect-001...) se calculan como el máximo + 1; si otra persona acaba de usar ese código,
+//   la base de datos lo rechaza (único) y se reintenta una vez con el siguiente.
+// - Un índice único parcial (lecturas_un_prestamo_abierto) impide dos préstamos abiertos del mismo libro.
+const esc=Admin.esc, el=id=>document.getElementById(id);
+const norm=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+const formLibro=el('form-libro'), formPrestar=el('form-prestar'), formDevolver=el('form-devolver'), formReco=el('form-reco');
+const portadaLibro=Portadas.campo(el('l-portada-campo'),{obligatoria:true}), portadaReco=Portadas.campo(el('r-portada-campo'),{obligatoria:true});
+const MSG_ABIERTO='Este libro ya tiene un préstamo abierto (quizá otra persona acaba de prestarlo). Recarga la lista.';
+const COLS_LIBRO='id,codigo,titulo,autor,generos,portada_url,prestado,alta,libros_internos(origen,coste),lecturas(id,codigo,solicitante,fecha_inicio,fecha_fin)';
+const COLS_RECO='id,titulo,autor,generos,recomendado_por,detalles,enlace,temporada,portada_url,alta,creado';
+const COSTE_MAX=999999.99; // numeric(8,2)
+
+let LIBROS=[], RECOS=[], GENEROS=[], TEMPORADAS=[], cargadoLibros=false, cargadoRecos=false;
+let pestana=location.hash==='#recomendados'?'recomendados':'biblioteca', filtro='todos', libro=null, reco=null, guardando=false;
+
+// ---------- Utilidades ----------
+const listaGeneros=g=>(Array.isArray(g)?g:[]).filter(Boolean);
+const unoDe=x=>Array.isArray(x)?x[0]||null:x||null;
+// Nombres sin repetir (sin distinguir mayúsculas ni tildes), ordenados.
+function distintos(lista){
+  const vistos=new Map();
+  lista.forEach(t=>{const v=String(t||'').trim().replace(/\s+/g,' ');if(v&&!vistos.has(norm(v)))vistos.set(norm(v),v);});
+  return [...vistos.values()].sort((a,b)=>a.localeCompare(b,'es'));
+}
+// Si el nombre escrito ya existe con otra forma (mayúsculas, tildes), se usa el que ya existe.
+const nombreExistente=(v,lista)=>lista.find(x=>norm(x)===norm(v))||v.trim().replace(/\s+/g,' ');
+const ponerOpciones=(id,lista)=>{el(id).innerHTML=lista.map(v=>'<option value="'+esc(v)+'"></option>').join('');};
+function mini(titulo,url){
+  const src=Cueva.urlSegura(url), c=colorPortada(titulo||'?');
+  return src?'<img class="mini" src="'+esc(src)+'" alt="" loading="lazy">'
+    :'<span class="mini" style="background:'+c[0]+';color:'+c[1]+'" aria-hidden="true">'+esc(Array.from(titulo||'?')[0])+'</span>';
+}
+function estadoLibro(l){
+  const a=l.abierto;
+  return l.estaPrestado?'<span class="estado no">'+(a?'Prestado a '+esc(a.solicitante)+' desde '+esc(Admin.fecha(a.fecha_inicio)):'Prestado')+'</span>'
+    :'<span class="estado ok">Disponible</span>';
+}
+// Lanza el error de una escritura, o { sinFilas } si no ha cambiado ninguna fila.
+function exigir(r){
+  if(r.error) throw r.error;
+  if(!Array.isArray(r.data)||!r.data.length) throw {sinFilas:true};
+  return r.data;
+}
+
+// ---------- Códigos ----------
+function codigoSiguiente(codigos,prefijo){
+  const re=new RegExp('^'+prefijo+'-(\\d+)$');
+  const max=codigos.reduce((m,c)=>{const x=re.exec(c||'');return x?Math.max(m,+x[1]):m;},0);
+  return prefijo+'-'+String(max+1).padStart(3,'0');
+}
+// Se leen todos los códigos de la tabla justo antes de insertar (la lista de la página puede estar desfasada).
+async function siguienteCodigo(tabla,prefijo){
+  const r=await Admin.sb().from(tabla).select('codigo').like('codigo',prefijo+'-%');
+  if(r.error) throw r.error;
+  return codigoSiguiente(r.data.map(x=>x.codigo),prefijo);
+}
+const esConflicto=(e,nombre)=>!!e&&e.code==='23505'&&((e.message||'')+' '+(e.details||'')).includes(nombre);
+// Inserta con el siguiente código libre. Si el código choca con otro (restriccion), recalcula y reintenta UNA vez.
+// antes(error) puede convertir un error en otro con mensaje propio, que se lanza sin reintentar.
+async function insertarConCodigo(tabla,prefijo,restriccion,fila,cols,antes){
+  for(let intento=0;;intento++){
+    const codigo=await siguienteCodigo(tabla,prefijo);
+    const r=await Admin.sb().from(tabla).insert(Object.assign({},fila,{codigo})).select(cols);
+    if(r.error&&antes){const otro=antes(r.error);if(otro) throw otro;}
+    if(r.error&&intento===0&&esConflicto(r.error,restriccion)) continue;
+    return r;
+  }
+}
+
+// ---------- Pestañas ----------
+function pintarPestana(){
+  ['biblioteca','recomendados'].forEach(k=>{
+    const on=k===pestana, t=el('tab-'+k);
+    t.setAttribute('aria-selected',on); t.tabIndex=on?0:-1;
+    el('panel-'+k).hidden=!on;
+  });
+  try{history.replaceState(history.state,'',location.pathname+(pestana==='recomendados'?'#recomendados':''));}catch(e){}
+}
+// Mientras se guarda algo (formulario bloqueado) no se puede cambiar de pestaña ni abrir otro registro.
+const ocupado=()=>!!document.querySelector('form[aria-busy="true"]');
+el('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b||ocupado())return;pestana=b.id.slice(4);pintarPestana();});
+el('tabs').addEventListener('keydown',e=>{
+  if((e.key!=='ArrowLeft'&&e.key!=='ArrowRight')||ocupado()) return;
+  pestana=pestana==='biblioteca'?'recomendados':'biblioteca';
+  pintarPestana(); el('tab-'+pestana).focus();
+});
+
+// ---------- Géneros (casillas en los dos formularios) ----------
+const marcadosDe=form=>[...form.querySelectorAll('input[name="generos"]:checked')].map(c=>c.value);
+function pintarGeneros(form,marcados){
+  const lista=[...new Set(GENEROS.concat(marcados))].sort((a,b)=>a.localeCompare(b,'es'));
+  form.querySelector('.etiquetas').innerHTML=lista.length?lista.map(g=>
+    '<label class="etiqueta"><input type="checkbox" name="generos" value="'+esc(g)+'" required'+(marcados.includes(g)?' checked':'')+'><span>'+esc(g)+'</span></label>').join('')
+    :'<p class="pista">Todavía no hay géneros: añade el primero aquí debajo.</p>';
+  Admin.obligatorios(form);
+}
+function ponerGeneros(lista){
+  GENEROS=distintos(lista);
+  [formLibro,formReco].forEach(f=>pintarGeneros(f,marcadosDe(f)));
+}
+document.querySelectorAll('[data-nuevo-genero]').forEach(caja=>{
+  const form=caja.closest('form'), entrada=caja.querySelector('input'), boton=caja.querySelector('button'), p=caja.querySelector('.error-campo');
+  const fallo=m=>{
+    p.textContent=m||''; p.hidden=!m;
+    if(m){entrada.setAttribute('aria-invalid','true');entrada.setAttribute('aria-describedby',p.id);}
+    else{entrada.removeAttribute('aria-invalid');entrada.removeAttribute('aria-describedby');}
+  };
+  const marcar=nombre=>{pintarGeneros(form,[...new Set(marcadosDe(form).concat(nombre))]);};
+  async function anadir(){
+    const nombre=entrada.value.trim().replace(/\s+/g,' ');
+    fallo('');
+    if(!nombre){fallo('Escribe el nombre del género.');entrada.focus();return;}
+    const ya=GENEROS.find(g=>norm(g)===norm(nombre));
+    if(ya){marcar(ya);entrada.value='';Admin.aviso('El género «'+ya+'» ya existía: lo he marcado.');return;}
+    const soltar=Admin.bloquear(form); // no se puede cambiar de registro mientras se guarda el género
+    try{
+      const r=await Admin.sb().from('generos').insert({nombre}).select('nombre');
+      if(r.error&&r.error.code==='23505'){ponerGeneros(GENEROS.concat(nombre));marcar(nombre);entrada.value='';return;} // otra persona acaba de crearlo
+      const filas=exigir(r);
+      ponerGeneros(GENEROS.concat(filas[0].nombre)); marcar(filas[0].nombre);
+      entrada.value='';
+      Admin.aviso('Género «'+filas[0].nombre+'» añadido.','ok');
+    }catch(e){console.error(e);fallo(Admin.mensajeError(e));}
+    finally{soltar();}
+  }
+  boton.addEventListener('click',anadir);
+  entrada.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();anadir();}});
+});
+// Sin ningún género en la tabla no hay casillas que validar: se avisa aparte.
+function sinGeneros(form){
+  if(marcadosDe(form).length||form.querySelector('input[name="generos"]')) return false;
+  Admin.estado(form,'Añade al menos un género.',true);
+  form.querySelector('[data-nuevo-genero] input').focus();
+  return true;
+}
+
+// ---------- Guardar con instantánea ----------
+// Al pulsar Guardar se valida y se toma una instantánea del registro (id o null si es nuevo), de todos los valores
+// del formulario y de la portada, SIN ninguna espera antes. Todo lo demás (ajustar la imagen, subirla, guardar,
+// borrar la portada anterior) trabaja solo con esa instantánea: nunca vuelve a leer el formulario ni el registro
+// abierto. Mientras dura, el formulario y el resto de la página están bloqueados (Admin.bloquear).
+async function guardarConPortada(form,foto,escribirFila,textoOk){
+  guardando=true;
+  const soltar=Admin.bloquear(form);
+  try{
+    let nueva;
+    try{
+      if(!foto.portada.nueva&&foto.portada.preparando) Admin.estado(form,'Preparando la portada…');
+      nueva=await Portadas.imagenDe(foto.portada);
+    }catch(e){console.error(e);Admin.fallo(form,e);return null;} // la imagen elegida no se ha podido ajustar
+    const portada=Object.assign({},foto.portada,{nueva});
+    return await Admin.escribir(form,()=>conPortada(portada,foto.datos.titulo,escribirFila),textoOk);
+  }finally{soltar();guardando=false;}
+}
+// La escritura tiene que haber cambiado ESE registro (por su id); si no, se trata como 0 filas.
+function exigirId(r,id){
+  const filas=exigir(r);
+  if(!filas.some(f=>String(f.id)===String(id))) throw {sinFilas:true};
+  return filas;
+}
+
+// ---------- Portada: sube la nueva y ordena el almacén ----------
+// escribirFila(cambio, estado) guarda la fila con cambio = { portada_url } (o {} si no cambia) y pone
+// estado.guardada = true en cuanto la base de datos confirma la portada nueva para ESE registro. Después:
+// - si no llegó a guardarla (error o se abortó por cualquier motivo), se borra el archivo recién subido;
+// - si la guardó y el registro tenía otra antes, se borra la anterior (un fallo ahí no es grave).
+async function conPortada(portada,titulo,escribirFila){
+  const sb=Admin.sb();
+  const subida=portada.nueva?await Portadas.subir(sb,portada.nueva,titulo):null;
+  const cambio=subida?{portada_url:subida.url}:portada.quitar?{portada_url:null}:{};
+  const estado={guardada:false};
+  try{
+    return await escribirFila(cambio,estado);
+  }finally{
+    if(subida&&!estado.guardada) await Portadas.borrarArchivo(sb,subida.nombre);
+    if(estado.guardada&&(subida||portada.quitar)&&portada.actual) Portadas.borrar(sb,portada.actual);
+  }
+}
+
+// ---------- Biblioteca: lista ----------
+function pintarLibros(){
+  if(!cargadoLibros) return;
+  const q=norm(el('q-libros').value);
+  const lista=LIBROS.filter(l=>(!q||norm(l.titulo+' '+l.autor).includes(q))&&(filtro==='todos'||(filtro==='prestados')===l.estaPrestado));
+  const n=LIBROS.length;
+  el('cuenta-libros').textContent=(lista.length===n?'':lista.length+' de ')+n+(n===1?' libro':' libros');
+  el('lista-libros').innerHTML=lista.length?lista.map(l=>{
+    const meta=[l.autor,l.generos.join(', ')].filter(Boolean).map(esc).join(' · ');
+    return '<button type="button" class="fila libro-fila" data-id="'+esc(l.id)+'">'+mini(l.titulo,l.portada_url)
+      +'<span class="st"><b>'+esc(l.titulo)+'</b><small>'+meta+'</small><small>'+esc(l.codigo||'Sin código')+'</small>'+estadoLibro(l)+'</span></button>';
+  }).join(''):'<p class="empty">'+(n?'Ningún libro coincide con la búsqueda.':'Todavía no hay libros. Añade el primero.')+'</p>';
+}
+function pintarAutores(){ponerOpciones('autores',distintos(LIBROS.map(l=>l.autor).concat(RECOS.map(r=>r.autor))));}
+
+// Carga libros (con sus datos internos y préstamos) y géneros. Se cumple cuando ya están pintados.
+function cargarLibros(){
+  return new Promise(listo=>Cueva.cargar(el('lista-libros'),
+    ()=>Admin.iniciar().then(sb=>Promise.all([sb.from('libros').select(COLS_LIBRO).order('titulo'),sb.from('generos').select('nombre').order('nombre')]))
+      .then(([a,b])=>a.error?a:b.error?b:{data:{libros:a.data,generos:b.data}}),
+    d=>{
+      LIBROS=d.libros.map(l=>{
+        const lecturas=(l.lecturas||[]).slice().sort((x,y)=>String(y.fecha_inicio).localeCompare(String(x.fecha_inicio))||String(y.codigo).localeCompare(String(x.codigo)));
+        const abierto=lecturas.find(x=>x.fecha_fin==null)||null;
+        return Object.assign({},l,{titulo:l.titulo||'',autor:l.autor||'',generos:listaGeneros(l.generos),internos:unoDe(l.libros_internos),lecturas,abierto,estaPrestado:!!abierto||!!l.prestado});
+      }).sort((a,b)=>a.titulo.localeCompare(b.titulo,'es'));
+      ponerGeneros(d.generos.map(g=>g.nombre));
+      ponerOpciones('solicitantes',distintos(LIBROS.flatMap(l=>l.lecturas.map(x=>x.solicitante))));
+      pintarAutores();
+      cargadoLibros=true; el('anadir-libro').hidden=false;
+      pintarLibros(); listo();
+    }));
+}
+
+el('q-libros').addEventListener('input',pintarLibros);
+el('filtro').addEventListener('click',e=>{
+  const b=e.target.closest('.chip'); if(!b) return;
+  filtro=b.dataset.f;
+  el('filtro').querySelectorAll('.chip').forEach(c=>{const on=c===b;c.classList.toggle('on',on);c.setAttribute('aria-pressed',on);});
+  pintarLibros();
+});
+el('anadir-libro').addEventListener('click',()=>abrirLibro(null));
+el('lista-libros').addEventListener('click',e=>{
+  const b=e.target.closest('.fila'); if(!b) return;
+  const l=LIBROS.find(x=>String(x.id)===b.dataset.id); if(l) abrirLibro(l);
+});
+
+// ---------- Biblioteca: formulario ----------
+function abrirLibro(l,yaAbierto){
+  if(ocupado()) return;
+  libro=l||null;
+  el('libro-titulo').textContent=l?'Editar libro':'Nuevo libro';
+  el('l-codigo').value=l?l.codigo||'Sin código':codigoSiguiente(LIBROS.map(x=>x.codigo),'Lib')+' (se confirma al guardar)';
+  el('borrar-libro').hidden=!l;
+  const i=l&&l.internos;
+  pintarGeneros(formLibro,l?l.generos:[]);
+  Admin.rellenar(formLibro,{titulo:l?l.titulo:'',autor:l?l.autor:'',generos:l?l.generos:[],origen:i?i.origen:'',coste:i&&i.coste!=null?i.coste:''});
+  el('l-nuevo-genero').value='';
+  portadaLibro.poner(l&&l.portada_url,l?l.titulo:'');
+  pintarPrestamos();
+  if(yaAbierto) Admin.mostrar('vista-libro'); else Admin.abrir('vista-libro');
+}
+el('l-titulo').addEventListener('input',e=>portadaLibro.titulo(e.target.value));
+// Si lo cede la autora o el autor y el coste está vacío, se propone 0.
+formLibro.addEventListener('change',e=>{if(e.target.name==='origen'&&e.target.value==='Autor'&&!formLibro.elements.coste.value)formLibro.elements.coste.value='0';});
+
+function pintarPrestamos(){
+  el('prestamos').hidden=!libro;
+  el('prestamos-nuevo').hidden=!!libro;
+  if(!libro) return;
+  el('prestamo-estado').innerHTML=estadoLibro(libro);
+  el('prestar').hidden=!!libro.abierto;
+  el('devolver').hidden=!libro.abierto;
+  el('historial').innerHTML=libro.lecturas.length?libro.lecturas.map(x=>
+    '<li><b>'+esc(x.solicitante)+'</b><small>Desde '+esc(Admin.fecha(x.fecha_inicio))+' · '+(x.fecha_fin?'hasta '+esc(Admin.fecha(x.fecha_fin)):'sin devolver')+'</small></li>').join('')
+    :'<li class="vacio">Este libro todavía no se ha prestado.</li>';
+}
+
+formLibro.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(guardando||sinGeneros(formLibro)) return;
+  const v=n=>formLibro.elements[n].value;
+  // Validación e instantánea, sin esperas (la portada cuenta aunque la imagen elegida aún se esté ajustando).
+  // Admin.validar pone el foco en el primer campo con error, también si es la portada.
+  portadaLibro.revisar();
+  if(!Admin.validar(formLibro,()=>+v('coste')>COSTE_MAX?{coste:'El coste no puede pasar de 999999,99 €.'}:{})) return;
+  const foto={
+    id:libro?libro.id:null,
+    datos:{titulo:Admin.texto(v('titulo')),autor:Admin.texto(v('autor')),generos:marcadosDe(formLibro)},
+    internos:{origen:formLibro.querySelector('input[name="origen"]:checked').value,coste:Math.round(Number(v('coste'))*100)/100},
+    portada:portadaLibro.instantanea()
+  };
+  const filas=await guardarConPortada(formLibro,foto,
+    (cambio,estado)=>guardarLibro(foto.id,Object.assign({},foto.datos,cambio),foto.internos,estado),
+    foto.id?'Libro actualizado.':'Libro añadido.');
+  if(filas){Admin.cerrar(formLibro);cargarLibros();}
+  else if(foto.id) cargarLibros(); // pudo guardarse una parte: la lista se pone al día (el formulario sigue abierto)
+});
+
+async function guardarLibro(id,fila,internos,estado){
+  const sb=Admin.sb();
+  if(id){
+    const filas=exigirId(await sb.from('libros').update(fila).eq('id',id).select('id,codigo'),id);
+    estado.guardada=true;
+    try{exigir(await sb.from('libros_internos').upsert(Object.assign({libro_id:id},internos),{onConflict:'libro_id'}).select('libro_id'));}
+    catch(e){console.error(e);throw {mensaje:'Se han guardado el título, el autor, los géneros y la portada, pero no el origen ni el coste. '+Admin.mensajeError(e)};}
+    return {data:filas,error:null};
+  }
+  // Libro nuevo: primero libros y luego libros_internos. Si lo segundo falla, se borra el libro (que no quede a medias).
+  const filas=exigir(await insertarConCodigo('libros','Lib','libros_codigo_key',fila,'id,codigo'));
+  const nuevo=filas[0];
+  try{
+    exigir(await sb.from('libros_internos').upsert(Object.assign({libro_id:nuevo.id},internos),{onConflict:'libro_id'}).select('libro_id'));
+  }catch(e){
+    console.error(e);
+    const motivo=Admin.mensajeError(e);
+    let deshecho=false;
+    try{const b=await sb.from('libros').delete().eq('id',nuevo.id).select('id');deshecho=!b.error&&Array.isArray(b.data)&&b.data.length>0;}catch(x){console.error(x);}
+    if(!deshecho){
+      estado.guardada=true; // el libro sigue existiendo con su portada: no se borra el archivo
+      throw {mensaje:'No se han podido guardar el origen y el coste, y tampoco se ha podido deshacer el alta. Borra a mano el libro '+nuevo.codigo+'. ('+motivo+')'};
+    }
+    throw {mensaje:'No se ha creado el libro porque no se han podido guardar el origen y el coste. '+motivo};
+  }
+  estado.guardada=true;
+  return {data:filas,error:null};
+}
+
+el('borrar-libro').addEventListener('click',async()=>{
+  if(!libro) return;
+  const sb=Admin.sb(), l=libro;
+  // Se cuentan los préstamos en la base de datos justo antes de preguntar.
+  let n=l.lecturas.length;
+  try{const r=await sb.from('lecturas').select('id',{count:'exact',head:true}).eq('libro_id',l.id);if(!r.error&&r.count!=null)n=r.count;}catch(e){}
+  const si=await Admin.confirmar('Se borrará el libro «'+l.titulo+'» ('+(l.codigo||'sin código')+')'
+    +(l.abierto?', que ahora está prestado a '+l.abierto.solicitante+',':'')
+    +(n?' y también '+(n===1?'el préstamo de su historial':'los '+n+' préstamos de su historial'):'')+'. Esta acción no se puede deshacer.');
+  if(!si) return;
+  const ok=await Admin.escribir(formLibro,()=>sb.from('libros').delete().eq('id',l.id).select('id'),'Libro borrado.');
+  if(!ok) return;
+  // Su portada solo se borra si la base de datos confirma que se ha borrado ESE libro. Un fallo aquí no deshace nada.
+  if(l.portada_url&&ok.some(f=>String(f.id)===String(l.id))) Portadas.borrar(sb,l.portada_url);
+  Admin.cerrar(formLibro); cargarLibros();
+});
+
+// ---------- Préstamos ----------
+// Tras prestar o devolver se vuelve a leer libros.prestado para confirmar que el disparador lo ha actualizado.
+async function comprobarPrestado(id,esperado){
+  const que=esperado?'el préstamo':'la devolución';
+  try{
+    const r=await Admin.sb().from('libros').select('prestado').eq('id',id).maybeSingle();
+    if(r.error||!r.data) throw r.error||new Error('sin fila');
+    if(r.data.prestado===esperado) return null;
+    return 'Se ha guardado '+que+', pero el libro no aparece como «'+(esperado?'prestado':'disponible')+'» en la base de datos: parece que el disparador no ha funcionado. Avisa a quien mantiene la base de datos.';
+  }catch(e){
+    console.error(e);
+    return 'Se ha guardado '+que+', pero no se ha podido comprobar el estado del libro. Recarga la página para verlo.';
+  }
+}
+// Tras prestar o devolver: se recargan los datos y se vuelve al libro (el de la instantánea) con todo al día.
+async function volverALibro(id,form){
+  Admin.cerrar(form);
+  await cargarLibros();
+  if(!libro||libro.id!==id) return; // solo se repinta si sigue abierto ese mismo libro
+  libro=LIBROS.find(l=>l.id===id)||null;
+  if(libro) pintarPrestamos(); else Admin.mostrar('vista-lista');
+}
+
+el('prestar').addEventListener('click',()=>{
+  if(!libro||libro.abierto||ocupado()) return;
+  el('prestar-libro').textContent='Libro: '+libro.titulo+' ('+(libro.codigo||'sin código')+')';
+  Admin.rellenar(formPrestar,{solicitante:'',fecha_inicio:Admin.hoy()});
+  Admin.abrir('vista-prestar');
+});
+formPrestar.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!libro||!Admin.validar(formPrestar)) return;
+  // Instantánea sin esperas: todo lo que sigue usa solo "fila".
+  const solicitante=nombreExistente(formPrestar.elements.solicitante.value,[...el('solicitantes').options].map(o=>o.value));
+  const fila={libro_id:libro.id,solicitante,fecha_inicio:formPrestar.elements.fecha_inicio.value};
+  let aviso=null;
+  const filas=await Admin.escribir(formPrestar,async()=>{
+    const sb=Admin.sb();
+    // Se vuelve a comprobar en la base de datos que no haya ya un préstamo abierto.
+    const ab=await sb.from('lecturas').select('id').eq('libro_id',fila.libro_id).is('fecha_fin',null).limit(1);
+    if(ab.error) throw ab.error;
+    if(ab.data.length) throw {mensaje:MSG_ABIERTO};
+    const r=await insertarConCodigo('lecturas','Lect','lecturas_codigo_key',fila,'id,codigo',
+      err=>esConflicto(err,'lecturas_un_prestamo_abierto')?{mensaje:MSG_ABIERTO}:null);
+    exigir(r);
+    aviso=await comprobarPrestado(fila.libro_id,true);
+    return r;
+  },'Libro prestado a '+solicitante+'.');
+  if(!filas) return;
+  if(aviso) Admin.aviso(aviso,'err');
+  volverALibro(fila.libro_id,formPrestar);
+});
+
+el('devolver').addEventListener('click',()=>{
+  if(!libro||!libro.abierto||ocupado()) return;
+  const a=libro.abierto, hoy=Admin.hoy();
+  el('devolver-info').textContent='«'+libro.titulo+'», prestado a '+a.solicitante+' desde el '+Admin.fecha(a.fecha_inicio)+'.';
+  formDevolver.elements.fecha_fin.min=a.fecha_inicio;
+  Admin.rellenar(formDevolver,{fecha_fin:hoy<a.fecha_inicio?a.fecha_inicio:hoy});
+  Admin.abrir('vista-devolver');
+});
+formDevolver.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!libro||!libro.abierto||ocupado()) return;
+  // Instantánea sin esperas: el libro, el préstamo abierto y la fecha.
+  const foto={libroId:libro.id,lecturaId:libro.abierto.id,inicio:libro.abierto.fecha_inicio,fin:formDevolver.elements.fecha_fin.value};
+  if(!Admin.validar(formDevolver,()=>foto.fin&&foto.fin<foto.inicio?{fecha_fin:'La devolución no puede ser anterior al inicio del préstamo ('+Admin.fecha(foto.inicio)+').'}:{})) return;
+  let aviso=null;
+  const filas=await Admin.escribir(formDevolver,async()=>{
+    const r=await Admin.sb().from('lecturas').update({fecha_fin:foto.fin}).eq('id',foto.lecturaId).is('fecha_fin',null).select('id');
+    if(!r.error&&Array.isArray(r.data)&&!r.data.length) throw {mensaje:'No se ha registrado la devolución: este préstamo ya estaba cerrado o no tienes permiso. Recarga la lista.'};
+    exigirId(r,foto.lecturaId);
+    aviso=await comprobarPrestado(foto.libroId,false);
+    return r;
+  },'Devolución registrada.');
+  if(!filas) return;
+  if(aviso) Admin.aviso(aviso,'err');
+  volverALibro(foto.libroId,formDevolver);
+});
+
+// ---------- Recomendados ----------
+function pintarRecos(){
+  if(!cargadoRecos) return;
+  const q=norm(el('q-recos').value);
+  const lista=RECOS.filter(r=>!q||norm(r.titulo+' '+r.autor).includes(q));
+  const n=RECOS.length;
+  el('cuenta-recos').textContent=(lista.length===n?'':lista.length+' de ')+n+(n===1?' recomendado':' recomendados');
+  el('lista-recos').innerHTML=lista.length?lista.map(r=>{
+    const meta=[r.autor,r.generos.join(', ')].filter(Boolean).map(esc).join(' · ');
+    const por=[r.recomendado_por?'Recomienda: '+r.recomendado_por:'',r.temporada?'Temporada '+r.temporada:''].filter(Boolean).map(esc).join(' · ');
+    return '<button type="button" class="fila libro-fila" data-id="'+esc(r.id)+'">'+mini(r.titulo,r.portada_url)
+      +'<span class="st"><b>'+esc(r.titulo)+'</b><small>'+meta+'</small>'+(por?'<small>'+por+'</small>':'')+'</span></button>';
+  }).join(''):'<p class="empty">'+(n?'Ningún recomendado coincide con la búsqueda.':'Todavía no hay recomendados. Añade el primero.')+'</p>';
+}
+function cargarRecos(){
+  return new Promise(listo=>Cueva.cargar(el('lista-recos'),
+    ()=>Admin.iniciar().then(sb=>Promise.all([
+      sb.from('recomendaciones').select(COLS_RECO).order('alta',{ascending:false,nullsFirst:false}).order('creado',{ascending:false,nullsFirst:false}),
+      sb.from('cursos').select('codigo').order('codigo',{ascending:false}),
+      sb.from('generos').select('nombre').order('nombre')]))
+      .then(([a,b,c])=>a.error?a:b.error?b:c.error?c:{data:{recos:a.data,cursos:b.data,generos:c.data}}),
+    d=>{
+      RECOS=d.recos.map(r=>Object.assign({},r,{titulo:r.titulo||'',autor:r.autor||'',generos:listaGeneros(r.generos)}));
+      TEMPORADAS=[...new Set(d.cursos.map(c=>String(c.codigo||'').trim()).filter(Boolean))].sort((a,b)=>b.localeCompare(a,'es',{numeric:true}));
+      ponerGeneros(GENEROS.concat(d.generos.map(g=>g.nombre)));
+      ponerOpciones('recomendadores',distintos(RECOS.map(r=>r.recomendado_por)));
+      pintarAutores();
+      cargadoRecos=true; el('anadir-reco').hidden=false;
+      pintarRecos(); listo();
+    }));
+}
+el('q-recos').addEventListener('input',pintarRecos);
+el('anadir-reco').addEventListener('click',()=>abrirReco(null));
+el('lista-recos').addEventListener('click',e=>{
+  const b=e.target.closest('.fila'); if(!b) return;
+  const r=RECOS.find(x=>String(x.id)===b.dataset.id); if(r) abrirReco(r);
+});
+
+const detalles=formReco.elements.detalles;
+const contar=()=>{const n=detalles.value.length;el('r-detalles-cuenta').textContent=n+' / 200 caracteres';el('r-detalles-cuenta').classList.toggle('lleno',n>=200);};
+detalles.addEventListener('input',contar);
+el('r-titulo').addEventListener('input',e=>portadaReco.titulo(e.target.value));
+
+function abrirReco(r){
+  if(ocupado()) return;
+  reco=r||null;
+  el('reco-titulo').textContent=r?'Editar recomendado':'Nuevo recomendado';
+  el('borrar-reco').hidden=!r;
+  // Temporadas: las de la tabla cursos (la más reciente primero). Si el recomendado tiene otra, se conserva.
+  const temps=r&&r.temporada&&!TEMPORADAS.includes(r.temporada)?[r.temporada].concat(TEMPORADAS):TEMPORADAS;
+  el('r-temporada').innerHTML='<option value="">Elige una temporada</option>'+temps.map(t=>'<option value="'+esc(t)+'">'+esc(t)+'</option>').join('');
+  pintarGeneros(formReco,r?r.generos:[]);
+  Admin.rellenar(formReco,r?{titulo:r.titulo,autor:r.autor,generos:r.generos,recomendado_por:r.recomendado_por,enlace:r.enlace,temporada:r.temporada,detalles:r.detalles}
+    :{titulo:'',autor:'',generos:[],recomendado_por:'',enlace:'',temporada:TEMPORADAS[0]||'',detalles:''});
+  el('r-nuevo-genero').value='';
+  contar();
+  portadaReco.poner(r&&r.portada_url,r?r.titulo:'');
+  Admin.abrir('vista-reco');
+}
+
+formReco.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(guardando||sinGeneros(formReco)) return;
+  const v=n=>formReco.elements[n].value;
+  // Igual que en los libros: validación e instantánea sin esperas; luego todo trabaja con la instantánea.
+  portadaReco.revisar();
+  if(!Admin.validar(formReco)) return;
+  const foto={
+    id:reco?reco.id:null,
+    datos:{titulo:Admin.texto(v('titulo')),autor:Admin.texto(v('autor')),generos:marcadosDe(formReco),
+      recomendado_por:nombreExistente(v('recomendado_por'),[...el('recomendadores').options].map(o=>o.value)),
+      enlace:v('enlace').trim(),temporada:v('temporada'),detalles:Admin.texto(v('detalles'))},
+    portada:portadaReco.instantanea()
+  };
+  const sb=Admin.sb();
+  const filas=await guardarConPortada(formReco,foto,async(cambio,estado)=>{
+    const fila=Object.assign({},foto.datos,cambio);
+    const r=foto.id?exigirId(await sb.from('recomendaciones').update(fila).eq('id',foto.id).select('id'),foto.id)
+      :exigir(await sb.from('recomendaciones').insert(fila).select('id'));
+    estado.guardada=true;
+    return {data:r,error:null};
+  },foto.id?'Recomendado actualizado.':'Recomendado añadido.');
+  if(filas){Admin.cerrar(formReco);cargarRecos();}
+});
+
+el('borrar-reco').addEventListener('click',async()=>{
+  if(!reco) return;
+  const r=reco, sb=Admin.sb();
+  const si=await Admin.confirmar('Se borrará el recomendado «'+r.titulo+'». Esta acción no se puede deshacer.');
+  if(!si) return;
+  const ok=await Admin.escribir(formReco,()=>sb.from('recomendaciones').delete().eq('id',r.id).select('id'),'Recomendado borrado.');
+  if(!ok) return;
+  // Su portada solo se borra si la base de datos confirma que se ha borrado ESE recomendado.
+  if(r.portada_url&&ok.some(f=>String(f.id)===String(r.id))) Portadas.borrar(sb,r.portada_url);
+  Admin.cerrar(formReco); cargarRecos();
+});
+
+// Al volver a la lista (formularios cerrados) se descarta cualquier imagen elegida o en ajuste.
+// Un guardado en curso no se ve afectado: trabaja con su instantánea.
+new MutationObserver(()=>{if(!el('vista-lista').hidden){portadaLibro.descartar();portadaReco.descartar();}})
+  .observe(el('vista-lista'),{attributes:true,attributeFilter:['hidden']});
+
+Admin.obligatorios(formLibro);
+Admin.obligatorios(formPrestar);
+Admin.obligatorios(formDevolver);
+Admin.obligatorios(formReco);
+pintarPestana();
+cargarLibros();
+cargarRecos();
+if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+</script>
+</body>
+</html>

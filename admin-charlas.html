@@ -241,23 +241,25 @@ formCharla.addEventListener('submit',async e=>{
     id?'Charla actualizada.':'Charla añadida. Ya puedes añadirle documentos.');
   if(!filas) return;
   cursoId=curso.id;
-  if(id){Admin.cerrar();cargarTodo();return;}
-  // Charla nueva: se queda abierta para añadirle documentos.
+  if(id){Admin.cerrar(formCharla);cargarTodo();return;}
+  // Charla nueva: se queda abierta para añadirle documentos (salvo que durante la espera se pulsara "atrás").
+  const seguia=Admin.visible(formCharla);
   await cargarTodo();
   const nueva=buscarCharla(filas[0].id);
-  if(nueva) abrirCharla(nueva,true); else Admin.cerrar();
+  if(!seguia||!Admin.visible(formCharla)) return;
+  if(nueva) abrirCharla(nueva,true); else Admin.cerrar(formCharla);
 });
 
 el('borrar-charla').addEventListener('click',async()=>{
   if(!charla) return;
-  const sb=Admin.sb(), id=charla.id;
+  const sb=Admin.sb(), ch=charla, id=ch.id; // instantánea: tras las esperas no se vuelve a leer la charla abierta
   // Se cuentan los documentos en la base de datos justo antes de preguntar.
-  let n=charla.documentos.length;
+  let n=ch.documentos.length;
   try{const r=await sb.from('documentos').select('id',{count:'exact',head:true}).eq('charla_id',id);if(!r.error&&r.count!=null)n=r.count;}catch(e){}
-  const si=await Admin.confirmar('Se borrará la charla «'+charla.titulo+'»'+(n?' y también sus '+n+(n===1?' documento':' documentos'):'')+'. Esta acción no se puede deshacer.');
+  const si=await Admin.confirmar('Se borrará la charla «'+ch.titulo+'»'+(n?' y también '+(n===1?'su documento':'sus '+n+' documentos'):'')+'. Esta acción no se puede deshacer.');
   if(!si) return;
   const ok=await Admin.escribir(formCharla,()=>sb.from('charlas').delete().eq('id',id).select('id'),'Charla borrada.');
-  if(ok){Admin.cerrar();cargarTodo();}
+  if(ok){Admin.cerrar(formCharla);cargarTodo();}
 });
 
 // ---------- Documentos ----------
@@ -276,10 +278,9 @@ el('lista-docs').addEventListener('click',e=>{
   const d=charla.documentos.find(x=>String(x.id)===b.dataset.id); if(d) abrirDoc(d);
 });
 
-// Tras guardar o borrar un documento: se recargan los datos y se vuelve a la charla con la lista al día.
-async function volverACharla(){
-  const id=charla.id;
-  Admin.cerrar();
+// Tras guardar o borrar un documento: se recargan los datos y se vuelve a la charla (la del documento) con la lista al día.
+async function volverACharla(id){
+  Admin.cerrar(formDoc);
   await cargarTodo();
   charla=buscarCharla(id);
   if(charla) pintarDocs(); else Admin.mostrar('vista-lista');
@@ -298,16 +299,17 @@ formDoc.addEventListener('submit',async e=>{
   const ok=await Admin.escribir(formDoc,
     ()=>id?sb.from('documentos').update(fila).eq('id',id).select('id'):sb.from('documentos').insert(fila).select('id'),
     id?'Documento actualizado.':'Documento añadido.');
-  if(ok) volverACharla();
+  if(ok) volverACharla(fila.charla_id);
 });
 
 el('borrar-doc').addEventListener('click',async()=>{
   if(!doc) return;
+  const id=doc.id, charlaId=charla.id; // se toman antes de la pregunta
   const si=await Admin.confirmar('Se borrará el documento «'+doc.nombre+'». Esta acción no se puede deshacer.');
   if(!si) return;
-  const sb=Admin.sb(), id=doc.id;
+  const sb=Admin.sb();
   const ok=await Admin.escribir(formDoc,()=>sb.from('documentos').delete().eq('id',id).select('id'),'Documento borrado.');
-  if(ok) volverACharla();
+  if(ok) volverACharla(charlaId);
 });
 
 Admin.obligatorios(formCharla);
