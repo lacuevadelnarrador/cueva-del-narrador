@@ -98,11 +98,11 @@ document.getElementById('tipos').addEventListener('click',e=>{const b=e.target.c
 document.getElementById('q').addEventListener('input',e=>{texto=e.target.value;if(CURSOS.length)pintarLista();});
 // Cursos, charlas y documentos solo se leen con sesión de socio. documentos.url es el enlace a Drive.
 Cueva.cargar(document.getElementById('lista'),
-  ()=>Cueva.privada().then(({sb})=>sb.from('cursos').select('id,codigo,nombre,periodo,charlas(titulo,fecha,tipo,ponente,tema,documentos(nombre,formato,url))').order('codigo',{ascending:false})),
+  ()=>Cueva.privada().then(({sb})=>sb.from('cursos').select('id,codigo,nombre,periodo,charlas(titulo,fecha,tipo,ponente,tema,documentos(nombre,formato,url,orden))').order('codigo',{ascending:false})),
   filas=>{
     CURSOS=filas.map(c=>({id:String(c.id),nombre:c.nombre||c.codigo||'Curso',periodo:c.periodo||'',
       charlas:(c.charlas||[]).map(ch=>Object.assign({},ch,{titulo:ch.titulo||'',
-        documentos:(ch.documentos||[]).map(d=>({nombre:d.nombre,formato:d.formato,enlace:Cueva.urlSegura(d.url)}))}))}));
+        documentos:(ch.documentos||[]).slice().sort((a,b)=>(a.orden??Infinity)-(b.orden??Infinity)).map(d=>({nombre:d.nombre,formato:d.formato,enlace:Cueva.urlSegura(d.url)}))}))}));
     cursoId=CURSOS.length?CURSOS[0].id:null;
     todo();
   });
