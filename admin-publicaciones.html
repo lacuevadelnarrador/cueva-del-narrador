@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Publicaciones · Administración · La Cueva del Narrador</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#528A93">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="pagehead">
+    <div class="top">
+      <div class="brand">
+        <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
+        <span>La Cueva<br>del Narrador</span>
+      </div>
+      <div class="avatar" aria-label="Tu perfil"></div>
+    </div>
+    <h1 class="largo">Publicaciones</h1>
+    <p class="sub">Administración de las publicaciones en redes.</p>
+  </header>
+
+  <main>
+    <a class="volver" href="admin.html">&#8249; Volver al panel</a>
+
+    <section id="vista-lista" aria-label="Lista de publicaciones">
+      <div class="barra-admin">
+        <p class="cuenta" id="cuenta" aria-live="polite"></p>
+        <button type="button" class="btn" id="anadir" hidden>+ Añadir</button>
+      </div>
+      <div id="lista"></div>
+    </section>
+
+    <section id="vista-form" hidden>
+      <form class="card formulario" id="form" novalidate>
+        <h2 id="form-titulo" tabindex="-1" data-foco>Nueva publicación</h2>
+        <p class="msg" data-estado hidden></p>
+        <div class="campo">
+          <label for="titulo">Título</label>
+          <input class="entrada" id="titulo" name="titulo" type="text" required autocomplete="off">
+        </div>
+        <div class="campo">
+          <label for="fecha">Fecha</label>
+          <input class="entrada" id="fecha" name="fecha" type="date" required>
+        </div>
+        <div class="campo">
+          <label for="plataforma">Plataforma</label>
+          <input class="entrada" id="plataforma" name="plataforma" type="text" list="plataformas" required autocomplete="off" aria-describedby="plataforma-pista">
+          <datalist id="plataformas"><option value="Instagram"><option value="TikTok"></datalist>
+          <p class="pista" id="plataforma-pista">Por ejemplo, Instagram o TikTok.</p>
+        </div>
+        <div class="campo">
+          <label for="curso_id">Curso</label>
+          <select class="entrada" id="curso_id" name="curso_id" required></select>
+        </div>
+        <div class="campo">
+          <label for="detalle">Detalle</label>
+          <textarea class="entrada" id="detalle" name="detalle"></textarea>
+        </div>
+        <div class="botones-form">
+          <button type="submit" class="btn">Guardar</button>
+          <button type="button" class="btn sec" data-cancelar>Cancelar</button>
+          <button type="button" class="btn peligro" id="borrar" hidden>Borrar</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="inicio.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="calendario.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a>
+    <a href="curso.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/></svg>Curso</a>
+    <a href="biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Biblioteca</a>
+    <a href="mas.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
+  </nav>
+</div>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script src="admin.js"></script>
+<script>
+const esc=Admin.esc, el=id=>document.getElementById(id), form=el('form');
+let PUBLICACIONES=[], CURSOS=[], editando=null;
+const cursoDe=id=>CURSOS.find(c=>String(c.id)===String(id));
+const nombreCurso=c=>c.nombre||c.codigo||'Curso';
+
+function pintar(){
+  el('cuenta').textContent=PUBLICACIONES.length+(PUBLICACIONES.length===1?' publicación':' publicaciones');
+  el('lista').innerHTML=PUBLICACIONES.length?PUBLICACIONES.map(p=>{
+    const c=p.curso_id!=null&&cursoDe(p.curso_id);
+    const meta=[Admin.fecha(p.fecha),p.plataforma,c&&nombreCurso(c)].filter(Boolean).map(esc).join(' · ');
+    return '<button type="button" class="fila" data-id="'+esc(p.id)+'"><span class="date"><b>'+esc(Admin.dia(p.fecha))+'</b><small>'+esc(Admin.diaSemana(p.fecha))+'</small></span><span class="st"><b>'+esc(p.titulo)+'</b><small>'+meta+'</small></span></button>';
+  }).join(''):'<p class="empty">Todavía no hay publicaciones.</p>';
+}
+
+// Publicaciones de la más reciente a la más antigua, y los cursos para el desplegable.
+function cargarLista(){
+  Cueva.cargar(el('lista'),
+    ()=>Admin.iniciar().then(sb=>Promise.all([
+      sb.from('publicaciones').select('id,fecha,titulo,plataforma,detalle,curso_id').order('fecha',{ascending:false}),
+      sb.from('cursos').select('id,codigo,nombre').order('codigo',{ascending:false})
+    ])).then(([p,c])=>{
+      if(c.error) return c;
+      CURSOS=c.data||[];
+      return p;
+    }),
+    filas=>{
+      PUBLICACIONES=filas;
+      el('curso_id').innerHTML='<option value="">Elige un curso</option>'+CURSOS.map(c=>'<option value="'+esc(c.id)+'">'+esc(nombreCurso(c))+'</option>').join('');
+      el('anadir').hidden=false;
+      pintar();
+    });
+}
+
+function abrirForm(p){
+  editando=p||null;
+  el('form-titulo').textContent=p?'Editar publicación':'Nueva publicación';
+  el('borrar').hidden=!p;
+  Admin.rellenar(form,p?{titulo:p.titulo,fecha:p.fecha,plataforma:p.plataforma,curso_id:p.curso_id,detalle:p.detalle}
+    :{titulo:'',fecha:Admin.hoy(),plataforma:'Instagram',curso_id:'',detalle:''});
+  Admin.abrir('vista-form');
+}
+
+el('anadir').addEventListener('click',()=>abrirForm(null));
+el('lista').addEventListener('click',e=>{
+  const b=e.target.closest('.fila'); if(!b) return;
+  const p=PUBLICACIONES.find(x=>String(x.id)===b.dataset.id); if(p) abrirForm(p);
+});
+
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!Admin.validar(form)) return;
+  const v=n=>form.elements[n].value;
+  const curso=cursoDe(v('curso_id')); // se envía el id tal como viene de la base de datos
+  const fila={titulo:Admin.texto(v('titulo')),fecha:v('fecha'),plataforma:Admin.texto(v('plataforma')),
+    curso_id:curso.id,detalle:Admin.texto(v('detalle'))};
+  const sb=Admin.sb(), id=editando&&editando.id;
+  const ok=await Admin.escribir(form,
+    ()=>id?sb.from('publicaciones').update(fila).eq('id',id).select('id'):sb.from('publicaciones').insert(fila).select('id'),
+    id?'Publicación actualizada.':'Publicación añadida.');
+  if(ok){Admin.cerrar();cargarLista();}
+});
+
+el('borrar').addEventListener('click',async()=>{
+  if(!editando) return;
+  const si=await Admin.confirmar('Se borrará la publicación «'+editando.titulo+'» del '+Admin.fecha(editando.fecha)+'. Esta acción no se puede deshacer.');
+  if(!si) return;
+  const sb=Admin.sb(), id=editando.id;
+  const ok=await Admin.escribir(form,()=>sb.from('publicaciones').delete().eq('id',id).select('id'),'Publicación borrada.');
+  if(ok){Admin.cerrar();cargarLista();}
+});
+
+Admin.obligatorios(form);
+cargarLista();
+if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+</script>
+</body>
+</html>

@@ -103,7 +103,7 @@ const Cueva = (function () {
 
   // ---------- Sesión ----------
   async function perfilActivo(sb, uid) {
-    const r = await sb.from('perfiles').select('nombre,activo').eq('id', uid).maybeSingle();
+    const r = await sb.from('perfiles').select('nombre,activo,rol').eq('id', uid).maybeSingle();
     if (r.error) throw Object.assign(r.error, { status: r.status });
     return r.data && r.data.activo === true ? r.data : null;
   }
@@ -142,6 +142,57 @@ const Cueva = (function () {
     return { sb, perfil };
   }
 
+  // Guardia del panel de administración: como privada() (sesión y cuenta activa) y además exige rol = 'admin'.
+  // Si el socio no es administrador, vuelve a inicio.html con un aviso.
+  async function admin() {
+    const r = await privada();
+    if (r.perfil.rol !== 'admin') { location.replace('inicio.html?aviso=solo-admin'); return nunca(); }
+    return r;
+  }
+
+  // ¿Es administrador el usuario de esta sesión? Se pregunta siempre a la base de datos
+  // (nunca a un valor guardado en el dispositivo). Ante cualquier duda, responde false.
+  async function esAdmin() {
+    if (!haySesionLocal()) return false;
+    try {
+      const sb = await cliente();
+      const { data } = await sb.auth.getSession();
+      if (!data.session) return false;
+      const perfil = await perfilActivo(sb, data.session.user.id);
+      return !!perfil && perfil.rol === 'admin';
+    } catch (e) { return false; }
+  }
+
+  // ---------- Avisos flotantes ----------
+  // Mensaje que se cierra solo. tipo: '' (información), 'ok' o 'err'.
+  function aviso(texto, tipo) {
+    let caja = document.getElementById('avisos');
+    if (!caja) {
+      caja = document.createElement('div');
+      caja.id = 'avisos'; caja.className = 'avisos';
+      document.body.appendChild(caja);
+    }
+    const p = document.createElement('p');
+    p.className = 'toast' + (tipo ? ' ' + tipo : '');
+    p.setAttribute('role', tipo === 'err' ? 'alert' : 'status');
+    p.textContent = texto;
+    caja.appendChild(p);
+    setTimeout(() => p.remove(), tipo === 'err' ? 8000 : 4000);
+  }
+  // Avisos que llegan en la dirección (?aviso=código). Solo se aceptan códigos conocidos y se
+  // muestra un texto fijo: nunca se pinta lo que venga en la URL.
+  const AVISOS = { 'solo-admin': 'Esa sección es solo para administradores.' };
+  function avisoDeLaUrl() {
+    let params;
+    try { params = new URLSearchParams(location.search); } catch (e) { return; }
+    if (!params.has('aviso')) return;
+    const texto = AVISOS[params.get('aviso')];
+    params.delete('aviso');
+    const q = params.toString();
+    try { history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + location.hash); } catch (e) {}
+    if (texto) aviso(texto, 'err');
+  }
+
   // Páginas públicas: se adaptan al momento si hay sesión guardada y luego se comprueba que sigue viva.
   function publica() {
     if (!haySesionLocal()) return;
@@ -159,6 +210,7 @@ const Cueva = (function () {
   });
 
   if (document.body && document.body.dataset.acceso === 'publico') publica();
+  if (document.body) avisoDeLaUrl();
 
-  return { esc, urlSegura, cliente, haySesionLocal, privada, perfilActivo, guardarInicial, salir, esErrorDeRed, mensaje, cargando, error, cargar };
+  return { esc, urlSegura, cliente, haySesionLocal, privada, admin, esAdmin, aviso, perfilActivo, guardarInicial, salir, esErrorDeRed, mensaje, cargando, error, cargar };
 })();

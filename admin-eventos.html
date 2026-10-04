@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Eventos · Administración · La Cueva del Narrador</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#528A93">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="pagehead">
+    <div class="top">
+      <div class="brand">
+        <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
+        <span>La Cueva<br>del Narrador</span>
+      </div>
+      <div class="avatar" aria-label="Tu perfil"></div>
+    </div>
+    <h1>Eventos</h1>
+    <p class="sub">Administración del calendario.</p>
+  </header>
+
+  <main>
+    <a class="volver" href="admin.html">&#8249; Volver al panel</a>
+
+    <section id="vista-lista" aria-label="Lista de eventos">
+      <div class="barra-admin">
+        <div class="chips" id="filtro" role="group" aria-label="Qué eventos mostrar">
+          <button type="button" class="chip on" data-f="proximos" aria-pressed="true">Próximos</button>
+          <button type="button" class="chip" data-f="pasados" aria-pressed="false">Pasados</button>
+          <button type="button" class="chip" data-f="todos" aria-pressed="false">Todos</button>
+        </div>
+        <button type="button" class="btn" id="anadir" hidden>+ Añadir</button>
+      </div>
+      <p class="cuenta" id="cuenta" aria-live="polite"></p>
+      <div id="lista"></div>
+    </section>
+
+    <section id="vista-form" hidden>
+      <form class="card formulario" id="form" novalidate>
+        <h2 id="form-titulo" tabindex="-1" data-foco>Nuevo evento</h2>
+        <p class="msg" data-estado hidden></p>
+        <div class="campo">
+          <label for="titulo">Título</label>
+          <input class="entrada" id="titulo" name="titulo" type="text" required autocomplete="off">
+        </div>
+        <div class="campo">
+          <label for="fecha">Fecha</label>
+          <input class="entrada" id="fecha" name="fecha" type="date" required>
+        </div>
+        <div class="campo">
+          <label for="hora">Hora</label>
+          <input class="entrada" id="hora" name="hora" type="time" required>
+        </div>
+        <div class="campo">
+          <label for="tipo">Tipo</label>
+          <select class="entrada" id="tipo" name="tipo" required></select>
+        </div>
+        <div class="campo">
+          <label for="lugar">Lugar</label>
+          <input class="entrada" id="lugar" name="lugar" type="text" required autocomplete="off">
+        </div>
+        <div class="campo">
+          <label for="detalle">Detalle</label>
+          <textarea class="entrada" id="detalle" name="detalle" required></textarea>
+        </div>
+        <div class="botones-form">
+          <button type="submit" class="btn">Guardar</button>
+          <button type="button" class="btn sec" data-cancelar>Cancelar</button>
+          <button type="button" class="btn peligro" id="borrar" hidden>Borrar</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="inicio.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="calendario.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a>
+    <a href="curso.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/></svg>Curso</a>
+    <a href="biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Biblioteca</a>
+    <a href="mas.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
+  </nav>
+</div>
+<script src="tipos.js"></script>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script src="admin.js"></script>
+<script>
+const esc=Admin.esc, el=id=>document.getElementById(id), form=el('form');
+let EVENTOS=[], filtro='proximos', editando=null;
+
+el('tipo').innerHTML='<option value="">Elige un tipo</option>'+Object.entries(TIPOS).map(([k,t])=>'<option value="'+esc(k)+'">'+esc(t.n)+'</option>').join('');
+// Todos los campos son obligatorios, salvo la hora de los retos (se publican en Instagram y no tienen hora).
+function reglaHora(){
+  form.elements.hora.required=form.elements.tipo.value!=='reto';
+  Admin.obligatorios(form);
+}
+el('tipo').addEventListener('change',reglaHora);
+reglaHora();
+
+const orden=(a,b)=>(a.fecha+(a.hora||'')).localeCompare(b.fecha+(b.hora||''));
+function pintar(){
+  const hoy=Admin.hoy();
+  let lista=EVENTOS.filter(e=>filtro==='todos'||(filtro==='proximos'?e.fecha>=hoy:e.fecha<hoy)).sort(orden);
+  if(filtro==='pasados') lista.reverse(); // los pasados, del más reciente al más antiguo
+  el('cuenta').textContent=lista.length+(lista.length===1?' evento':' eventos');
+  el('lista').innerHTML=lista.length?Admin.agrupar(lista,e=>Admin.mes(e.fecha)).map(([m,evs])=>
+    '<h3 class="grupo">'+esc(m)+'</h3>'+evs.map(e=>{
+      const t=tipo(e.tipo);
+      const meta=[Admin.fecha(e.fecha),Admin.hora(e.hora)&&Admin.hora(e.hora)+' h',e.lugar,e.tipo?t.n:'Sin tipo'].filter(Boolean).map(esc).join(' · ');
+      return '<button type="button" class="fila" data-id="'+esc(e.id)+'"><span class="date" style="background:'+t.c+';color:'+t.t+'"><b>'+esc(Admin.dia(e.fecha))+'</b><small>'+esc(Admin.diaSemana(e.fecha))+'</small></span><span class="st"><b>'+esc(e.titulo)+'</b><small>'+meta+'</small></span></button>';
+    }).join('')).join('')
+    :'<p class="empty">'+({proximos:'No hay eventos próximos.',pasados:'No hay eventos pasados.',todos:'Todavía no hay eventos.'})[filtro]+'</p>';
+}
+
+function cargarLista(){
+  Cueva.cargar(el('lista'),
+    ()=>Admin.iniciar().then(sb=>sb.from('eventos').select('id,fecha,hora,titulo,tipo,lugar,detalle').order('fecha').order('hora',{nullsFirst:true})),
+    filas=>{EVENTOS=filas.filter(e=>e.fecha);el('anadir').hidden=false;pintar();});
+}
+
+function abrirForm(ev){
+  editando=ev||null;
+  el('form-titulo').textContent=ev?'Editar evento':'Nuevo evento';
+  el('borrar').hidden=!ev;
+  Admin.rellenar(form,ev?{titulo:ev.titulo,fecha:ev.fecha,hora:Admin.hora(ev.hora),tipo:TIPOS[ev.tipo]?ev.tipo:'',lugar:ev.lugar,detalle:ev.detalle}
+    :{titulo:'',fecha:'',hora:'',tipo:'',lugar:'',detalle:''});
+  reglaHora();
+  Admin.abrir('vista-form');
+}
+
+el('filtro').addEventListener('click',e=>{
+  const b=e.target.closest('.chip'); if(!b) return;
+  filtro=b.dataset.f;
+  el('filtro').querySelectorAll('.chip').forEach(c=>{const on=c===b;c.classList.toggle('on',on);c.setAttribute('aria-pressed',on);});
+  pintar();
+});
+el('anadir').addEventListener('click',()=>abrirForm(null));
+el('lista').addEventListener('click',e=>{
+  const b=e.target.closest('.fila'); if(!b) return;
+  const ev=EVENTOS.find(x=>String(x.id)===b.dataset.id); if(ev) abrirForm(ev);
+});
+
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!Admin.validar(form)) return;
+  const v=n=>form.elements[n].value;
+  // Una hora vacía se guarda como null.
+  const fila={titulo:Admin.texto(v('titulo')),fecha:v('fecha'),hora:Admin.texto(v('hora')),tipo:Admin.texto(v('tipo')),lugar:Admin.texto(v('lugar')),detalle:Admin.texto(v('detalle'))};
+  const sb=Admin.sb(), id=editando&&editando.id;
+  const ok=await Admin.escribir(form,
+    ()=>id?sb.from('eventos').update(fila).eq('id',id).select('id'):sb.from('eventos').insert(fila).select('id'),
+    id?'Evento actualizado.':'Evento añadido.');
+  if(ok){Admin.cerrar();cargarLista();}
+});
+
+el('borrar').addEventListener('click',async()=>{
+  if(!editando) return;
+  const si=await Admin.confirmar('Se borrará el evento «'+editando.titulo+'» del '+Admin.fecha(editando.fecha)+'. Esta acción no se puede deshacer.');
+  if(!si) return;
+  const sb=Admin.sb(), id=editando.id;
+  const ok=await Admin.escribir(form,()=>sb.from('eventos').delete().eq('id',id).select('id'),'Evento borrado.');
+  if(ok){Admin.cerrar();cargarLista();}
+});
+
+cargarLista();
+if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+</script>
+</body>
+</html>
