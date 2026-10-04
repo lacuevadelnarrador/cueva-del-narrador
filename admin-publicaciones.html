@@ -144,16 +144,17 @@ form.addEventListener('submit',async e=>{
   const ok=await Admin.escribir(form,
     ()=>id?sb.from('publicaciones').update(fila).eq('id',id).select('id'):sb.from('publicaciones').insert(fila).select('id'),
     id?'Publicación actualizada.':'Publicación añadida.');
-  if(ok){Admin.cerrar();cargarLista();}
+  if(ok){Admin.cerrar(form);cargarLista();}
 });
 
 el('borrar').addEventListener('click',async()=>{
   if(!editando) return;
+  const id=editando.id; // se toma antes de la pregunta: después de una espera no se vuelve a leer el registro abierto
   const si=await Admin.confirmar('Se borrará la publicación «'+editando.titulo+'» del '+Admin.fecha(editando.fecha)+'. Esta acción no se puede deshacer.');
   if(!si) return;
-  const sb=Admin.sb(), id=editando.id;
+  const sb=Admin.sb();
   const ok=await Admin.escribir(form,()=>sb.from('publicaciones').delete().eq('id',id).select('id'),'Publicación borrada.');
-  if(ok){Admin.cerrar();cargarLista();}
+  if(ok){Admin.cerrar(form);cargarLista();}
 });
 
 Admin.obligatorios(form);

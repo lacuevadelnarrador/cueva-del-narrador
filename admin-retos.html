@@ -140,16 +140,17 @@ form.addEventListener('submit',async e=>{
   const ok=await Admin.escribir(form,
     ()=>id?sb.from('retos').update(fila).eq('id',id).select('id'):sb.from('retos').insert(fila).select('id'),
     id?'Reto actualizado.':'Reto añadido.');
-  if(ok){Admin.cerrar();cargarLista();}
+  if(ok){Admin.cerrar(form);cargarLista();}
 });
 
 el('borrar').addEventListener('click',async()=>{
   if(!editando) return;
+  const id=editando.id; // se toma antes de la pregunta: después de una espera no se vuelve a leer el registro abierto
   const si=await Admin.confirmar('Se borrará el reto «'+editando.titulo+'». Esta acción no se puede deshacer.');
   if(!si) return;
-  const sb=Admin.sb(), id=editando.id;
+  const sb=Admin.sb();
   const ok=await Admin.escribir(form,()=>sb.from('retos').delete().eq('id',id).select('id'),'Reto borrado.');
-  if(ok){Admin.cerrar();cargarLista();}
+  if(ok){Admin.cerrar(form);cargarLista();}
 });
 
 Admin.obligatorios(form);
