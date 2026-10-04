@@ -28,6 +28,7 @@
 
   <main>
     <div class="menu">
+      <a class="item admin" href="admin.html" id="tarjeta-admin" hidden><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="tx"><b>Administración</b><small>Gestiona eventos, retos, charlas y publicaciones.</small></span></a>
       <a class="item" href="retos.html" data-solo="socio" hidden><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg></span><span class="tx"><b>Retos</b><small>El reto del mes y los retos anteriores.</small></span></a>
       <a class="item" href="club.html" data-solo="socio" hidden><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg></span><span class="tx"><b>Sobre el club</b><small>Qué es la Cueva, qué hacemos y cómo apuntarse.</small></span></a>
       <a class="item" href="entidades.html"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6M15 14.5c3 0 6 1.8 6 5"/></svg></span><span class="tx"><b>Entidades colaboradoras</b><small>Quienes nos acompañan.</small></span></a>
@@ -49,6 +50,9 @@
 <script src="supabase-config.js"></script>
 <script src="auth.js"></script>
 <script>
+// La tarjeta de administración solo aparece si la base de datos confirma rol = 'admin' y cuenta activa.
+// Ocultarla no protege nada: quien escribe en la base de datos lo deciden sus políticas (RLS).
+Cueva.esAdmin().then(si => { document.getElementById('tarjeta-admin').hidden = !si; });
 if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js"));
 </script>
 </body>

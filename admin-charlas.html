@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Charlas y documentos · Administración · La Cueva del Narrador</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#528A93">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="pagehead">
+    <div class="top">
+      <div class="brand">
+        <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
+        <span>La Cueva<br>del Narrador</span>
+      </div>
+      <div class="avatar" aria-label="Tu perfil"></div>
+    </div>
+    <h1>Charlas</h1>
+    <p class="sub">Administración de charlas y documentos.</p>
+  </header>
+
+  <main>
+    <a class="volver" href="admin.html">&#8249; Volver al panel</a>
+
+    <section id="vista-lista" aria-label="Lista de charlas">
+      <div class="tabs" id="tabs" role="tablist" aria-label="Cursos" hidden></div>
+      <div class="barra-admin">
+        <p class="cuenta" id="cuenta" aria-live="polite"></p>
+        <button type="button" class="btn" id="anadir" hidden>+ Añadir charla</button>
+      </div>
+      <div id="lista"></div>
+    </section>
+
+    <section id="vista-charla" hidden>
+      <form class="card formulario" id="form-charla" novalidate>
+        <h2 id="charla-titulo" tabindex="-1" data-foco>Nueva charla</h2>
+        <p class="msg" data-estado hidden></p>
+        <div class="campo">
+          <label for="curso_id">Curso</label>
+          <select class="entrada" id="curso_id" name="curso_id" required></select>
+        </div>
+        <div class="campo">
+          <label for="titulo">Título</label>
+          <input class="entrada" id="titulo" name="titulo" type="text" required autocomplete="off">
+        </div>
+        <div class="campo">
+          <label for="fecha">Fecha</label>
+          <input class="entrada" id="fecha" name="fecha" type="date" required>
+        </div>
+        <div class="campo">
+          <label for="tipo">Tipo</label>
+          <select class="entrada" id="tipo" name="tipo" required></select>
+        </div>
+        <div class="campo">
+          <label for="ponente">Ponente</label>
+          <input class="entrada" id="ponente" name="ponente" type="text" autocomplete="off">
+        </div>
+        <div class="campo">
+          <label for="tema">Tema</label>
+          <textarea class="entrada" id="tema" name="tema" required></textarea>
+        </div>
+        <div class="botones-form">
+          <button type="submit" class="btn">Guardar</button>
+          <button type="button" class="btn sec" data-cancelar>Cancelar</button>
+          <button type="button" class="btn peligro" id="borrar-charla" hidden>Borrar</button>
+        </div>
+
+        <div class="subseccion" id="documentos" aria-labelledby="docs-titulo">
+          <div class="barra-admin">
+            <h3 id="docs-titulo">Documentos</h3>
+            <button type="button" class="btn" id="anadir-doc">+ Añadir</button>
+          </div>
+          <p class="pista">Primero los apuntes de clase y luego las actividades.</p>
+          <div id="lista-docs"></div>
+        </div>
+        <p class="pista subseccion" id="docs-nueva">Guarda la charla para poder añadirle documentos.</p>
+      </form>
+    </section>
+
+    <section id="vista-doc" hidden>
+      <form class="card formulario" id="form-doc" novalidate>
+        <h2 id="doc-titulo" tabindex="-1" data-foco>Nuevo documento</h2>
+        <p class="pista de-charla" id="doc-charla"></p>
+        <p class="msg" data-estado hidden></p>
+        <div class="campo">
+          <label for="nombre">Nombre</label>
+          <input class="entrada" id="nombre" name="nombre" type="text" required autocomplete="off">
+        </div>
+        <div class="campo">
+          <label for="formato">Formato</label>
+          <select class="entrada" id="formato" name="formato" required>
+            <option value="PDF">PDF</option>
+            <option value="Word">Word</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="url">Enlace</label>
+          <input class="entrada" id="url" name="url" type="url" inputmode="url" required autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="https://drive.google.com/..." aria-describedby="url-pista">
+          <p class="pista" id="url-pista">Tiene que empezar por https://</p>
+        </div>
+        <fieldset class="opciones" role="radiogroup">
+          <legend>Grupo</legend>
+          <label class="opcion"><input type="radio" name="grupo" value="apuntes" required> Apuntes de clase</label>
+          <label class="opcion"><input type="radio" name="grupo" value="actividad" required> Actividad</label>
+        </fieldset>
+        <div class="botones-form">
+          <button type="submit" class="btn">Guardar</button>
+          <button type="button" class="btn sec" data-cancelar>Cancelar</button>
+          <button type="button" class="btn peligro" id="borrar-doc" hidden>Borrar</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="inicio.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="calendario.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a>
+    <a href="curso.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/></svg>Curso</a>
+    <a href="biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Biblioteca</a>
+    <a href="mas.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
+  </nav>
+</div>
+<script src="tipos.js"></script>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script src="admin.js"></script>
+<script>
+const esc=Admin.esc, el=id=>document.getElementById(id);
+const formCharla=el('form-charla'), formDoc=el('form-doc');
+const TIPOS_CHARLA=['clase','marketing','invitado'];
+let CURSOS=[], cursoId=null, charla=null, doc=null;
+
+const cursoActual=()=>CURSOS.find(c=>String(c.id)===String(cursoId))||CURSOS[0];
+const nombreCurso=c=>c.nombre||c.codigo||'Curso';
+const buscarCharla=id=>{for(const c of CURSOS){const ch=c.charlas.find(x=>String(x.id)===String(id));if(ch)return ch;}return null;};
+
+// ---------- Orden de los documentos ----------
+// Apuntes de clase: 101, 102, 103...  Actividades: 201, 202, 203...
+// Un documento nuevo recibe el siguiente número libre de su grupo dentro de la charla.
+// Los documentos que ya existen no se renumeran nunca.
+const BASE={apuntes:100,actividad:200};
+const grupoDe=o=>o>=101&&o<=199?'apuntes':o>=201&&o<=299?'actividad':null;
+const NOMBRE_GRUPO={apuntes:'Apuntes de clase',actividad:'Actividad'};
+const porOrden=(a,b)=>(a.orden??Infinity)-(b.orden??Infinity);
+function siguienteOrden(docs,grupo,excluirId){
+  const usados=docs.filter(d=>String(d.id)!==String(excluirId)&&grupoDe(d.orden)===grupo).map(d=>d.orden);
+  const base=BASE[grupo];
+  const siguiente=usados.length?Math.max(...usados)+1:base+1;
+  if(siguiente<=base+99) return siguiente;
+  for(let n=base+1;n<=base+99;n++) if(!usados.includes(n)) return n; // grupo lleno al final: se usa el primer hueco
+  return null;
+}
+
+// ---------- Lista de charlas ----------
+el('tipo').innerHTML='<option value="">Elige un tipo</option>'+TIPOS_CHARLA.map(k=>'<option value="'+k+'">'+esc(TIPOS[k].n)+'</option>').join('');
+
+function pintarLista(){
+  const tabs=el('tabs');
+  if(!CURSOS.length){
+    tabs.hidden=true; el('anadir').hidden=true; el('cuenta').textContent='';
+    el('lista').innerHTML='<p class="empty">Todavía no hay cursos. Hay que crearlos primero en la base de datos.</p>';
+    return;
+  }
+  const actual=cursoActual();
+  tabs.hidden=false;
+  tabs.innerHTML=CURSOS.map(c=>'<button type="button" class="tab" role="tab" data-id="'+esc(c.id)+'" aria-selected="'+(c===actual)+'">'+esc(nombreCurso(c))+'</button>').join('');
+  tabs.style.gridTemplateColumns='repeat('+CURSOS.length+',1fr)';
+  el('anadir').hidden=false;
+  const lista=actual.charlas;
+  el('cuenta').textContent=lista.length+(lista.length===1?' charla':' charlas');
+  el('lista').innerHTML=lista.length?lista.map(ch=>{
+    const t=tipo(ch.tipo), n=ch.documentos.length;
+    const meta=[ch.tipo?t.n:'Sin tipo',ch.fecha?Admin.fecha(ch.fecha):'Sin fecha',ch.ponente,n+(n===1?' documento':' documentos')].filter(Boolean).map(esc).join(' · ');
+    return '<button type="button" class="fila" data-id="'+esc(ch.id)+'"><span class="tp" style="background:'+t.c+'" aria-hidden="true"></span><span class="st"><b>'+esc(ch.titulo)+'</b><small>'+meta+'</small></span></button>';
+  }).join(''):'<p class="empty">Este curso todavía no tiene charlas.</p>';
+}
+
+// Carga cursos, charlas y documentos. Devuelve una promesa que se cumple cuando ya están pintados.
+function cargarTodo(){
+  return new Promise(listo=>Cueva.cargar(el('lista'),
+    ()=>Admin.iniciar().then(sb=>sb.from('cursos').select('id,codigo,nombre,periodo,charlas(id,curso_id,titulo,fecha,tipo,ponente,tema,documentos(id,charla_id,nombre,formato,url,orden))').order('codigo',{ascending:false})),
+    filas=>{
+      CURSOS=filas.map(c=>Object.assign({},c,{charlas:(c.charlas||[])
+        .map(ch=>Object.assign({},ch,{documentos:(ch.documentos||[]).slice().sort(porOrden)}))
+        .sort((a,b)=>(a.fecha||'9999').localeCompare(b.fecha||'9999')||String(a.titulo).localeCompare(String(b.titulo),'es'))}));
+      if(!CURSOS.some(c=>String(c.id)===String(cursoId))) cursoId=CURSOS.length?CURSOS[0].id:null;
+      el('curso_id').innerHTML='<option value="">Elige un curso</option>'+CURSOS.map(c=>'<option value="'+esc(c.id)+'">'+esc(nombreCurso(c))+'</option>').join('');
+      pintarLista();
+      listo();
+    }));
+}
+
+el('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;cursoId=b.dataset.id;pintarLista();});
+el('anadir').addEventListener('click',()=>abrirCharla(null));
+el('lista').addEventListener('click',e=>{
+  const b=e.target.closest('.fila'); if(!b) return;
+  const ch=buscarCharla(b.dataset.id); if(ch) abrirCharla(ch);
+});
+
+// ---------- Formulario de charla ----------
+function pintarCharla(){
+  el('charla-titulo').textContent=charla?'Editar charla':'Nueva charla';
+  el('borrar-charla').hidden=!charla;
+  el('documentos').hidden=!charla;
+  el('docs-nueva').hidden=!!charla;
+  pintarDocs();
+}
+function pintarDocs(){
+  if(!charla) return;
+  const docs=charla.documentos;
+  el('lista-docs').innerHTML=docs.length?docs.map(d=>{
+    const g=grupoDe(d.orden);
+    return '<button type="button" class="fila doc-fila" data-id="'+esc(d.id)+'"><span class="fmt">'+esc(d.formato||'—')+'</span><span class="st"><b>'+esc(d.nombre)+'</b><small>'+esc(g?NOMBRE_GRUPO[g]:'Sin grupo')+'</small></span></button>';
+  }).join(''):'<p class="empty">Esta charla todavía no tiene documentos.</p>';
+}
+function abrirCharla(ch,yaAbierta){
+  charla=ch||null;
+  Admin.rellenar(formCharla,ch?{curso_id:ch.curso_id,titulo:ch.titulo,fecha:ch.fecha,tipo:TIPOS_CHARLA.includes(ch.tipo)?ch.tipo:'',ponente:ch.ponente,tema:ch.tema}
+    :{curso_id:cursoActual()?cursoActual().id:'',titulo:'',fecha:'',tipo:'',ponente:'',tema:''});
+  pintarCharla();
+  if(yaAbierta) Admin.mostrar('vista-charla'); else Admin.abrir('vista-charla');
+}
+
+formCharla.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!Admin.validar(formCharla)) return;
+  const v=n=>formCharla.elements[n].value;
+  const curso=CURSOS.find(c=>String(c.id)===v('curso_id')); // se envía el id tal como viene de la base de datos
+  const fila={curso_id:curso.id,titulo:Admin.texto(v('titulo')),fecha:Admin.texto(v('fecha')),tipo:Admin.texto(v('tipo')),ponente:Admin.texto(v('ponente')),tema:Admin.texto(v('tema'))};
+  const sb=Admin.sb(), id=charla&&charla.id;
+  const filas=await Admin.escribir(formCharla,
+    ()=>id?sb.from('charlas').update(fila).eq('id',id).select('id'):sb.from('charlas').insert(fila).select('id'),
+    id?'Charla actualizada.':'Charla añadida. Ya puedes añadirle documentos.');
+  if(!filas) return;
+  cursoId=curso.id;
+  if(id){Admin.cerrar();cargarTodo();return;}
+  // Charla nueva: se queda abierta para añadirle documentos.
+  await cargarTodo();
+  const nueva=buscarCharla(filas[0].id);
+  if(nueva) abrirCharla(nueva,true); else Admin.cerrar();
+});
+
+el('borrar-charla').addEventListener('click',async()=>{
+  if(!charla) return;
+  const sb=Admin.sb(), id=charla.id;
+  // Se cuentan los documentos en la base de datos justo antes de preguntar.
+  let n=charla.documentos.length;
+  try{const r=await sb.from('documentos').select('id',{count:'exact',head:true}).eq('charla_id',id);if(!r.error&&r.count!=null)n=r.count;}catch(e){}
+  const si=await Admin.confirmar('Se borrará la charla «'+charla.titulo+'»'+(n?' y también sus '+n+(n===1?' documento':' documentos'):'')+'. Esta acción no se puede deshacer.');
+  if(!si) return;
+  const ok=await Admin.escribir(formCharla,()=>sb.from('charlas').delete().eq('id',id).select('id'),'Charla borrada.');
+  if(ok){Admin.cerrar();cargarTodo();}
+});
+
+// ---------- Documentos ----------
+function abrirDoc(d){
+  doc=d||null;
+  el('doc-titulo').textContent=d?'Editar documento':'Nuevo documento';
+  el('doc-charla').textContent='Charla: '+charla.titulo;
+  el('borrar-doc').hidden=!d;
+  Admin.rellenar(formDoc,d?{nombre:d.nombre,formato:d.formato==='Word'?'Word':'PDF',url:d.url,grupo:grupoDe(d.orden)}
+    :{nombre:'',formato:'PDF',url:'',grupo:'apuntes'});
+  Admin.abrir('vista-doc');
+}
+el('anadir-doc').addEventListener('click',()=>{if(charla)abrirDoc(null);});
+el('lista-docs').addEventListener('click',e=>{
+  const b=e.target.closest('.fila'); if(!b||!charla) return;
+  const d=charla.documentos.find(x=>String(x.id)===b.dataset.id); if(d) abrirDoc(d);
+});
+
+// Tras guardar o borrar un documento: se recargan los datos y se vuelve a la charla con la lista al día.
+async function volverACharla(){
+  const id=charla.id;
+  Admin.cerrar();
+  await cargarTodo();
+  charla=buscarCharla(id);
+  if(charla) pintarDocs(); else Admin.mostrar('vista-lista');
+}
+
+formDoc.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!Admin.validar(formDoc)) return;
+  const v=n=>formDoc.elements[n].value;
+  const grupo=v('grupo');
+  // Si no cambia de grupo, conserva su orden; si es nuevo o cambia de grupo, toma el siguiente número libre.
+  const orden=doc&&grupoDe(doc.orden)===grupo?doc.orden:siguienteOrden(charla.documentos,grupo,doc&&doc.id);
+  if(orden==null){Admin.estado(formDoc,'Este grupo ya tiene 99 documentos y no caben más.',true);return;}
+  const fila={charla_id:charla.id,nombre:Admin.texto(v('nombre')),formato:v('formato'),url:v('url').trim(),orden};
+  const sb=Admin.sb(), id=doc&&doc.id;
+  const ok=await Admin.escribir(formDoc,
+    ()=>id?sb.from('documentos').update(fila).eq('id',id).select('id'):sb.from('documentos').insert(fila).select('id'),
+    id?'Documento actualizado.':'Documento añadido.');
+  if(ok) volverACharla();
+});
+
+el('borrar-doc').addEventListener('click',async()=>{
+  if(!doc) return;
+  const si=await Admin.confirmar('Se borrará el documento «'+doc.nombre+'». Esta acción no se puede deshacer.');
+  if(!si) return;
+  const sb=Admin.sb(), id=doc.id;
+  const ok=await Admin.escribir(formDoc,()=>sb.from('documentos').delete().eq('id',id).select('id'),'Documento borrado.');
+  if(ok) volverACharla();
+});
+
+Admin.obligatorios(formCharla);
+Admin.obligatorios(formDoc);
+cargarTodo();
+if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+</script>
+</body>
+</html>

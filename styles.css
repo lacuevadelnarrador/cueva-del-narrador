@@ -322,11 +322,79 @@ button.item{width:100%;font:inherit;text-align:left;cursor:pointer}
 .nav a.acceso.on svg{background:rgba(20,38,42,.16)}
 .nav a.acceso:focus-visible{outline-color:#fff;outline-offset:2px;box-shadow:0 0 0 4px var(--nav),0 8px 16px rgba(0,0,0,.35)}
 
+/* ---------- Panel de administración ---------- */
+/* Tarjeta de acceso en "Más": acento ámbar. Texto #14262A sobre #FFBA55 = 9,6:1 */
+.item.admin{border:2px solid var(--amber);box-shadow:var(--sh2)}
+.item.admin .ic{background:var(--amber);color:#14262A}
+.volver{display:inline-flex;align-items:center;gap:6px;min-height:44px;justify-self:start;margin-bottom:-18px;color:var(--link);font-size:15px;text-decoration:underline;text-underline-offset:3px}
+.barra-admin{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.barra-admin .chips{padding:0;margin:0;flex:1 1 auto}
+.barra-admin .btn{flex:none}
+.barra-admin .cuenta{margin:0}
+.tabs+.barra-admin{margin-top:14px}
+.de-charla{margin:-8px 0 14px}
+.grupo{font-size:16px;color:var(--muted);letter-spacing:.06em;margin:20px 0 10px}
+.grupo:first-child{margin-top:0}
+.fila{display:flex;align-items:center;gap:14px;width:100%;min-height:64px;padding:12px 14px;margin-bottom:10px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh1);color:var(--ink);font:inherit;text-align:left;cursor:pointer;transition:transform .12s var(--ease),box-shadow .2s var(--ease)}
+.fila::after{content:"";flex:none;width:8px;height:8px;border-right:2px solid var(--muted);border-top:2px solid var(--muted);transform:rotate(45deg);margin-right:6px}
+.fila:active{transform:scale(.98)}
+.fila .st{flex:1}
+.fila .st small{overflow-wrap:anywhere}
+.fila .date{min-width:52px;padding:6px 4px}
+.fila .date b{font-size:22px}
+.fila .date small{display:block}
+.fila .fmt{flex:none;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.04em;text-transform:uppercase;background:var(--accent);color:#fff;border-radius:6px;padding:2px 8px}
+.fila.doc-fila{min-height:56px;background:var(--bg);box-shadow:none}
+.formulario h2{font-size:26px;color:var(--title);margin-bottom:16px}
+.formulario h2:focus{outline:none}
+.formulario h3{font-size:20px;color:var(--title);margin-bottom:6px}
+/* Campos obligatorios: asterisco en la etiqueta (el lector de pantalla usa aria-required) */
+.ast{color:#A33A26;font-weight:700}
+.leyenda-obligatorio{margin:-8px 0 14px}
+.pista{font-size:13px;color:var(--muted)}
+.entrada{width:100%;min-height:48px;border:1.5px solid var(--muted);background:var(--card);color:var(--ink);border-radius:var(--r-s);padding:10px 14px;font-family:'Lora',serif;font-size:16px;line-height:1.4;color-scheme:light;transition:border-color .2s var(--ease)}
+textarea.entrada{min-height:104px;resize:vertical}
+select.entrada{cursor:pointer}
+.entrada:focus-visible{border-color:var(--chipline)}
+/* Error: no solo color. Borde más grueso, icono y mensaje de texto junto al campo */
+.entrada[aria-invalid="true"]{border-color:#B3412B;border-width:2px;box-shadow:inset 4px 0 0 #B3412B}
+.error-campo{display:flex;align-items:flex-start;gap:6px;font-size:14px;font-weight:600;color:#A33A26}
+.error-campo::before{content:"!";content:"!" / "";flex:none;display:grid;place-items:center;width:18px;height:18px;margin-top:1px;border-radius:50%;background:#A33A26;color:#fff;font-family:'Oswald',sans-serif;font-size:13px;line-height:1}
+.opciones{border:0;padding:0;margin:0 0 12px;display:grid;gap:2px;min-width:0}
+.opciones legend{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:13px;color:var(--muted);padding:0;margin-bottom:4px}
+.opcion{display:flex;align-items:center;gap:10px;min-height:44px;font-size:16px;cursor:pointer}
+.opcion input{width:22px;height:22px;margin:0;accent-color:var(--teal-700);flex:none}
+.botones-form{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.btn.sec{background:transparent;color:var(--link);border:1.5px solid var(--chipline);box-shadow:none}
+/* Blanco sobre #B3412B = 5,6:1 */
+.btn.peligro{background:#B3412B;color:#fff}
+.formulario .btn.peligro{margin-left:auto}
+.subseccion{margin-top:24px;padding-top:18px;border-top:1px solid var(--line)}
+.subseccion .barra-admin h3{margin:0}
+.subseccion>.pista{margin-bottom:12px}
+/* Avisos flotantes, por encima de la barra inferior */
+.avisos{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));width:calc(100% - 32px);max-width:448px;z-index:20;display:grid;gap:8px;pointer-events:none}
+.toast{background:var(--teal-deep);color:#fff;border-left:5px solid var(--aqua);border-radius:var(--r-s);padding:12px 16px;font-size:15px;box-shadow:var(--sh2);animation:subir .22s var(--ease)}
+.toast.err{border-left-color:#E8735A}
+/* Diálogo de confirmación */
+.dialogo{border:0;border-radius:var(--r-m);background:var(--card);color:var(--ink);padding:22px 20px 18px;width:calc(100% - 32px);max-width:400px;box-shadow:var(--sh2)}
+.dialogo::backdrop{background:rgba(15,29,32,.6)}
+.dialogo h2{font-size:24px;color:var(--title);margin-bottom:10px}
+.dialogo p{margin-bottom:16px}
+.dialogo .botones-form{justify-content:flex-end}
+@media (prefers-color-scheme:dark){
+  .entrada{color-scheme:dark}
+  .error-campo,.ast{color:#F2A08E}
+  .error-campo::before{background:#F2A08E;color:#14262A}
+  .entrada[aria-invalid="true"]{border-color:#E8735A;box-shadow:inset 4px 0 0 #E8735A}
+}
+
 /* ---------- Respuesta al puntero (solo ratón/trackpad) ---------- */
 @media (hover:hover){
   .btn:hover{filter:brightness(1.08);box-shadow:var(--sh2)}
   a.item:hover,a.doc:hover{box-shadow:var(--sh2);transform:translateY(-1px)}
   a.item:hover::after{transform:translateX(2px) rotate(45deg)}
+  .fila:hover{box-shadow:var(--sh2);transform:translateY(-1px)}
   .chip:hover:not(.on),.tab:hover:not([aria-selected="true"]){background:var(--bg)}
   button.day:hover:not(.has){background:var(--bg)}
   .nav a:hover{color:var(--navink)}
