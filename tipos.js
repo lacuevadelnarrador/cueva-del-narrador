@@ -15,11 +15,15 @@ const OTRO = { n: 'Otro', c: '#9DB4B8', t: '#14262A' };
 // PUBLICACIONES EN REDES (solo las ve el panel de administración; no son un tipo de evento)
 // Van aparte de TIPOS para que no salgan en las leyendas ni en los filtros de eventos.
 const PUBLICACION = { n: 'Publicación', c: '#C3A6E0', t: '#14262A' };
-// Estados de una publicación, en orden. n = etiqueta, p = nombre del filtro, c / t = colores de la etiqueta (el texto va siempre).
+// Estados de una publicación, en orden de atención (el primero es el que más la requiere).
+// n = etiqueta, p = nombre del filtro, f = nombre en plural femenino para el calendario ("1 pendiente", "2 publicadas"),
+// c / t = colores de la etiqueta (el texto va siempre),
+// b / s / w = color, trazo y grosor del contorno del día en el calendario del panel (el trazo distinto evita depender solo del color;
+// todos tienen al menos 3:1 frente al violeta de PUBLICACION).
 const ESTADOS = {
-  pendiente:  { n: 'Pendiente',  p: 'Pendientes',  c: '#ECE7DF', t: '#14262A' },
-  programado: { n: 'Programado', p: 'Programadas', c: '#A9DDE2', t: '#14262A' },
-  publicado:  { n: 'Publicado',  p: 'Publicadas',  c: '#8FBF9F', t: '#14262A' }
+  pendiente:  { n: 'Pendiente',  p: 'Pendientes',  f: ['pendiente', 'pendientes'],   c: '#ECE7DF', t: '#14262A', b: '#B71C1C', s: 'solid',  w: '3px' },
+  programado: { n: 'Programado', p: 'Programadas', f: ['programada', 'programadas'], c: '#A9DDE2', t: '#14262A', b: '#0D47A1', s: 'dashed', w: '3px' },
+  publicado:  { n: 'Publicado',  p: 'Publicadas',  f: ['publicada', 'publicadas'],   c: '#8FBF9F', t: '#14262A', b: '#1B5E20', s: 'double', w: '4px' }
 };
 const tipo = k => TIPOS[k] || OTRO;
 

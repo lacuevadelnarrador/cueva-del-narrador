@@ -2,7 +2,7 @@
 // Al cambiar archivos importantes, sube el número de versión para forzar la actualización.
 // Aquí solo se guardan los archivos de la propia web (páginas, estilos, imágenes), que no llevan datos.
 // Los datos de socios vienen de Supabase y NUNCA se guardan en caché: sin sesión o sin conexión no están disponibles.
-const VERSION = 'cueva-v17';
+const VERSION = 'cueva-v18';
 const ARCHIVOS = [
   './',
   'index.html',
