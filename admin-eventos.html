@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Eventos · Administración · La Cueva del Narrador</title>
+<title>Charlas y Eventos · Administración · La Cueva del Narrador</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#528A93">
 <link rel="manifest" href="manifest.webmanifest">
@@ -23,8 +23,8 @@
       </div>
       <div class="avatar" aria-label="Tu perfil"></div>
     </div>
-    <h1>Eventos</h1>
-    <p class="sub">Administración del calendario.</p>
+    <h1 class="largo">Charlas y Eventos</h1>
+    <p class="sub">Clases, charlas, sesiones de escritura y sus documentos.</p>
   </header>
 
   <main>
@@ -32,7 +32,7 @@
 
     <p class="pista">Los retos se gestionan en <a href="admin-retos.html" style="color:var(--link);text-decoration:underline;text-underline-offset:3px">Administración &gt; Retos</a> y aparecen solos en el calendario el día de inicio.</p>
 
-    <section id="vista-lista" aria-label="Lista de eventos">
+    <section id="vista-lista" aria-label="Lista de charlas y eventos">
       <div class="barra-admin">
         <div class="chips" id="filtro" role="group" aria-label="Qué eventos mostrar">
           <button type="button" class="chip on" data-f="proximos" aria-pressed="true">Próximos</button>
@@ -41,6 +41,7 @@
         </div>
         <button type="button" class="btn" id="anadir" hidden>+ Añadir</button>
       </div>
+      <div class="chips" id="filtro-tipo" role="group" aria-label="Filtrar por tipo"></div>
       <p class="cuenta" id="cuenta" aria-live="polite"></p>
       <div id="lista"></div>
     </section>
@@ -71,12 +72,67 @@
         </div>
         <div class="campo">
           <label for="detalle">Detalle</label>
-          <textarea class="entrada" id="detalle" name="detalle" required></textarea>
+          <textarea class="entrada" id="detalle" name="detalle" aria-describedby="detalle-pista"></textarea>
+          <p class="pista" id="detalle-pista">Es el resumen de la charla. Obligatorio cuando la fecha ya ha llegado.</p>
+        </div>
+        <div id="de-charla" hidden>
+          <div class="campo">
+            <label for="curso_id">Curso</label>
+            <select class="entrada" id="curso_id" name="curso_id" required disabled></select>
+          </div>
+          <div class="campo">
+            <label for="ponente">Ponente</label>
+            <input class="entrada" id="ponente" name="ponente" type="text" autocomplete="off" disabled>
+          </div>
         </div>
         <div class="botones-form">
           <button type="submit" class="btn">Guardar</button>
           <button type="button" class="btn sec" data-cancelar>Cancelar</button>
           <button type="button" class="btn peligro" id="borrar" hidden>Borrar</button>
+        </div>
+
+        <div class="subseccion" id="documentos" aria-labelledby="docs-titulo" hidden>
+          <div class="barra-admin">
+            <h3 id="docs-titulo">Documentos</h3>
+            <button type="button" class="btn" id="anadir-doc">+ Añadir</button>
+          </div>
+          <p class="pista">Primero los apuntes de clase y luego las actividades.</p>
+          <div id="lista-docs"></div>
+        </div>
+        <p class="pista subseccion" id="docs-nuevo" hidden>Guarda el evento para poder añadirle documentos.</p>
+      </form>
+    </section>
+
+    <section id="vista-doc" hidden>
+      <form class="card formulario" id="form-doc" novalidate>
+        <h2 id="doc-titulo" tabindex="-1" data-foco>Nuevo documento</h2>
+        <p class="pista de-charla" id="doc-evento"></p>
+        <p class="msg" data-estado hidden></p>
+        <div class="campo">
+          <label for="nombre">Nombre</label>
+          <input class="entrada" id="nombre" name="nombre" type="text" required autocomplete="off">
+        </div>
+        <div class="campo">
+          <label for="formato">Formato</label>
+          <select class="entrada" id="formato" name="formato" required>
+            <option value="PDF">PDF</option>
+            <option value="Word">Word</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="url">Enlace</label>
+          <input class="entrada" id="url" name="url" type="url" inputmode="url" required autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="https://drive.google.com/..." aria-describedby="url-pista">
+          <p class="pista" id="url-pista">Tiene que empezar por https://</p>
+        </div>
+        <fieldset class="opciones" role="radiogroup">
+          <legend>Grupo</legend>
+          <label class="opcion"><input type="radio" name="grupo" value="apuntes" required> Apuntes de clase</label>
+          <label class="opcion"><input type="radio" name="grupo" value="actividad" required> Actividad</label>
+        </fieldset>
+        <div class="botones-form">
+          <button type="submit" class="btn">Guardar</button>
+          <button type="button" class="btn sec" data-cancelar>Cancelar</button>
+          <button type="button" class="btn peligro" id="borrar-doc" hidden>Borrar</button>
         </div>
       </form>
     </section>
@@ -95,42 +151,85 @@
 <script src="auth.js"></script>
 <script src="admin.js"></script>
 <script>
-const esc=Admin.esc, el=id=>document.getElementById(id), form=el('form');
-let EVENTOS=[], filtro='proximos', editando=null;
+const esc=Admin.esc, el=id=>document.getElementById(id), form=el('form'), formDoc=el('form-doc');
+// Los eventos de charla llevan curso, ponente y documentos. Las sesiones de escritura, no.
+const TIPOS_CHARLA=['clase','marketing','invitado'];
+const esCharla=t=>TIPOS_CHARLA.includes(t);
+const SIN_SESION='Quita primero sus documentos.';
+let EVENTOS=[], CURSOS=[], filtro='proximos', filtroTipo='todos', editando=null, doc=null;
+// Orden de los botones del filtro por tipo
+const ORDEN_TIPOS=['clase','marketing','sesion','invitado'];
+
+const nombreCurso=c=>c.nombre||c.codigo||'Curso';
+const buscar=id=>EVENTOS.find(x=>String(x.id)===String(id))||null;
+const nDocs=n=>n+(n===1?' documento':' documentos');
 
 // Los retos no se crean aquí: salen de la tabla retos (Administración > Retos).
 el('tipo').innerHTML='<option value="">Elige un tipo</option>'+Object.entries(TIPOS).filter(([k])=>k!=='reto').map(([k,t])=>'<option value="'+esc(k)+'">'+esc(t.n)+'</option>').join('');
-// Todos los campos son obligatorios, también la hora.
-Admin.obligatorios(form);
 
+// ---------- Orden de los documentos ----------
+// Apuntes de clase: 101, 102, 103...  Actividades: 201, 202, 203...
+// Un documento nuevo recibe el siguiente número libre de su grupo dentro del evento.
+// Los documentos que ya existen no se renumeran nunca.
+const BASE={apuntes:100,actividad:200};
+const grupoDe=o=>o>=101&&o<=199?'apuntes':o>=201&&o<=299?'actividad':null;
+const NOMBRE_GRUPO={apuntes:'Apuntes de clase',actividad:'Actividad'};
+const porOrden=(a,b)=>(a.orden??Infinity)-(b.orden??Infinity);
+function siguienteOrden(docs,grupo,excluirId){
+  const usados=docs.filter(d=>String(d.id)!==String(excluirId)&&grupoDe(d.orden)===grupo).map(d=>d.orden);
+  const base=BASE[grupo];
+  const siguiente=usados.length?Math.max(...usados)+1:base+1;
+  if(siguiente<=base+99) return siguiente;
+  for(let n=base+1;n<=base+99;n++) if(!usados.includes(n)) return n; // grupo lleno al final: se usa el primer hueco
+  return null;
+}
+
+// ---------- Lista ----------
 const orden=(a,b)=>(a.fecha+(a.hora||'')).localeCompare(b.fecha+(b.hora||''));
+// Botones de tipo: salen de TODOS los eventos cargados (no de los filtrados por fecha), así no cambian al pulsar Próximos o Pasados.
+// Si el tipo elegido ya no existe (por ejemplo, tras borrar su último evento), se vuelve a "Todos".
+function pintarTipos(){
+  const hay=new Set(EVENTOS.map(e=>e.tipo));
+  const ts=ORDEN_TIPOS.filter(t=>hay.has(t));
+  if(filtroTipo!=='todos'&&!ts.includes(filtroTipo)) filtroTipo='todos';
+  el('filtro-tipo').innerHTML=[['todos','Todos']].concat(ts.map(t=>[t,TIPOS[t].n])).map(([k,n])=>
+    '<button type="button" class="chip'+(k===filtroTipo?' on':'')+'" data-t="'+esc(k)+'" aria-pressed="'+(k===filtroTipo)+'">'+esc(n)+'</button>').join('');
+}
+// Los dos filtros se combinan: fecha (Próximos / Pasados / Todos) y tipo. Se agrupa por mes lo que queda.
 function pintar(){
   const hoy=Admin.hoy();
-  let lista=EVENTOS.filter(e=>filtro==='todos'||(filtro==='proximos'?e.fecha>=hoy:e.fecha<hoy)).sort(orden);
+  let lista=EVENTOS.filter(e=>(filtro==='todos'||(filtro==='proximos'?e.fecha>=hoy:e.fecha<hoy))&&(filtroTipo==='todos'||e.tipo===filtroTipo)).sort(orden);
   if(filtro==='pasados') lista.reverse(); // los pasados, del más reciente al más antiguo
   el('cuenta').textContent=lista.length+(lista.length===1?' evento':' eventos');
   el('lista').innerHTML=lista.length?Admin.agrupar(lista,e=>Admin.mes(e.fecha)).map(([m,evs])=>
     '<h3 class="grupo">'+esc(m)+'</h3>'+evs.map(e=>{
       const t=tipo(e.tipo);
-      const meta=[Admin.fecha(e.fecha),Admin.hora(e.hora)&&Admin.hora(e.hora)+' h',e.lugar,e.tipo?t.n:'Sin tipo'].filter(Boolean).map(esc).join(' · ');
+      const curso=esCharla(e.tipo)?CURSOS.find(c=>String(c.id)===String(e.curso_id)):null;
+      const deCharla=esCharla(e.tipo)?[curso?'Curso '+(curso.codigo||nombreCurso(curso)):'Sin curso',nDocs(e.documentos.length)]:[];
+      const meta=[Admin.fecha(e.fecha),Admin.hora(e.hora)&&Admin.hora(e.hora)+' h',e.lugar,e.tipo?t.n:'Sin tipo'].concat(deCharla).filter(Boolean).map(esc).join(' · ');
       return '<button type="button" class="fila" data-id="'+esc(e.id)+'"><span class="date" style="background:'+t.c+';color:'+t.t+'"><b>'+esc(Admin.dia(e.fecha))+'</b><small>'+esc(Admin.diaSemana(e.fecha))+'</small></span><span class="st"><b>'+esc(e.titulo)+'</b><small>'+meta+'</small></span></button>';
     }).join('')).join('')
-    :'<p class="empty">'+({proximos:'No hay eventos próximos.',pasados:'No hay eventos pasados.',todos:'Todavía no hay eventos.'})[filtro]+'</p>';
+    :'<p class="empty">'+(EVENTOS.length?'No hay eventos con estos filtros.':'Todavía no hay eventos.')+'</p>';
 }
 
+// Carga eventos (con sus documentos) y cursos. Devuelve una promesa que se cumple cuando ya están pintados.
 function cargarLista(){
-  Cueva.cargar(el('lista'),
-    ()=>Admin.iniciar().then(sb=>sb.from('eventos').select('id,fecha,hora,titulo,tipo,lugar,detalle').order('fecha').order('hora',{nullsFirst:true})),
-    filas=>{EVENTOS=filas.filter(e=>e.fecha&&e.tipo!=='reto');el('anadir').hidden=false;pintar();});
-}
-
-function abrirForm(ev){
-  editando=ev||null;
-  el('form-titulo').textContent=ev?'Editar evento':'Nuevo evento';
-  el('borrar').hidden=!ev;
-  Admin.rellenar(form,ev?{titulo:ev.titulo,fecha:ev.fecha,hora:Admin.hora(ev.hora),tipo:TIPOS[ev.tipo]?ev.tipo:'',lugar:ev.lugar,detalle:ev.detalle}
-    :{titulo:'',fecha:'',hora:'',tipo:'',lugar:'',detalle:''});
-  Admin.abrir('vista-form');
+  return new Promise(listo=>Cueva.cargar(el('lista'),
+    ()=>Admin.iniciar().then(sb=>Promise.all([
+      sb.from('eventos').select('id,fecha,hora,titulo,tipo,lugar,detalle,curso_id,ponente,documentos(id,evento_id,nombre,formato,url,orden)').order('fecha').order('hora',{nullsFirst:true}),
+      sb.from('cursos').select('id,codigo,nombre').order('codigo',{ascending:false})
+    ])).then(([ev,cu])=>({error:ev.error||cu.error,data:{eventos:ev.data||[],cursos:cu.data||[]}})),
+    ({eventos,cursos})=>{
+      EVENTOS=eventos.filter(e=>e.fecha&&e.tipo!=='reto').map(e=>Object.assign({},e,{documentos:(e.documentos||[]).slice().sort(porOrden)}));
+      CURSOS=cursos;
+      const sel=el('curso_id'), antes=sel.value;
+      sel.innerHTML='<option value="">Elige un curso</option>'+CURSOS.map(c=>'<option value="'+esc(c.id)+'">'+esc(nombreCurso(c))+'</option>').join('');
+      sel.value=antes;
+      el('anadir').hidden=false;
+      pintarTipos();
+      pintar();
+      listo();
+    }));
 }
 
 el('filtro').addEventListener('click',e=>{
@@ -139,34 +238,162 @@ el('filtro').addEventListener('click',e=>{
   el('filtro').querySelectorAll('.chip').forEach(c=>{const on=c===b;c.classList.toggle('on',on);c.setAttribute('aria-pressed',on);});
   pintar();
 });
+el('filtro-tipo').addEventListener('click',e=>{
+  const b=e.target.closest('.chip'); if(!b) return;
+  filtroTipo=b.dataset.t;
+  pintarTipos();
+  pintar();
+});
 el('anadir').addEventListener('click',()=>abrirForm(null));
 el('lista').addEventListener('click',e=>{
   const b=e.target.closest('.fila'); if(!b) return;
-  const ev=EVENTOS.find(x=>String(x.id)===b.dataset.id); if(ev) abrirForm(ev);
+  const ev=buscar(b.dataset.id); if(ev) abrirForm(ev);
 });
+
+// ---------- Formulario del evento ----------
+// Detalle: obligatorio solo si la fecha ya ha llegado (fecha <= hoy, comparando el texto AAAA-MM-DD).
+function detalleObligatorio(){
+  const f=form.elements.fecha.value;
+  form.elements.detalle.required=!!f&&f<=Admin.hoy();
+  Admin.obligatorios(form);
+}
+// Curso, ponente y documentos solo para los tipos de charla. Ocultos quedan desactivados y no se validan.
+// Los documentos solo se pueden añadir a un evento ya guardado como charla.
+function pintarTipo(){
+  const charla=esCharla(form.elements.tipo.value);
+  el('de-charla').hidden=!charla;
+  ['curso_id','ponente'].forEach(n=>{form.elements[n].disabled=!charla;});
+  const conDocs=charla&&!!editando&&esCharla(editando.tipo);
+  el('documentos').hidden=!conDocs;
+  el('docs-nuevo').hidden=!charla||conDocs;
+}
+function pintarDocs(){
+  if(!editando) return;
+  const docs=editando.documentos;
+  el('lista-docs').innerHTML=docs.length?docs.map(d=>{
+    const g=grupoDe(d.orden);
+    return '<button type="button" class="fila doc-fila" data-id="'+esc(d.id)+'"><span class="fmt">'+esc(d.formato||'—')+'</span><span class="st"><b>'+esc(d.nombre)+'</b><small>'+esc(g?NOMBRE_GRUPO[g]:'Sin grupo')+'</small></span></button>';
+  }).join(''):'<p class="empty">Este evento todavía no tiene documentos.</p>';
+}
+function abrirForm(ev,yaAbierto){
+  editando=ev||null;
+  el('form-titulo').textContent=ev?'Editar evento':'Nuevo evento';
+  el('borrar').hidden=!ev;
+  Admin.rellenar(form,ev?{titulo:ev.titulo,fecha:ev.fecha,hora:Admin.hora(ev.hora),tipo:TIPOS[ev.tipo]?ev.tipo:'',lugar:ev.lugar,detalle:ev.detalle,curso_id:ev.curso_id,ponente:ev.ponente}
+    :{titulo:'',fecha:'',hora:'',tipo:'',lugar:'',detalle:'',curso_id:'',ponente:''});
+  pintarTipo();
+  detalleObligatorio();
+  pintarDocs();
+  if(yaAbierto) Admin.mostrar('vista-form'); else Admin.abrir('vista-form');
+}
+form.elements.fecha.addEventListener('input',detalleObligatorio);
+form.elements.fecha.addEventListener('change',detalleObligatorio);
+form.elements.tipo.addEventListener('change',pintarTipo);
 
 form.addEventListener('submit',async e=>{
   e.preventDefault();
-  if(!Admin.validar(form)) return;
+  if(form.getAttribute('aria-busy')) return; // ya se está guardando
+  detalleObligatorio();
+  const ev=editando, id=ev&&ev.id; // instantánea: tras las esperas no se vuelve a leer el registro abierto
   const v=n=>form.elements[n].value;
-  const fila={titulo:Admin.texto(v('titulo')),fecha:v('fecha'),hora:Admin.texto(v('hora')),tipo:Admin.texto(v('tipo')),lugar:Admin.texto(v('lugar')),detalle:Admin.texto(v('detalle'))};
-  const sb=Admin.sb(), id=editando&&editando.id;
-  const ok=await Admin.escribir(form,
-    ()=>id?sb.from('eventos').update(fila).eq('id',id).select('id'):sb.from('eventos').insert(fila).select('id'),
-    id?'Evento actualizado.':'Evento añadido.');
-  if(ok){Admin.cerrar(form);cargarLista();}
+  const charla=esCharla(v('tipo'));
+  // Un evento con documentos no puede pasar a ser una sesión.
+  if(!Admin.validar(form,()=>id&&!charla&&ev.documentos.length?{tipo:SIN_SESION}:null)) return;
+  const curso=charla?CURSOS.find(c=>String(c.id)===v('curso_id')):null; // se envía el id tal como viene de la base de datos
+  const fila={titulo:Admin.texto(v('titulo')),fecha:v('fecha'),hora:Admin.texto(v('hora')),tipo:Admin.texto(v('tipo')),lugar:Admin.texto(v('lugar')),detalle:Admin.texto(v('detalle')),
+    curso_id:curso?curso.id:null,ponente:charla?Admin.texto(v('ponente')):null};
+  const sb=Admin.sb();
+  let tieneDocs=false;
+  // Un evento que acaba de convertirse en charla (nuevo, o antes sesión) se queda abierto para añadirle documentos.
+  const quedaAbierto=charla&&!(ev&&esCharla(ev.tipo));
+  const filas=await Admin.escribir(form,async()=>{
+    // Se comprueba también en la base de datos, justo antes de guardar.
+    if(id&&!charla){
+      const r=await sb.from('documentos').select('id',{count:'exact',head:true}).eq('evento_id',id);
+      if(r.error) return r;
+      if(r.count){tieneDocs=true;throw {mensaje:SIN_SESION};}
+    }
+    return id?sb.from('eventos').update(fila).eq('id',id).select('id'):sb.from('eventos').insert(fila).select('id');
+  },(id?'Evento actualizado.':'Evento añadido.')+(quedaAbierto?' Ya puedes añadirle documentos.':''));
+  if(!filas){
+    if(tieneDocs&&Admin.visible(form)) Admin.validar(form,()=>({tipo:SIN_SESION}));
+    return;
+  }
+  if(!quedaAbierto){Admin.cerrar(form);cargarLista();return;}
+  // Se queda abierto (salvo que durante la espera se pulsara "atrás").
+  const seguia=Admin.visible(form);
+  await cargarLista();
+  const nuevo=buscar(filas[0].id);
+  if(!seguia||!Admin.visible(form)) return;
+  if(nuevo) abrirForm(nuevo,true); else Admin.cerrar(form);
 });
 
 el('borrar').addEventListener('click',async()=>{
   if(!editando) return;
-  const id=editando.id; // se toma antes de la pregunta: después de una espera no se vuelve a leer el registro abierto
-  const si=await Admin.confirmar('Se borrará el evento «'+editando.titulo+'» del '+Admin.fecha(editando.fecha)+'. Esta acción no se puede deshacer.');
+  const sb=Admin.sb(), ev=editando, id=ev.id; // instantánea: tras las esperas no se vuelve a leer el registro abierto
+  // Se cuentan los documentos en la base de datos justo antes de preguntar.
+  let n=ev.documentos.length;
+  try{const r=await sb.from('documentos').select('id',{count:'exact',head:true}).eq('evento_id',id);if(!r.error&&r.count!=null)n=r.count;}catch(e){}
+  const si=await Admin.confirmar('Se borrará el evento «'+ev.titulo+'» del '+Admin.fecha(ev.fecha)+(n?' y también '+(n===1?'su documento':'sus '+n+' documentos'):'')+'. Esta acción no se puede deshacer.');
   if(!si) return;
-  const sb=Admin.sb();
   const ok=await Admin.escribir(form,()=>sb.from('eventos').delete().eq('id',id).select('id'),'Evento borrado.');
   if(ok){Admin.cerrar(form);cargarLista();}
 });
 
+// ---------- Documentos ----------
+function abrirDoc(d){
+  doc=d||null;
+  el('doc-titulo').textContent=d?'Editar documento':'Nuevo documento';
+  el('doc-evento').textContent='Evento: '+editando.titulo;
+  el('borrar-doc').hidden=!d;
+  Admin.rellenar(formDoc,d?{nombre:d.nombre,formato:d.formato==='Word'?'Word':'PDF',url:d.url,grupo:grupoDe(d.orden)}
+    :{nombre:'',formato:'PDF',url:'',grupo:'apuntes'});
+  Admin.abrir('vista-doc');
+}
+el('anadir-doc').addEventListener('click',()=>{if(editando)abrirDoc(null);});
+el('lista-docs').addEventListener('click',e=>{
+  const b=e.target.closest('.fila'); if(!b||!editando) return;
+  const d=editando.documentos.find(x=>String(x.id)===b.dataset.id); if(d) abrirDoc(d);
+});
+
+// Tras guardar o borrar un documento: se recargan los datos y se vuelve al evento (el del documento) con la lista al día.
+async function volverAEvento(id){
+  Admin.cerrar(formDoc);
+  await cargarLista();
+  editando=buscar(id);
+  if(editando) pintarDocs(); else Admin.mostrar('vista-lista');
+}
+
+formDoc.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(formDoc.getAttribute('aria-busy')) return; // ya se está guardando
+  if(!Admin.validar(formDoc)) return;
+  const ev=editando, d=doc; // instantánea
+  const v=n=>formDoc.elements[n].value;
+  const grupo=v('grupo');
+  // Si no cambia de grupo, conserva su orden; si es nuevo o cambia de grupo, toma el siguiente número libre.
+  const orden=d&&grupoDe(d.orden)===grupo?d.orden:siguienteOrden(ev.documentos,grupo,d&&d.id);
+  if(orden==null){Admin.estado(formDoc,'Este grupo ya tiene 99 documentos y no caben más.',true);return;}
+  const fila={evento_id:ev.id,nombre:Admin.texto(v('nombre')),formato:v('formato'),url:v('url').trim(),orden};
+  const sb=Admin.sb(), id=d&&d.id;
+  const ok=await Admin.escribir(formDoc,
+    ()=>id?sb.from('documentos').update(fila).eq('id',id).select('id'):sb.from('documentos').insert(fila).select('id'),
+    id?'Documento actualizado.':'Documento añadido.');
+  if(ok) volverAEvento(fila.evento_id);
+});
+
+el('borrar-doc').addEventListener('click',async()=>{
+  if(!doc) return;
+  const id=doc.id, eventoId=editando.id; // se toman antes de la pregunta
+  const si=await Admin.confirmar('Se borrará el documento «'+doc.nombre+'». Esta acción no se puede deshacer.');
+  if(!si) return;
+  const sb=Admin.sb();
+  const ok=await Admin.escribir(formDoc,()=>sb.from('documentos').delete().eq('id',id).select('id'),'Documento borrado.');
+  if(ok) volverAEvento(eventoId);
+});
+
+Admin.obligatorios(form);
+Admin.obligatorios(formDoc);
 cargarLista();
 if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
 </script>
