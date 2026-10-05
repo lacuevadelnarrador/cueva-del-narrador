@@ -30,11 +30,25 @@
   <main>
     <a class="volver" href="admin.html">&#8249; Volver al panel</a>
 
-    <section id="vista-lista" aria-label="Lista de publicaciones">
-      <div class="barra-admin">
-        <p class="cuenta" id="cuenta" aria-live="polite"></p>
+    <section id="vista-lista" aria-label="Calendario y lista de publicaciones">
+      <div class="barra-admin barra-pub">
         <button type="button" class="btn" id="anadir" hidden>+ Añadir</button>
       </div>
+      <div class="chips" id="filtro" role="group" aria-label="Filtrar por estado"></div>
+
+      <div class="monthbar">
+        <button type="button" class="iconbtn" id="prev" aria-label="Mes anterior">&#8249;</button>
+        <h2 id="titulo-mes" aria-live="polite"></h2>
+        <button type="button" class="iconbtn" id="next" aria-label="Mes siguiente">&#8250;</button>
+      </div>
+      <div class="cal">
+        <div class="dow"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+        <div class="days" id="dias"></div>
+      </div>
+      <div class="legend" id="leyenda"></div>
+
+      <div class="listhead lista-pub"><h2 id="titulo-lista" tabindex="-1"></h2><button type="button" class="chip" id="ver-mes" hidden>Ver todo el mes</button></div>
+      <p class="cuenta" id="cuenta" aria-live="polite"></p>
       <div id="lista"></div>
     </section>
 
@@ -61,6 +75,10 @@
           <select class="entrada" id="curso_id" name="curso_id" required></select>
         </div>
         <div class="campo">
+          <label for="estado">Estado</label>
+          <select class="entrada" id="estado" name="estado" required></select>
+        </div>
+        <div class="campo">
           <label for="detalle">Detalle</label>
           <textarea class="entrada" id="detalle" name="detalle"></textarea>
         </div>
@@ -81,29 +99,94 @@
     <a href="mas.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
   </nav>
 </div>
+<script src="tipos.js"></script>
 <script src="supabase-config.js"></script>
 <script src="auth.js"></script>
 <script src="admin.js"></script>
 <script>
 const esc=Admin.esc, el=id=>document.getElementById(id), form=el('form');
-let PUBLICACIONES=[], CURSOS=[], editando=null;
+let PUBLICACIONES=[], CURSOS=[], editando=null, cargado=false;
 const cursoDe=id=>CURSOS.find(c=>String(c.id)===String(id));
 const nombreCurso=c=>c.nombre||c.codigo||'Curso';
 
-function pintar(){
-  el('cuenta').textContent=PUBLICACIONES.length+(PUBLICACIONES.length===1?' publicación':' publicaciones');
-  el('lista').innerHTML=PUBLICACIONES.length?PUBLICACIONES.map(p=>{
-    const c=p.curso_id!=null&&cursoDe(p.curso_id);
-    const meta=[Admin.fecha(p.fecha),p.plataforma,c&&nombreCurso(c)].filter(Boolean).map(esc).join(' · ');
-    return '<button type="button" class="fila" data-id="'+esc(p.id)+'"><span class="date"><b>'+esc(Admin.dia(p.fecha))+'</b><small>'+esc(Admin.diaSemana(p.fecha))+'</small></span><span class="st"><b>'+esc(p.titulo)+'</b><small>'+meta+'</small></span></button>';
-  }).join(''):'<p class="empty">Todavía no hay publicaciones.</p>';
+// ---------- Calendario ----------
+// Como el calendario de los socios (calendario.html), pero solo con publicaciones.
+// Se abre en el mes actual. El mes visible, el día elegido (sel) y el filtro por estado se mantienen
+// al guardar, borrar, cancelar y cambiar de estado; tras guardar, el calendario salta al mes de la publicación.
+// Las fechas son texto 'AAAA-MM-DD' y se leen por partes, así que la zona horaria no las mueve.
+const MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const mayus=t=>t.charAt(0).toUpperCase()+t.slice(1);
+const dos=n=>String(n).padStart(2,'0');
+const clave=(a,m,d)=>a+'-'+dos(m+1)+'-'+dos(d);
+const partes=f=>{const p=f.split('-').map(Number);return {a:p[0],m:p[1]-1,d:p[2]};};
+const hoy=partes(Admin.hoy());
+let anio=hoy.a, mes=hoy.m, sel=null, filtro='todas';
+const nPubs=n=>n+(n===1?' publicación':' publicaciones');
+const estadoDe=p=>ESTADOS[p.estado]||{n:p.estado||'Sin estado',c:'#ECE7DF',t:'#14262A'};
+const pasaFiltro=p=>filtro==='todas'||p.estado===filtro;
+const orden=(x,y)=>x.fecha.localeCompare(y.fecha)||(Number(x.id)-Number(y.id)); // en el mismo día, por orden de alta
+
+el('estado').innerHTML=Object.entries(ESTADOS).map(([k,e])=>'<option value="'+esc(k)+'">'+esc(e.n)+'</option>').join('');
+el('leyenda').innerHTML='<span><i style="background:'+PUBLICACION.c+'"></i>'+esc(PUBLICACION.n)+'</span>';
+
+function pintarFiltro(){
+  el('filtro').innerHTML=[['todas','Todas']].concat(Object.entries(ESTADOS).map(([k,e])=>[k,e.p])).map(([k,n])=>
+    '<button type="button" class="chip'+(k===filtro?' on':'')+'" data-f="'+esc(k)+'" aria-pressed="'+(k===filtro)+'">'+esc(n)+'</button>').join('');
 }
 
-// Publicaciones de la más reciente a la más antigua, y los cursos para el desplegable.
+function pintarCalendario(delMes){
+  el('titulo-mes').textContent=mayus(MESES[mes])+' '+anio;
+  const primero=(new Date(anio,mes,1).getDay()+6)%7;
+  const total=new Date(anio,mes+1,0).getDate();
+  let h='';
+  for(let i=0;i<primero;i++) h+='<span class="day blank"></span>';
+  for(let d=1;d<=total;d++){
+    const k=clave(anio,mes,d);
+    const n=delMes.filter(p=>p.fecha===k).length;
+    const esHoy=anio===hoy.a&&mes===hoy.m&&d===hoy.d;
+    const estilo=n?' style="background:'+PUBLICACION.c+';color:'+PUBLICACION.t+'"':'';
+    const cls='day'+(n?' has':'')+(esHoy?' today':'')+(sel===k?' sel':'');
+    const label=d+' de '+MESES[mes]+(n?', '+nPubs(n):'')+(esHoy?', hoy':'');
+    h+='<button type="button" class="'+cls+'"'+estilo+' data-k="'+k+'" aria-label="'+esc(label)+'" aria-pressed="'+(sel===k)+'"><span class="num">'+d+'</span></button>';
+  }
+  el('dias').innerHTML=h;
+}
+
+// Cada publicación: la fila (abre el formulario) y, debajo, los tres botones de cambio rápido de estado.
+// Los botones van en un <form> propio para usar Admin.escribir (bloqueo, filas afectadas y mensajes).
+function pintarLista(lista){
+  if(sel){const p=partes(sel);el('titulo-lista').textContent=p.d+' de '+MESES[p.m];}
+  else el('titulo-lista').textContent='Publicaciones de '+MESES[mes];
+  el('ver-mes').hidden=!sel;
+  if(!cargado) return; // mientras carga (o si falla), la lista muestra el aviso
+  el('cuenta').textContent=nPubs(lista.length);
+  el('lista').innerHTML=lista.length?lista.map(p=>{
+    const c=p.curso_id!=null&&cursoDe(p.curso_id), e=estadoDe(p);
+    const meta=[Admin.fecha(p.fecha),p.plataforma,c&&nombreCurso(c)].filter(Boolean).map(esc).join(' · ');
+    const chips=Object.entries(ESTADOS).map(([k,x])=>
+      '<button type="button" class="chip'+(k===p.estado?' on':'')+'" data-e="'+esc(k)+'" aria-pressed="'+(k===p.estado)+'">'+esc(x.n)+'</button>').join('');
+    return '<div class="pub">'
+      +'<button type="button" class="fila" data-id="'+esc(p.id)+'"><span class="date" style="background:'+PUBLICACION.c+';color:'+PUBLICACION.t+'"><b>'+esc(Admin.dia(p.fecha))+'</b><small>'+esc(Admin.diaSemana(p.fecha))+'</small></span>'
+      +'<span class="st"><b>'+esc(p.titulo)+'</b><small>'+meta+'</small><span class="estado-pub" style="background:'+e.c+';color:'+e.t+'">'+esc(e.n)+'</span></span></button>'
+      +'<form class="estado-rapido" data-id="'+esc(p.id)+'" novalidate><div class="chips" role="group" aria-label="'+esc('Estado de «'+(p.titulo||'')+'»')+'">'+chips+'</div><p class="msg" data-estado hidden></p></form>'
+      +'</div>';
+  }).join('')
+    :'<p class="empty">'+(filtro!=='todas'?'No hay publicaciones con este filtro.':!PUBLICACIONES.length?'Todavía no hay publicaciones.':sel?'Ese día no hay publicaciones.':'Este mes no hay publicaciones.')+'</p>';
+}
+
+// El filtro por estado afecta a los días del calendario y a la lista.
+function pintar(){
+  const delMes=PUBLICACIONES.filter(p=>p.fecha&&p.fecha.startsWith(anio+'-'+dos(mes+1))&&pasaFiltro(p)).sort(orden);
+  pintarFiltro();
+  pintarCalendario(delMes);
+  pintarLista(sel?delMes.filter(p=>p.fecha===sel):delMes);
+}
+
+// Publicaciones y cursos (para el desplegable). Devuelve una promesa que se cumple cuando ya están pintados.
 function cargarLista(){
-  Cueva.cargar(el('lista'),
+  return new Promise(listo=>Cueva.cargar(el('lista'),
     ()=>Admin.iniciar().then(sb=>Promise.all([
-      sb.from('publicaciones').select('id,fecha,titulo,plataforma,detalle,curso_id').order('fecha',{ascending:false}),
+      sb.from('publicaciones').select('id,fecha,titulo,plataforma,detalle,curso_id,estado').order('fecha'),
       sb.from('cursos').select('id,codigo,nombre').order('codigo',{ascending:false})
     ])).then(([p,c])=>{
       if(c.error) return c;
@@ -112,39 +195,88 @@ function cargarLista(){
     }),
     filas=>{
       PUBLICACIONES=filas;
-      el('curso_id').innerHTML='<option value="">Elige un curso</option>'+CURSOS.map(c=>'<option value="'+esc(c.id)+'">'+esc(nombreCurso(c))+'</option>').join('');
+      cargado=true;
+      const s=el('curso_id'), antes=s.value;
+      s.innerHTML='<option value="">Elige un curso</option>'+CURSOS.map(c=>'<option value="'+esc(c.id)+'">'+esc(nombreCurso(c))+'</option>').join('');
+      s.value=antes;
       el('anadir').hidden=false;
       pintar();
-    });
+      listo();
+    }));
 }
 
+el('filtro').addEventListener('click',e=>{
+  const b=e.target.closest('.chip'); if(!b) return;
+  filtro=b.dataset.f; pintar();
+  el('filtro').querySelector('[data-f="'+filtro+'"]').focus();
+});
+el('dias').addEventListener('click',e=>{
+  const b=e.target.closest('.day[data-k]'); if(!b) return;
+  sel=sel===b.dataset.k?null:b.dataset.k; pintar();
+  el('dias').querySelector('[data-k="'+b.dataset.k+'"]').focus();
+});
+el('ver-mes').addEventListener('click',()=>{sel=null;pintar();el('titulo-lista').scrollIntoView({block:'nearest'});});
+el('prev').addEventListener('click',()=>{mes--;if(mes<0){mes=11;anio--;}sel=null;pintar();});
+el('next').addEventListener('click',()=>{mes++;if(mes>11){mes=0;anio++;}sel=null;pintar();});
+
+// ---------- Cambio rápido de estado ----------
+// Un toque cambia el estado. No es optimista: se repinta cuando la base de datos lo confirma.
+// Mientras guarda, los botones quedan desactivados y la página bloqueada, así que varios toques seguidos hacen una sola escritura.
+async function cambiarEstado(b){
+  const f=b.closest('form');
+  if(f.getAttribute('aria-busy')) return; // ya se está guardando
+  const id=f.dataset.id, nuevo=b.dataset.e; // instantánea
+  const p=PUBLICACIONES.find(x=>String(x.id)===id);
+  if(!p||p.estado===nuevo||!ESTADOS[nuevo]) return;
+  const sb=Admin.sb();
+  const ok=await Admin.escribir(f,()=>sb.from('publicaciones').update({estado:nuevo}).eq('id',p.id).select('id'),
+    'Estado de «'+p.titulo+'»: '+ESTADOS[nuevo].n+'.');
+  if(!ok){Admin.aviso(f.querySelector('[data-estado]').textContent,'err');return;}
+  await cargarLista();
+  const vuelta=[...el('lista').querySelectorAll('.estado-rapido')].find(x=>x.dataset.id===id);
+  const chip=vuelta&&vuelta.querySelector('[data-e="'+nuevo+'"]');
+  // Si con el filtro activo la publicación ya no se ve, el foco pasa al título de la lista.
+  if(chip&&Admin.visible(chip)) chip.focus({preventScroll:true});
+  else if(Admin.visible(el('titulo-lista'))) el('titulo-lista').focus({preventScroll:true});
+}
+
+// ---------- Formulario ----------
 function abrirForm(p){
   editando=p||null;
   el('form-titulo').textContent=p?'Editar publicación':'Nueva publicación';
   el('borrar').hidden=!p;
-  Admin.rellenar(form,p?{titulo:p.titulo,fecha:p.fecha,plataforma:p.plataforma,curso_id:p.curso_id,detalle:p.detalle}
-    :{titulo:'',fecha:Admin.hoy(),plataforma:'Instagram',curso_id:'',detalle:''});
+  // Nueva: la fecha arranca en el día elegido del calendario o, si no hay ninguno, en hoy.
+  Admin.rellenar(form,p?{titulo:p.titulo,fecha:p.fecha,plataforma:p.plataforma,curso_id:p.curso_id,estado:ESTADOS[p.estado]?p.estado:'',detalle:p.detalle}
+    :{titulo:'',fecha:sel||Admin.hoy(),plataforma:'Instagram',curso_id:'',estado:'pendiente',detalle:''});
   Admin.abrir('vista-form');
 }
 
 el('anadir').addEventListener('click',()=>abrirForm(null));
 el('lista').addEventListener('click',e=>{
+  const ch=e.target.closest('.estado-rapido .chip');
+  if(ch){cambiarEstado(ch);return;}
   const b=e.target.closest('.fila'); if(!b) return;
   const p=PUBLICACIONES.find(x=>String(x.id)===b.dataset.id); if(p) abrirForm(p);
 });
 
 form.addEventListener('submit',async e=>{
   e.preventDefault();
+  if(form.getAttribute('aria-busy')) return; // ya se está guardando
   if(!Admin.validar(form)) return;
   const v=n=>form.elements[n].value;
   const curso=cursoDe(v('curso_id')); // se envía el id tal como viene de la base de datos
   const fila={titulo:Admin.texto(v('titulo')),fecha:v('fecha'),plataforma:Admin.texto(v('plataforma')),
-    curso_id:curso.id,detalle:Admin.texto(v('detalle'))};
-  const sb=Admin.sb(), id=editando&&editando.id;
+    curso_id:curso.id,estado:v('estado'),detalle:Admin.texto(v('detalle'))};
+  const sb=Admin.sb(), id=editando&&editando.id; // instantánea: tras la espera no se vuelve a leer el registro abierto
   const ok=await Admin.escribir(form,
     ()=>id?sb.from('publicaciones').update(fila).eq('id',id).select('id'):sb.from('publicaciones').insert(fila).select('id'),
     id?'Publicación actualizada.':'Publicación añadida.');
-  if(ok){Admin.cerrar(form);cargarLista();}
+  if(!ok) return;
+  // El calendario salta al mes de la publicación guardada; si había un día elegido, pasa a ser el suyo.
+  const p=partes(fila.fecha);
+  anio=p.a; mes=p.m; if(sel) sel=fila.fecha;
+  Admin.cerrar(form);
+  cargarLista();
 });
 
 el('borrar').addEventListener('click',async()=>{
@@ -158,6 +290,7 @@ el('borrar').addEventListener('click',async()=>{
 });
 
 Admin.obligatorios(form);
+pintar();
 cargarLista();
 if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
 </script>

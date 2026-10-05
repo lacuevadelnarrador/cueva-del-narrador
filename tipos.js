@@ -11,6 +11,16 @@ const TIPOS = {
   reto:      { n: 'Reto',                         c: '#A9DDE2', t: '#14262A' }
 };
 const OTRO = { n: 'Otro', c: '#9DB4B8', t: '#14262A' };
+
+// PUBLICACIONES EN REDES (solo las ve el panel de administración; no son un tipo de evento)
+// Van aparte de TIPOS para que no salgan en las leyendas ni en los filtros de eventos.
+const PUBLICACION = { n: 'Publicación', c: '#C3A6E0', t: '#14262A' };
+// Estados de una publicación, en orden. n = etiqueta, p = nombre del filtro, c / t = colores de la etiqueta (el texto va siempre).
+const ESTADOS = {
+  pendiente:  { n: 'Pendiente',  p: 'Pendientes',  c: '#ECE7DF', t: '#14262A' },
+  programado: { n: 'Programado', p: 'Programadas', c: '#A9DDE2', t: '#14262A' },
+  publicado:  { n: 'Publicado',  p: 'Publicadas',  c: '#8FBF9F', t: '#14262A' }
+};
 const tipo = k => TIPOS[k] || OTRO;
 
 // QUÉ HACEMOS EN EL CLUB (lo usan la portada y "Sobre el club")
