@@ -7,6 +7,7 @@ const TIPOS = {
   marketing: { n: 'Clase de marketing',           c: '#8797DB', t: '#14262A' },
   sesion:    { n: 'Sesión de escritura conjunta', c: '#E8A9A9', t: '#14262A' },
   invitado:  { n: 'Charla con invitados',         c: '#FFBA55', t: '#14262A' },
+  otros:     { n: 'Otros',                        c: '#8FBF9F', t: '#14262A' },
   reto:      { n: 'Reto',                         c: '#A9DDE2', t: '#14262A' }
 };
 const OTRO = { n: 'Otro', c: '#9DB4B8', t: '#14262A' };

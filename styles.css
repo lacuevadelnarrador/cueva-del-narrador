@@ -161,6 +161,8 @@ button.day:active{transform:scale(.9)}
 .ev p{font-size:14px;color:var(--muted)}
 .badge{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-top:6px}
 .badge i{width:9px;height:9px;border-radius:50%;display:block}
+.ev .enlaces{list-style:none;margin:4px 0 0;padding:0}
+.ev .enlaces a{display:flex;align-items:center;min-height:44px;color:var(--link);font-size:14px;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
 .empty{padding:20px;color:var(--muted);font-style:italic;text-align:center;border-style:dashed;box-shadow:none}
 
 /* ---------- Biblioteca ---------- */

@@ -82,7 +82,7 @@ function pintarLista(){
   document.getElementById('lista').innerHTML=lista.length?lista.map(c=>{
     const t=tipo(c.tipo);
     const docs=(c.documentos||[]).map(d=>d.enlace
-      ?'<a class="doc" href="'+esc(d.enlace)+'" target="_blank" rel="noopener"><span class="fmt">'+esc(d.formato)+'</span><span class="dn">'+esc(d.nombre)+'</span></a>'
+      ?'<a class="doc" href="'+esc(d.enlace)+'" target="_blank" rel="noopener noreferrer"><span class="fmt">'+esc(d.formato)+'</span><span class="dn">'+esc(d.nombre)+'</span></a>'
       :'<div class="doc off"><span class="fmt">'+esc(d.formato)+'</span><span class="dn">'+esc(d.nombre)+'</span><span class="pend">Pronto</span></div>').join('');
     const meta=[fechaBonita(c.fecha),c.ponente].filter(Boolean).map(esc).join(' · ');
     return '<details class="charla"><summary><span class="tp" style="background:'+t.c+'" aria-hidden="true"></span><span class="st"><b>'+esc(c.titulo)+'</b><small>'+esc(t.n)+(meta?' · '+meta:'')+'</small></span></summary><div class="cuerpo">'+(c.detalle?'<p class="tema">'+esc(c.detalle)+'</p>':'')+(docs?'<div class="docs">'+docs+'</div>':'<p class="empty">Todavía no hay documentos de esta charla.</p>')+'</div></details>';
@@ -103,6 +103,8 @@ const TIPOS_CHARLA=['clase','marketing','invitado'];
 const dos=n=>String(n).padStart(2,'0');
 const hoyLocal=()=>{const d=new Date();return d.getFullYear()+'-'+dos(d.getMonth()+1)+'-'+dos(d.getDate());};
 // Cursos, eventos y documentos solo se leen con sesión de socio. documentos.url es el enlace a Drive.
+// Los enlaces de interés (formato URL, orden 301...) salen al final, tras apuntes y actividades, y solo si empiezan por https://.
+const https=u=>/^https:\/\//i.test(String(u||'').trim())?String(u).trim():'';
 Cueva.cargar(document.getElementById('lista'),
   ()=>Cueva.privada().then(({sb})=>Promise.all([
     sb.from('cursos').select('id,codigo,nombre,periodo').order('codigo',{ascending:false}),
@@ -111,7 +113,7 @@ Cueva.cargar(document.getElementById('lista'),
   ({cursos,eventos})=>{
     const hoy=hoyLocal();
     const charlas=eventos.filter(e=>(e.fecha&&e.fecha<=hoy)||(e.documentos||[]).length).map(e=>Object.assign({},e,{titulo:e.titulo||'',
-      documentos:(e.documentos||[]).slice().sort((a,b)=>(a.orden??Infinity)-(b.orden??Infinity)).map(d=>({nombre:d.nombre,formato:d.formato,enlace:Cueva.urlSegura(d.url)}))}));
+      documentos:(e.documentos||[]).slice().sort((a,b)=>(a.orden??Infinity)-(b.orden??Infinity)).map(d=>({nombre:d.nombre,formato:d.formato,enlace:d.formato==='URL'?https(d.url):Cueva.urlSegura(d.url)}))}));
     CURSOS=cursos.map(c=>({id:String(c.id),nombre:c.nombre||c.codigo||'Curso',periodo:c.periodo||'',
       charlas:charlas.filter(e=>String(e.curso_id)===String(c.id))}));
     cursoId=CURSOS.length?CURSOS[0].id:null;
