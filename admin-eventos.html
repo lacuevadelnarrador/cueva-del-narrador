@@ -33,6 +33,8 @@
     <p class="pista">Los retos se gestionan en <a href="admin-retos.html" style="color:var(--link);text-decoration:underline;text-underline-offset:3px">Administración &gt; Retos</a> y aparecen solos en el calendario el día de inicio.</p>
 
     <section id="vista-lista" aria-label="Lista de charlas y eventos">
+      <div class="tabs" id="tabs" role="tablist" aria-label="Cursos" hidden></div>
+      <p class="periodo" id="periodo" style="margin:10px 0 14px"></p>
       <div class="barra-admin">
         <div class="chips" id="filtro" role="group" aria-label="Qué eventos mostrar">
           <button type="button" class="chip on" data-f="proximos" aria-pressed="true">Próximos</button>
@@ -75,11 +77,11 @@
           <textarea class="entrada" id="detalle" name="detalle" aria-describedby="detalle-pista"></textarea>
           <p class="pista" id="detalle-pista">Es el resumen de la charla. Obligatorio cuando la fecha ya ha llegado.</p>
         </div>
+        <div class="campo">
+          <label for="curso_id">Curso</label>
+          <select class="entrada" id="curso_id" name="curso_id" required></select>
+        </div>
         <div id="de-charla" hidden>
-          <div class="campo">
-            <label for="curso_id">Curso</label>
-            <select class="entrada" id="curso_id" name="curso_id" required disabled></select>
-          </div>
           <div class="campo">
             <label for="ponente">Ponente</label>
             <input class="entrada" id="ponente" name="ponente" type="text" autocomplete="off" disabled>
@@ -156,9 +158,12 @@ const esc=Admin.esc, el=id=>document.getElementById(id), form=el('form'), formDo
 const TIPOS_CHARLA=['clase','marketing','invitado'];
 const esCharla=t=>TIPOS_CHARLA.includes(t);
 const SIN_SESION='Quita primero sus documentos.';
-let EVENTOS=[], CURSOS=[], filtro='proximos', filtroTipo='todos', editando=null, doc=null;
+let EVENTOS=[], CURSOS=[], cursoId=null, filtro='proximos', filtroTipo='todos', editando=null, doc=null;
 // Orden de los botones del filtro por tipo
 const ORDEN_TIPOS=['clase','marketing','sesion','invitado'];
+// Pestaña de defensa para eventos sin curso: solo aparece mientras exista alguno.
+const SIN_CURSO='sin-curso';
+const cursoDe=e=>e.curso_id==null?SIN_CURSO:String(e.curso_id);
 
 const nombreCurso=c=>c.nombre||c.codigo||'Curso';
 const buscar=id=>EVENTOS.find(x=>String(x.id)===String(id))||null;
@@ -186,19 +191,35 @@ function siguienteOrden(docs,grupo,excluirId){
 
 // ---------- Lista ----------
 const orden=(a,b)=>(a.fecha+(a.hora||'')).localeCompare(b.fecha+(b.hora||''));
-// Botones de tipo: salen de TODOS los eventos cargados (no de los filtrados por fecha), así no cambian al pulsar Próximos o Pasados.
+// Pestañas de curso (como en curso.html): una por curso, del más reciente al más antiguo, sin "Todos".
+function pestanas(){
+  const ps=CURSOS.map(c=>({id:String(c.id),nombre:nombreCurso(c),periodo:c.periodo||''}));
+  if(EVENTOS.some(e=>e.curso_id==null)) ps.push({id:SIN_CURSO,nombre:'Sin curso',periodo:''});
+  return ps;
+}
+function pintarTabs(){
+  const ps=pestanas(), tabs=el('tabs');
+  if(!ps.some(p=>p.id===cursoId)) cursoId=ps.length?ps[0].id:null; // por defecto, el curso más reciente
+  tabs.hidden=!ps.length;
+  tabs.innerHTML=ps.map(p=>'<button type="button" class="tab" role="tab" data-id="'+esc(p.id)+'" aria-selected="'+(p.id===cursoId)+'">'+esc(p.nombre)+'</button>').join('');
+  tabs.style.gridTemplateColumns='repeat('+ps.length+',1fr)';
+  const actual=ps.find(p=>p.id===cursoId);
+  el('periodo').textContent=actual?actual.periodo:'';
+}
+const delCurso=()=>EVENTOS.filter(e=>cursoDe(e)===cursoId);
+// Botones de tipo: salen de TODOS los eventos del curso elegido (no de los filtrados por fecha), así no cambian al pulsar Próximos o Pasados.
 // Si el tipo elegido ya no existe (por ejemplo, tras borrar su último evento), se vuelve a "Todos".
 function pintarTipos(){
-  const hay=new Set(EVENTOS.map(e=>e.tipo));
+  const hay=new Set(delCurso().map(e=>e.tipo));
   const ts=ORDEN_TIPOS.filter(t=>hay.has(t));
   if(filtroTipo!=='todos'&&!ts.includes(filtroTipo)) filtroTipo='todos';
   el('filtro-tipo').innerHTML=[['todos','Todos']].concat(ts.map(t=>[t,TIPOS[t].n])).map(([k,n])=>
     '<button type="button" class="chip'+(k===filtroTipo?' on':'')+'" data-t="'+esc(k)+'" aria-pressed="'+(k===filtroTipo)+'">'+esc(n)+'</button>').join('');
 }
-// Los dos filtros se combinan: fecha (Próximos / Pasados / Todos) y tipo. Se agrupa por mes lo que queda.
+// Los tres filtros se combinan: curso, fecha (Próximos / Pasados / Todos) y tipo. Se agrupa por mes lo que queda.
 function pintar(){
   const hoy=Admin.hoy();
-  let lista=EVENTOS.filter(e=>(filtro==='todos'||(filtro==='proximos'?e.fecha>=hoy:e.fecha<hoy))&&(filtroTipo==='todos'||e.tipo===filtroTipo)).sort(orden);
+  let lista=delCurso().filter(e=>(filtro==='todos'||(filtro==='proximos'?e.fecha>=hoy:e.fecha<hoy))&&(filtroTipo==='todos'||e.tipo===filtroTipo)).sort(orden);
   if(filtro==='pasados') lista.reverse(); // los pasados, del más reciente al más antiguo
   el('cuenta').textContent=lista.length+(lista.length===1?' evento':' eventos');
   el('lista').innerHTML=lista.length?Admin.agrupar(lista,e=>Admin.mes(e.fecha)).map(([m,evs])=>
@@ -209,7 +230,7 @@ function pintar(){
       const meta=[Admin.fecha(e.fecha),Admin.hora(e.hora)&&Admin.hora(e.hora)+' h',e.lugar,e.tipo?t.n:'Sin tipo'].concat(deCharla).filter(Boolean).map(esc).join(' · ');
       return '<button type="button" class="fila" data-id="'+esc(e.id)+'"><span class="date" style="background:'+t.c+';color:'+t.t+'"><b>'+esc(Admin.dia(e.fecha))+'</b><small>'+esc(Admin.diaSemana(e.fecha))+'</small></span><span class="st"><b>'+esc(e.titulo)+'</b><small>'+meta+'</small></span></button>';
     }).join('')).join('')
-    :'<p class="empty">'+(EVENTOS.length?'No hay eventos con estos filtros.':'Todavía no hay eventos.')+'</p>';
+    :'<p class="empty">'+(EVENTOS.length?'No hay eventos con estos filtros.':CURSOS.length?'Todavía no hay eventos.':'Todavía no hay cursos. Hay que crearlos primero en la base de datos.')+'</p>';
 }
 
 // Carga eventos (con sus documentos) y cursos. Devuelve una promesa que se cumple cuando ya están pintados.
@@ -217,7 +238,7 @@ function cargarLista(){
   return new Promise(listo=>Cueva.cargar(el('lista'),
     ()=>Admin.iniciar().then(sb=>Promise.all([
       sb.from('eventos').select('id,fecha,hora,titulo,tipo,lugar,detalle,curso_id,ponente,documentos(id,evento_id,nombre,formato,url,orden)').order('fecha').order('hora',{nullsFirst:true}),
-      sb.from('cursos').select('id,codigo,nombre').order('codigo',{ascending:false})
+      sb.from('cursos').select('id,codigo,nombre,periodo').order('codigo',{ascending:false})
     ])).then(([ev,cu])=>({error:ev.error||cu.error,data:{eventos:ev.data||[],cursos:cu.data||[]}})),
     ({eventos,cursos})=>{
       EVENTOS=eventos.filter(e=>e.fecha&&e.tipo!=='reto').map(e=>Object.assign({},e,{documentos:(e.documentos||[]).slice().sort(porOrden)}));
@@ -225,12 +246,20 @@ function cargarLista(){
       const sel=el('curso_id'), antes=sel.value;
       sel.innerHTML='<option value="">Elige un curso</option>'+CURSOS.map(c=>'<option value="'+esc(c.id)+'">'+esc(nombreCurso(c))+'</option>').join('');
       sel.value=antes;
-      el('anadir').hidden=false;
+      el('anadir').hidden=!CURSOS.length; // sin cursos no se puede crear ningún evento
+      pintarTabs();
       pintarTipos();
       pintar();
       listo();
     }));
 }
+
+// Al cambiar de curso, el tipo vuelve a "Todos" (como en curso.html); la fecha se mantiene.
+el('tabs').addEventListener('click',e=>{
+  const b=e.target.closest('.tab'); if(!b) return;
+  cursoId=b.dataset.id; filtroTipo='todos';
+  pintarTabs(); pintarTipos(); pintar();
+});
 
 el('filtro').addEventListener('click',e=>{
   const b=e.target.closest('.chip'); if(!b) return;
@@ -257,12 +286,13 @@ function detalleObligatorio(){
   form.elements.detalle.required=!!f&&f<=Admin.hoy();
   Admin.obligatorios(form);
 }
-// Curso, ponente y documentos solo para los tipos de charla. Ocultos quedan desactivados y no se validan.
+// El curso es obligatorio en todos los eventos. Ponente y documentos, solo para los tipos de charla:
+// ocultos, el ponente queda desactivado y no se valida.
 // Los documentos solo se pueden añadir a un evento ya guardado como charla.
 function pintarTipo(){
   const charla=esCharla(form.elements.tipo.value);
   el('de-charla').hidden=!charla;
-  ['curso_id','ponente'].forEach(n=>{form.elements[n].disabled=!charla;});
+  form.elements.ponente.disabled=!charla;
   const conDocs=charla&&!!editando&&esCharla(editando.tipo);
   el('documentos').hidden=!conDocs;
   el('docs-nuevo').hidden=!charla||conDocs;
@@ -279,8 +309,9 @@ function abrirForm(ev,yaAbierto){
   editando=ev||null;
   el('form-titulo').textContent=ev?'Editar evento':'Nuevo evento';
   el('borrar').hidden=!ev;
+  // Al editar, el curso del evento; al añadir, el de la pestaña activa (en "Sin curso", hay que elegirlo).
   Admin.rellenar(form,ev?{titulo:ev.titulo,fecha:ev.fecha,hora:Admin.hora(ev.hora),tipo:TIPOS[ev.tipo]?ev.tipo:'',lugar:ev.lugar,detalle:ev.detalle,curso_id:ev.curso_id,ponente:ev.ponente}
-    :{titulo:'',fecha:'',hora:'',tipo:'',lugar:'',detalle:'',curso_id:'',ponente:''});
+    :{titulo:'',fecha:'',hora:'',tipo:'',lugar:'',detalle:'',curso_id:cursoId===SIN_CURSO?'':cursoId,ponente:''});
   pintarTipo();
   detalleObligatorio();
   pintarDocs();
@@ -299,9 +330,9 @@ form.addEventListener('submit',async e=>{
   const charla=esCharla(v('tipo'));
   // Un evento con documentos no puede pasar a ser una sesión.
   if(!Admin.validar(form,()=>id&&!charla&&ev.documentos.length?{tipo:SIN_SESION}:null)) return;
-  const curso=charla?CURSOS.find(c=>String(c.id)===v('curso_id')):null; // se envía el id tal como viene de la base de datos
+  const curso=CURSOS.find(c=>String(c.id)===v('curso_id')); // se envía el id tal como viene de la base de datos
   const fila={titulo:Admin.texto(v('titulo')),fecha:v('fecha'),hora:Admin.texto(v('hora')),tipo:Admin.texto(v('tipo')),lugar:Admin.texto(v('lugar')),detalle:Admin.texto(v('detalle')),
-    curso_id:curso?curso.id:null,ponente:charla?Admin.texto(v('ponente')):null};
+    curso_id:curso.id,ponente:charla?Admin.texto(v('ponente')):null};
   const sb=Admin.sb();
   let tieneDocs=false;
   // Un evento que acaba de convertirse en charla (nuevo, o antes sesión) se queda abierto para añadirle documentos.
@@ -319,6 +350,8 @@ form.addEventListener('submit',async e=>{
     if(tieneDocs&&Admin.visible(form)) Admin.validar(form,()=>({tipo:SIN_SESION}));
     return;
   }
+  // Si su curso no es el de la pestaña activa, se pasa a la pestaña de su curso para que no desaparezca de la vista.
+  cursoId=String(fila.curso_id);
   if(!quedaAbierto){Admin.cerrar(form);cargarLista();return;}
   // Se queda abierto (salvo que durante la espera se pulsara "atrás").
   const seguia=Admin.visible(form);
