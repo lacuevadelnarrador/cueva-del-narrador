@@ -214,3 +214,134 @@ const Cueva = (function () {
 
   return { esc, urlSegura, cliente, haySesionLocal, privada, admin, esAdmin, aviso, perfilActivo, guardarInicial, salir, esErrorDeRed, mensaje, cargando, error, cargar };
 })();
+
+// INTERFAZ DEL MÓVIL (todas las páginas): aviso "Gira el móvil" y "arrastrar para refrescar" en la app instalada.
+// Solo cambia la interfaz: no lee ni escribe datos.
+(function () {
+  if (!document.body) return;
+
+  // ---------- A) Aviso "Gira el móvil" ----------
+  // Solo en teléfonos en horizontal. Se decide por la PANTALLA, nunca por la ventana: con el teclado abierto
+  // en vertical la ventana se encoge (y parece horizontal), pero la pantalla no cambia.
+  // Teléfono = pantalla táctil con el lado menor por debajo de 600 px. Si el navegador no da las medidas
+  // de la pantalla (0 o vacías, como en algunas vistas incrustadas), no se considera teléfono.
+  const tactil = () => navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
+  const esTelefono = () => { const l = Math.min(screen.width, screen.height); return l > 0 && l < 600 && tactil(); };
+  function horizontal() {
+    const o = screen.orientation && screen.orientation.type;
+    if (o) return o.indexOf('landscape') === 0;
+    if (typeof window.orientation === 'number') return Math.abs(window.orientation) === 90;
+    return screen.width > screen.height;
+  }
+  const raiz = document.documentElement;
+  const gira = document.createElement('div');
+  gira.className = 'gira';
+  gira.tabIndex = -1;
+  gira.innerHTML = '<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="20" y="6" width="24" height="40" rx="4"/><path d="M29 40h6"/>' +
+    '<path d="M50 30a18 18 0 01-14 22"/><path d="M40 47l-4 5 6 2"/></svg><div role="alert"></div>';
+  document.body.appendChild(gira);
+  const texto = gira.querySelector('[role="alert"]');
+  // Mientras se ve, html.girado oculta (visibility) todo lo demás del body: no se puede tocar, ni llegar con el
+  // teclado, ni leer con el lector de pantalla. También bloquea el scroll del fondo.
+  function comprobarGiro() {
+    const si = esTelefono() && horizontal();
+    if (si === raiz.classList.contains('girado')) return;
+    raiz.classList.toggle('girado', si);
+    if (si) {
+      texto.innerHTML = '<p class="gira-titulo">Gira el móvil</p><p>La Cueva del Narrador se usa en vertical.</p>';
+      if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+      gira.focus({ preventScroll: true });
+    } else {
+      texto.textContent = '';
+    }
+  }
+  if (screen.orientation && screen.orientation.addEventListener) screen.orientation.addEventListener('change', comprobarGiro);
+  window.addEventListener('orientationchange', comprobarGiro);
+  window.addEventListener('resize', comprobarGiro);
+  comprobarGiro();
+
+  // ---------- B) Arrastrar para refrescar (solo en la app instalada) ----------
+  // En el navegador normal ya existe el gesto nativo, así que aquí no se hace nada.
+  const instalada = () => (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  if (instalada()) raiz.classList.add('instalada');
+  const UMBRAL = 70, MAXIMO = 100, PAUSA = 2000, CLAVE = 'cueva-recarga';
+  // Resistencia: hasta el umbral la píldora sigue casi al dedo (y queda entera a la vista); después, cada vez menos.
+  const recorrido = dy => Math.min(dy <= UMBRAL ? dy * 0.9 : UMBRAL * 0.9 + (dy - UMBRAL) * 0.3, MAXIMO);
+  const ind = document.createElement('div');
+  ind.className = 'tirar';
+  ind.setAttribute('role', 'status');
+  ind.innerHTML = '<span class="tirar-giro" aria-hidden="true"></span><span class="tirar-texto"></span>';
+  document.body.appendChild(ind);
+  const indTexto = ind.querySelector('.tirar-texto');
+  let gesto = null, recargando = false;
+
+  const ultimaRecarga = () => { try { return +sessionStorage.getItem(CLAVE) || 0; } catch (e) { return 0; } };
+  const visible = el => !el.closest('[hidden]') && el.getClientRects().length > 0;
+  const arriba = () => window.scrollY <= 0 && (document.scrollingElement || raiz).scrollTop <= 0;
+  const campo = el => el && el.closest && el.closest('input:not([type=button]):not([type=submit]):not([type=checkbox]):not([type=radio]), textarea, select, [contenteditable=""], [contenteditable="true"]');
+  // ¿Hay algo que impida el gesto en toda la página? (formulario del panel abierto, diálogo, guardando, aviso de giro)
+  const pagina = () => raiz.classList.contains('girado') || document.querySelector('dialog[open], [aria-busy="true"]') ||
+    [...document.querySelectorAll('form.formulario')].some(visible) || campo(document.activeElement);
+  // ¿Empezó el dedo en un sitio donde no debe activarse? (campos; calendario, estanterías, chips y pestañas aunque
+  // ahora no desborden; cualquier otra cosa que se desplace en horizontal; o contenedores desplazados hacia abajo)
+  function origen(el) {
+    if (campo(el) || el.closest('.cal, .shelf, .chips, .tabs')) return true;
+    for (let n = el; n && n !== document.body && n !== raiz; n = n.parentElement) {
+      const s = getComputedStyle(n);
+      if (/(auto|scroll)/.test(s.overflowX) && n.scrollWidth > n.clientWidth + 1) return true;
+      if (/(auto|scroll)/.test(s.overflowY) && n.scrollHeight > n.clientHeight + 1 && n.scrollTop > 0) return true;
+    }
+    return false;
+  }
+  function pintarInd(dist, listo) {
+    ind.classList.add('activo');
+    ind.style.transform = 'translate(-50%,' + (dist - 56) + 'px)';
+    const t = listo ? 'Suelta para actualizar' : 'Arrastra para actualizar';
+    if (indTexto.textContent !== t) indTexto.textContent = t;
+  }
+  function soltar() {
+    gesto = null;
+    ind.classList.remove('activo', 'cargando');
+    ind.style.transform = '';
+    indTexto.textContent = '';
+  }
+
+  document.addEventListener('touchstart', e => {
+    gesto = null;
+    if (recargando || e.touches.length !== 1 || !instalada()) return;
+    if (Date.now() - ultimaRecarga() < PAUSA || !arriba() || pagina() || origen(e.target)) return;
+    const t = e.touches[0];
+    gesto = { x: t.clientX, y: t.clientY, dy: 0, decidido: false };
+    raiz.classList.add('instalada');
+  }, { passive: true });
+
+  // No pasivo: solo se llama a preventDefault cuando ya está claro que es un arrastre hacia abajo desde arriba del todo.
+  document.addEventListener('touchmove', e => {
+    if (!gesto) return;
+    if (e.touches.length !== 1) { soltar(); return; }
+    const t = e.touches[0], dx = t.clientX - gesto.x, dy = t.clientY - gesto.y;
+    if (!gesto.decidido) {
+      if (dy < -5 || (Math.abs(dx) > 10 && Math.abs(dx) >= dy)) { gesto = null; return; } // hacia arriba o de lado: scroll normal
+      if (dy <= 10 || dy <= Math.abs(dx)) return;
+      if (!arriba()) { gesto = null; return; }
+      gesto.decidido = true;
+    }
+    if (e.cancelable) e.preventDefault();
+    gesto.dy = dy;
+    pintarInd(recorrido(dy), dy >= UMBRAL);
+  }, { passive: false });
+
+  document.addEventListener('touchend', () => {
+    if (!gesto) return;
+    const listo = gesto.decidido && gesto.dy >= UMBRAL;
+    if (!listo) { soltar(); return; }
+    gesto = null;
+    recargando = true;
+    ind.classList.add('cargando');
+    ind.style.transform = 'translate(-50%,' + (recorrido(UMBRAL) - 56) + 'px)';
+    indTexto.textContent = 'Actualizando…';
+    try { sessionStorage.setItem(CLAVE, String(Date.now())); } catch (e) {}
+    location.reload();
+  });
+  document.addEventListener('touchcancel', () => { if (gesto) soltar(); });
+})();

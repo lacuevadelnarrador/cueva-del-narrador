@@ -75,6 +75,12 @@ function pintarLeyenda(){
   document.getElementById('leyenda').innerHTML=Object.values(TIPOS).map(t=>'<span><i style="background:'+t.c+'"></i>'+t.n+'</span>').join('');
 }
 
+// Enlaces de interés de un evento (ya filtrados: formato URL y https://). Sin enlaces, no se añade nada.
+function pintarEnlaces(enlaces){
+  if(!enlaces||!enlaces.length) return '';
+  return '<ul class="enlaces" aria-label="Enlaces de interés">'+enlaces.map(d=>'<li><a href="'+esc(d.url)+'" target="_blank" rel="noopener noreferrer">'+esc(d.nombre)+'</a></li>').join('')+'</ul>';
+}
+
 function pintar(){
   document.getElementById('titulo-mes').textContent=MESES[mes]+' '+anio;
   const prefMes=anio+'-'+String(mes+1).padStart(2,'0');
@@ -105,7 +111,7 @@ function pintar(){
   document.getElementById('lista').innerHTML=lista.length?lista.map(e=>{
     const p=partes(e.fecha), t=tipo(e.tipo);
     const dia=DIAS[new Date(p.a,p.m,p.d).getDay()];
-    return '<article class="ev"><div class="date" style="background:'+t.c+';color:'+t.t+'"><b>'+String(p.d).padStart(2,'0')+'</b><small>'+dia+'</small></div><div><h3>'+esc(e.titulo)+'</h3><p>'+[e.hora&&e.hora+' h',e.lugar].filter(Boolean).map(esc).join(' · ')+'</p>'+(e.detalle?'<p>'+esc(e.detalle)+'</p>':'')+'<span class="badge"><i style="background:'+t.c+'"></i>'+t.n+'</span></div></article>';
+    return '<article class="ev"><div class="date" style="background:'+t.c+';color:'+t.t+'"><b>'+String(p.d).padStart(2,'0')+'</b><small>'+dia+'</small></div><div><h3>'+esc(e.titulo)+'</h3><p>'+[e.hora&&e.hora+' h',e.lugar].filter(Boolean).map(esc).join(' · ')+'</p>'+(e.detalle?'<p>'+esc(e.detalle)+'</p>':'')+'<span class="badge"><i style="background:'+t.c+'"></i>'+t.n+'</span>'+pintarEnlaces(e.enlaces)+'</div></article>';
   }).join(''):'<p class="empty">'+(sel?'Ese día no hay nada previsto.':'Este mes no hay eventos programados.')+'</p>';
 }
 
@@ -124,15 +130,19 @@ const comoEvento=r=>{
   return {fecha:r.inicio,hora:'',titulo:r.titulo||tipo('reto').n,tipo:'reto',lugar:'Instagram',
     detalle:p?'Plazo: hasta el '+p.d+' de '+MESES[p.m].toLowerCase()+'.':''};
 };
+// De los documentos de un evento solo se muestran los enlaces de interés (formato URL), por su orden,
+// y solo si empiezan por https:// (si no, no se pintan como enlace). Un enlace sin nombre usa uno genérico.
+const enlacesDe=docs=>(docs||[]).filter(d=>d.formato==='URL'&&/^https:\/\//i.test(String(d.url||'').trim()))
+  .sort((a,b)=>(a.orden??Infinity)-(b.orden??Infinity)).map(d=>({nombre:d.nombre||'Enlace de interés',url:String(d.url).trim()}));
 // Los datos solo se leen con sesión de socio. La hora llega como "19:30:00" y se muestra "19:30".
 // Los eventos de tipo reto se ignoran: los retos vienen solo de la tabla retos.
 Cueva.cargar(document.getElementById('lista'),
   ()=>Cueva.privada().then(({sb})=>Promise.all([
-    sb.from('eventos').select('fecha,hora,titulo,tipo,lugar,detalle').order('fecha'),
+    sb.from('eventos').select('fecha,hora,titulo,tipo,lugar,detalle,documentos(nombre,url,formato,orden)').order('fecha'),
     sb.from('retos').select('titulo,mes,inicio,plazo,palabras,incluir,nota').order('inicio')
   ])).then(([ev,re])=>({error:ev.error||re.error,data:{eventos:ev.data||[],retos:re.data||[]}})),
   ({eventos,retos})=>{
-    EVENTOS=eventos.filter(e=>e.fecha&&e.tipo!=='reto').map(e=>Object.assign({},e,{hora:e.hora?String(e.hora).slice(0,5):''}))
+    EVENTOS=eventos.filter(e=>e.fecha&&e.tipo!=='reto').map(e=>Object.assign({},e,{hora:e.hora?String(e.hora).slice(0,5):'',enlaces:enlacesDe(e.documentos)}))
       .concat(retos.filter(r=>r.inicio).map(comoEvento));
     cargado=true; pintar();
   });

@@ -161,6 +161,8 @@ button.day:active{transform:scale(.9)}
 .ev p{font-size:14px;color:var(--muted)}
 .badge{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-top:6px}
 .badge i{width:9px;height:9px;border-radius:50%;display:block}
+.ev .enlaces{list-style:none;margin:4px 0 0;padding:0}
+.ev .enlaces a{display:flex;align-items:center;min-height:44px;color:var(--link);font-size:14px;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
 .empty{padding:20px;color:var(--muted);font-style:italic;text-align:center;border-style:dashed;box-shadow:none}
 
 /* ---------- Biblioteca ---------- */
@@ -345,6 +347,16 @@ button.item{width:100%;font:inherit;text-align:left;cursor:pointer}
 .fila .date small{display:block}
 .fila .fmt{flex:none;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.04em;text-transform:uppercase;background:var(--accent);color:#fff;border-radius:6px;padding:2px 8px}
 .fila.doc-fila{min-height:56px;background:var(--bg);box-shadow:none}
+/* Publicaciones (panel): la fila, su etiqueta de estado y los botones de cambio rápido debajo */
+.barra-pub{justify-content:flex-end;margin-bottom:0}
+.barra-pub+.chips{margin-bottom:10px}
+.lista-pub{margin-top:24px}
+.lista-pub h2:focus{outline:none}
+.pub{margin-bottom:16px}
+.pub .fila{margin-bottom:0}
+.estado-pub{display:inline-block;margin-top:6px;padding:2px 10px;border-radius:999px;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.estado-rapido .chips{padding:6px 2px 0}
+.estado-rapido .msg{margin:8px 0 0}
 .formulario h2{font-size:26px;color:var(--title);margin-bottom:16px}
 .formulario h2:focus{outline:none}
 .formulario h3{font-size:20px;color:var(--title);margin-bottom:6px}
@@ -436,6 +448,28 @@ h4.grupo{font-family:'Oswald',sans-serif;text-transform:uppercase;font-weight:50
   .iconbtn:hover{filter:brightness(1.1)}
   .charla summary:hover{background:var(--bg)}
 }
+
+/* ---------- Aviso "Gira el móvil" (lo pinta auth.js solo en teléfonos en horizontal) ---------- */
+/* Mientras se ve, todo lo demás del body queda oculto: no se puede tocar ni recorrer con el teclado. */
+.gira{display:none}
+html.girado,html.girado body{overflow:hidden}
+html.girado body>*:not(.gira){visibility:hidden!important}
+html.girado dialog::backdrop{display:none}
+html.girado .gira{display:flex;position:fixed;inset:0;z-index:2147483647;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px max(24px,env(safe-area-inset-right)) 24px max(24px,env(safe-area-inset-left));background:#2F5860;color:#fff;text-align:center}
+.gira:focus{outline:none}
+.gira svg{width:72px;height:72px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;animation:gira-movil 2.4s var(--ease) infinite}
+.gira p{font-size:17px;line-height:1.4}
+.gira .gira-titulo{font-family:'Oswald',sans-serif;font-size:28px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px}
+@keyframes gira-movil{0%,30%{transform:rotate(-90deg)}60%,100%{transform:rotate(0)}}
+
+/* ---------- Arrastrar para refrescar (solo en la app instalada; lo pinta auth.js) ---------- */
+html.instalada,html.instalada body{overscroll-behavior-y:contain}
+.tirar{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);left:50%;z-index:2147483646;display:flex;align-items:center;gap:8px;min-height:40px;padding:8px 16px;border-radius:999px;background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:var(--sh2);font-size:14px;white-space:nowrap;pointer-events:none;transform:translate(-50%,-140%);visibility:hidden;transition:transform .25s var(--ease),visibility 0s .25s}
+.tirar.activo{visibility:visible;transition:none}
+.tirar.cargando{transition:transform .2s var(--ease)}
+.tirar-giro{display:none;width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--link);border-radius:50%}
+.tirar.cargando .tirar-giro{display:block;animation:tirar-gira .8s linear infinite}
+@keyframes tirar-gira{to{transform:rotate(360deg)}}
 
 /* ---------- Movimiento reducido ---------- */
 @media (prefers-reduced-motion:reduce){
