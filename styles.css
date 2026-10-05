@@ -125,11 +125,10 @@ a.item:active,a.doc:active{transform:scale(.98)}
 .nav a:focus-visible{outline-offset:-2px;box-shadow:none}
 
 /* ---------- Páginas interiores ---------- */
-.pagehead{background:linear-gradient(180deg,var(--teal) 0,var(--teal-700) calc(64px + env(safe-area-inset-top,0px)));color:#fff;padding:calc(20px + env(safe-area-inset-top,0px)) 20px 24px;border-radius:0 0 28px 28px;box-shadow:0 6px 18px rgba(31,58,64,.18)}
+.pagehead{background:linear-gradient(180deg,var(--teal) 0,var(--teal-700) calc(64px + env(safe-area-inset-top,0px)));color:#fff;padding:calc(20px + env(safe-area-inset-top,0px)) 20px 28px;border-radius:0 0 28px 28px;box-shadow:0 6px 18px rgba(31,58,64,.18)}
 .pagehead h1{font-size:42px;letter-spacing:.01em;color:var(--amber);text-align:center}
 .pagehead .sub{text-align:center;color:#EBEDEF}
 .pagehead .top{margin-bottom:18px}
-.pagehead::after{content:"";display:block;width:40px;height:20px;margin:14px auto 0;border:3px solid var(--aqua);border-bottom:0;border-radius:20px 20px 0 0;opacity:.8}
 
 /* ---------- Calendario ---------- */
 .monthbar{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -149,9 +148,28 @@ button.day:active{transform:scale(.9)}
 .day.sel{box-shadow:inset 0 0 0 3px var(--card),0 0 0 3px var(--ink),var(--sh2);position:relative;z-index:1}
 .day.today .num{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
 .day:focus-visible{position:relative;z-index:2}
+
+/* Calendario de publicaciones (solo panel, admin-publicaciones.html). El de los socios no usa .cal-pub.
+   Tres señales a la vez en un mismo día: el contorno de estado (borde), hoy (número subrayado y punto debajo)
+   y el día elegido (anillo oscuro exterior, separado del contorno por un hueco del color de la tarjeta).
+   Colores, trazos y grosores salen de ESTADOS (tipos.js) mediante variables; los de aquí son de reserva. */
+.cal-pub .day{position:relative;box-shadow:none}
+.cal-pub .day.est-pendiente{border:var(--pendiente-w,3px) var(--pendiente-s,solid) var(--pendiente-b,#B71C1C)}
+.cal-pub .day.est-programado{border:var(--programado-w,3px) var(--programado-s,dashed) var(--programado-b,#0D47A1)}
+.cal-pub .day.est-publicado{border:var(--publicado-w,4px) var(--publicado-s,double) var(--publicado-b,#1B5E20)}
+.cal-pub .day.today .num{transform:translateY(-4px)}
+.cal-pub .day.today::after{content:"";position:absolute;left:50%;bottom:4px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:currentColor}
+/* Halo violeta de 1 px por fuera: la línea exterior del contorno (sobre todo la del doble) queda entre violeta y no se pierde en modo oscuro */
+.cal-pub .day.has{box-shadow:0 0 0 1px var(--pub,#C3A6E0)}
+.cal-pub .day.sel{box-shadow:0 0 0 2px var(--card),0 0 0 5px var(--ink);z-index:1}
+.cal-pub .day.has.sel{box-shadow:0 0 0 1px var(--pub,#C3A6E0),0 0 0 3px var(--card),0 0 0 6px var(--ink)}
+.cal-pub .day:focus-visible{box-shadow:0 0 0 2px var(--halo);z-index:2}
+.cal-pub .day.sel:focus-visible{box-shadow:0 0 0 2px var(--card),0 0 0 5px var(--ink);outline-offset:5px}
+.cal-pub .day.has.sel:focus-visible{box-shadow:0 0 0 1px var(--pub,#C3A6E0),0 0 0 3px var(--card),0 0 0 6px var(--ink);outline-offset:6px}
 .legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:14px;font-size:13px;color:var(--muted)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:10px;height:10px;border-radius:50%;display:block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+.legend .muestra{width:26px;height:20px;border-radius:6px;box-shadow:none}
 .listhead{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:14px}
 .chip{display:inline-flex;align-items:center;justify-content:center;min-height:44px;background:var(--card);border:1.5px solid var(--chipline);color:var(--link);border-radius:999px;padding:0 16px;font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;transition:background-color .2s var(--ease),color .2s var(--ease),transform .12s var(--ease)}
 .chip:active{transform:scale(.95)}

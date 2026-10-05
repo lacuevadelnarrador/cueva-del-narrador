@@ -41,7 +41,7 @@
         <h2 id="titulo-mes" aria-live="polite"></h2>
         <button type="button" class="iconbtn" id="next" aria-label="Mes siguiente">&#8250;</button>
       </div>
-      <div class="cal">
+      <div class="cal cal-pub" id="cal">
         <div class="dow"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
         <div class="days" id="dias"></div>
       </div>
@@ -127,11 +127,27 @@ const pasaFiltro=p=>filtro==='todas'||p.estado===filtro;
 const orden=(x,y)=>x.fecha.localeCompare(y.fecha)||(Number(x.id)-Number(y.id)); // en el mismo día, por orden de alta
 
 el('estado').innerHTML=Object.entries(ESTADOS).map(([k,e])=>'<option value="'+esc(k)+'">'+esc(e.n)+'</option>').join('');
-el('leyenda').innerHTML='<span><i style="background:'+PUBLICACION.c+'"></i>'+esc(PUBLICACION.n)+'</span>';
+// Contorno de estado: los colores, trazos y grosores de ESTADOS pasan al CSS (.day.est-*) como variables.
+el('cal').style.setProperty('--pub',PUBLICACION.c);
+Object.entries(ESTADOS).forEach(([k,e])=>{const s=el('cal').style;s.setProperty('--'+k+'-b',e.b);s.setProperty('--'+k+'-s',e.s);s.setProperty('--'+k+'-w',e.w);});
+// Leyenda en texto: el relleno violeta y una muestra de cada contorno con su nombre.
+el('leyenda').innerHTML='<span><i style="background:'+PUBLICACION.c+'"></i>'+esc(PUBLICACION.n)+'</span>'
+  +Object.values(ESTADOS).map(e=>'<span><i class="muestra" style="background:'+PUBLICACION.c+';box-shadow:0 0 0 1px '+PUBLICACION.c+';border:'+e.w+' '+e.s+' '+e.b+'"></i>'+esc(e.n)+'</span>').join('');
 
 function pintarFiltro(){
   el('filtro').innerHTML=[['todas','Todas']].concat(Object.entries(ESTADOS).map(([k,e])=>[k,e.p])).map(([k,n])=>
     '<button type="button" class="chip'+(k===filtro?' on':'')+'" data-f="'+esc(k)+'" aria-pressed="'+(k===filtro)+'">'+esc(n)+'</button>').join('');
+}
+
+// Contorno del día: el estado que requiere más atención (el primero en el orden de ESTADOS).
+const estadoDelDia=lista=>Object.keys(ESTADOS).find(k=>lista.some(p=>p.estado===k))||null;
+// Para el aria-label: "1 pendiente y 1 publicada" (en el orden de ESTADOS; un estado desconocido va al final).
+function resumenEstados(lista){
+  const cuenta={};
+  lista.forEach(p=>{cuenta[p.estado]=(cuenta[p.estado]||0)+1;});
+  const claves=Object.keys(ESTADOS).filter(k=>cuenta[k]).concat(Object.keys(cuenta).filter(k=>!ESTADOS[k]));
+  const trozos=claves.map(k=>{const c=cuenta[k],e=ESTADOS[k];return c+' '+(e?e.f[c===1?0:1]:'sin estado');});
+  return trozos.length>1?trozos.slice(0,-1).join(', ')+' y '+trozos[trozos.length-1]:trozos[0];
 }
 
 function pintarCalendario(delMes){
@@ -142,11 +158,12 @@ function pintarCalendario(delMes){
   for(let i=0;i<primero;i++) h+='<span class="day blank"></span>';
   for(let d=1;d<=total;d++){
     const k=clave(anio,mes,d);
-    const n=delMes.filter(p=>p.fecha===k).length;
+    const delDia=delMes.filter(p=>p.fecha===k), n=delDia.length; // delMes ya viene filtrado por estado
     const esHoy=anio===hoy.a&&mes===hoy.m&&d===hoy.d;
     const estilo=n?' style="background:'+PUBLICACION.c+';color:'+PUBLICACION.t+'"':'';
-    const cls='day'+(n?' has':'')+(esHoy?' today':'')+(sel===k?' sel':'');
-    const label=d+' de '+MESES[mes]+(n?', '+nPubs(n):'')+(esHoy?', hoy':'');
+    const est=estadoDelDia(delDia);
+    const cls='day'+(n?' has':'')+(est?' est-'+est:'')+(esHoy?' today':'')+(sel===k?' sel':'');
+    const label=d+' de '+MESES[mes]+(n?', '+nPubs(n)+': '+resumenEstados(delDia):'')+(esHoy?', hoy':'');
     h+='<button type="button" class="'+cls+'"'+estilo+' data-k="'+k+'" aria-label="'+esc(label)+'" aria-pressed="'+(sel===k)+'"><span class="num">'+d+'</span></button>';
   }
   el('dias').innerHTML=h;
