@@ -25,10 +25,16 @@
     </div>
     <div class="perfil-identidad">
       <div class="perfil-foto" id="perfil-foto" aria-hidden="true"></div>
+      <div class="foto-acciones" id="foto-acciones" hidden>
+        <div class="foto-botones">
+          <button type="button" class="foto-btn" id="foto-cambiar"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span id="foto-cambiar-tx">Añadir foto</span></button>
+          <button type="button" class="foto-btn" id="foto-quitar" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13"/></svg>Quitar foto</button>
+        </div>
+        <p class="foto-pista">Solo la ven tú y la administración del club.</p>
+      </div>
       <p class="perfil-eyebrow" hidden>Mi perfil</p>
       <h1 id="perfil-nombre">Mi perfil</h1>
       <ul class="perfil-pastillas" id="perfil-pastillas" aria-label="Sobre ti"></ul>
-      <p class="perfil-pista-foto" id="perfil-pista-foto" hidden>Pronto podrás añadir tu foto</p>
     </div>
   </header>
 
@@ -47,6 +53,7 @@
 <script src="tipos.js"></script>
 <script src="supabase-config.js"></script>
 <script src="auth.js"></script>
+<script src="fotos.js"></script>
 <script src="perfil.js"></script>
 <script>
 if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js"));

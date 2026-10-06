@@ -89,8 +89,56 @@ const Cueva = (function () {
     if (i) guardar(CLAVE_INICIAL, i); else borrar(CLAVE_INICIAL);
     pintarAvatar();
   }
+  // Solo cambia el texto (la inicial): si hay miniatura encima, se queda donde está y no parpadea.
   function pintarAvatar() {
-    document.querySelectorAll('.avatar').forEach(a => { a.textContent = leer(CLAVE_INICIAL) || ''; });
+    const inicial = leer(CLAVE_INICIAL) || '';
+    document.querySelectorAll('.avatar').forEach(a => {
+      [...a.childNodes].forEach(n => { if (n.nodeType === 3) n.remove(); });
+      a.insertBefore(document.createTextNode(inicial), a.firstChild);
+      if (miniAvatar) ponerMini(a, miniAvatar);
+    });
+  }
+
+  // ---------- Miniatura de la foto (socios.foto_mini) ----------
+  // Data URI JPEG de 128x128 que guarda la base de datos (mismas reglas que ella). Se asigna SIEMPRE con la propiedad
+  // src de un <img> creado aquí, nunca con innerHTML. La del avatar de la barra vive solo en memoria (miniAvatar):
+  // no se guarda en el dispositivo ni en caché. Si falta o algo falla, se ve la inicial que hay debajo.
+  const MINI = /^data:image\/jpeg;base64,[A-Za-z0-9+/]+={0,2}$/;
+  const miniValida = t => typeof t === 'string' && t.length <= 14000 && MINI.test(t);
+  let miniAvatar = null, miniFijada = false;
+  function ponerMini(el, mini) {
+    if (!el) return false;
+    let img = [...el.children].find(n => n.classList.contains('foto-mini'));
+    if (!miniValida(mini)) { if (img) img.remove(); return false; }
+    if (!img) {
+      img = document.createElement('img');
+      img.className = 'foto-mini';
+      img.alt = '';
+      img.decoding = 'async';
+      img.addEventListener('error', () => img.remove());
+      el.classList.add('foto-circulo');
+      el.appendChild(img);
+    }
+    if (img.getAttribute('src') !== mini) img.src = mini;
+    return true;
+  }
+  // Cambia la miniatura del avatar de la barra (null = volver a la inicial). La usa "Mi perfil" al cambiar la foto.
+  function avatarMini(mini) {
+    miniFijada = true;
+    miniAvatar = miniValida(mini) ? mini : null;
+    document.querySelectorAll('.avatar').forEach(a => ponerMini(a, miniAvatar));
+  }
+  // Consulta pequeña de la propia ficha, sin esperarla: la página se pinta antes con la inicial.
+  // Si falla (sin conexión, sin permiso, sin ficha) no se muestra nada: se queda la inicial.
+  let miniPedida = false;
+  function cargarMiniAvatar(sb, uid) {
+    if (miniPedida || !uid) return;
+    miniPedida = true;
+    Promise.resolve().then(() => sb.from('socios').select('foto_mini').eq('id', uid).maybeSingle()).then(r => {
+      if (miniFijada || r.error || !r.data || !miniValida(r.data.foto_mini)) return;
+      miniAvatar = r.data.foto_mini;
+      document.querySelectorAll('.avatar').forEach(a => ponerMini(a, miniAvatar));
+    }).catch(() => {});
   }
   // El círculo de la inicial lleva a "Mi perfil". Las páginas lo traen como <div class="avatar">; aquí se cambia por
   // un enlace de verdad con los mismos atributos (así sigue oculto para los visitantes con data-solo="socio" hidden).
@@ -160,6 +208,7 @@ const Cueva = (function () {
     }
     if (!perfil) { await salir(); location.replace('acceso.html?motivo=inactiva'); return nunca(); }
     guardarInicial(perfil.nombre);
+    cargarMiniAvatar(sb, data.session.user.id);
     return { sb, perfil };
   }
 
@@ -219,7 +268,8 @@ const Cueva = (function () {
     if (!haySesionLocal()) return;
     pintarSesion(true);
     cliente().then(sb => sb.auth.getSession()).then(({ data, error }) => {
-      if (!error && !data.session) { borrar(CLAVE_SESION); borrar(CLAVE_INICIAL); pintarSesion(false); }
+      if (!error && !data.session) { borrar(CLAVE_SESION); borrar(CLAVE_INICIAL); pintarSesion(false); return; }
+      if (!error) return cliente().then(sb => cargarMiniAvatar(sb, data.session.user.id));
     }).catch(() => {});
   }
 
@@ -234,7 +284,8 @@ const Cueva = (function () {
   if (document.body && document.body.dataset.acceso === 'publico') publica();
   if (document.body) avisoDeLaUrl();
 
-  return { esc, urlSegura, cliente, haySesionLocal, privada, admin, esAdmin, aviso, perfilActivo, guardarInicial, salir, esErrorDeRed, mensaje, registrar, cargando, error, cargar };
+  return { esc, urlSegura, cliente, haySesionLocal, privada, admin, esAdmin, aviso, perfilActivo, guardarInicial, salir, esErrorDeRed, mensaje, registrar, cargando, error, cargar,
+    miniValida, ponerMini, avatarMini };
 })();
 
 // INTERFAZ DEL MÓVIL (todas las páginas): aviso "Gira el móvil" y "arrastrar para refrescar" en la app instalada.
