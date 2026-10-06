@@ -189,7 +189,7 @@
       Cueva.guardarInicial(perfil.nombre);
       location.replace(volver);
     }catch(e){
-      console.error(e);
+      Cueva.registrar('No se ha podido comprobar la cuenta', e);
       mensaje(Cueva.esErrorDeRed(e)?SIN_RED:'No hemos podido comprobar tu cuenta. Inténtalo de nuevo dentro de un momento.',true);
       paso(3);
     }

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Socios · Administración · La Cueva del Narrador</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#528A93">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="pagehead">
+    <div class="top">
+      <div class="brand">
+        <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
+        <span>La Cueva<br>del Narrador</span>
+      </div>
+      <div class="avatar" aria-label="Tu perfil"></div>
+    </div>
+    <nav class="migas" aria-label="Ruta"><ol><li><a class="migas-admin" href="admin.html"><svg class="migas-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><span>Administración</span></a></li><li data-miga-seccion aria-current="page">Socios</li><li data-miga-vista hidden></li></ol></nav>
+    <h1 class="largo">Socios</h1>
+    <p class="sub">Fichas, cuentas, cuotas y bajas.</p>
+  </header>
+
+  <main>
+    <a class="volver" href="admin.html">&#8249; Volver al panel</a>
+
+    <section id="vista-lista" class="soc-lista" aria-label="Listado de socios">
+      <div id="aviso-pend"></div>
+      <div class="barra-admin">
+        <p class="cuenta" id="cuenta" aria-live="polite"></p>
+        <button type="button" class="btn sec" id="generar" hidden>Generar cuotas de un curso</button>
+      </div>
+      <input class="buscador" id="q" type="search" placeholder="Buscar por nombre, código, correo o teléfono" aria-label="Buscar socios por nombre, código, correo o teléfono" autocomplete="off">
+      <div class="chips" id="filtro" role="group" aria-label="Filtrar socios">
+        <button type="button" class="chip on" data-f="todos" aria-pressed="true">Todos</button>
+        <button type="button" class="chip" data-f="activos" aria-pressed="false">Activos</button>
+        <button type="button" class="chip" data-f="inactivos" aria-pressed="false">Inactivos</button>
+        <button type="button" class="chip" data-f="pendientes" aria-pressed="false">Con cuotas pendientes</button>
+        <button type="button" class="chip" data-f="admins" aria-pressed="false">Administradores</button>
+      </div>
+      <div id="lista"></div>
+    </section>
+
+    <section id="vista-ficha" hidden aria-label="Ficha del socio" data-miga="Ficha">
+      <div id="ficha" class="soc-ficha"></div>
+    </section>
+
+    <section id="vista-pendientes" class="soc-lista" hidden data-miga="Fichas pendientes" aria-labelledby="t-pendientes">
+      <h2 id="t-pendientes" class="soc-titulo" tabindex="-1" data-foco>Fichas pendientes</h2>
+      <p class="pista">Cuentas que ya existen pero todavía no tienen ficha de socio. Elige una para crear su ficha.</p>
+      <div id="pendientes"></div>
+    </section>
+
+    <section id="vista-crear" hidden data-miga="Crear ficha">
+      <form class="card formulario" id="form-crear" novalidate></form>
+    </section>
+  </main>
+
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="inicio.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="calendario.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a>
+    <a href="curso.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/></svg>Curso</a>
+    <a href="biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Biblioteca</a>
+    <a href="mas.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
+  </nav>
+</div>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script src="admin.js"></script>
+<script src="admin-socios.js"></script>
+<script>
+if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+</script>
+</body>
+</html>

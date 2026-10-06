@@ -104,10 +104,10 @@ const Portadas = (function () {
     try {
       r = await sb.storage.from(ALMACEN).upload(nombre, preparada.blob, { contentType: 'image/jpeg', upsert: false });
     } catch (e) {
-      console.error(e);
+      Cueva.registrar('No se ha podido subir la portada', e);
       throw { mensaje: mensajeSubida(e) };
     }
-    if (r.error) { console.error(r.error); throw { mensaje: mensajeSubida(r.error) }; }
+    if (r.error) { Cueva.registrar('No se ha podido subir la portada', r.error); throw { mensaje: mensajeSubida(r.error) }; }
     return { nombre, url: sb.storage.from(ALMACEN).getPublicUrl(nombre).data.publicUrl };
   }
 
@@ -120,7 +120,7 @@ const Portadas = (function () {
       if (!Array.isArray(r.data) || !r.data.length) throw new Error('El almacén no ha borrado ' + nombre + ' (¿ya no existía o falta permiso?)');
       return true;
     } catch (e) {
-      console.warn('No se ha podido borrar la portada antigua', nombre, e);
+      Cueva.registrar('No se ha podido borrar la portada antigua', e);
       return false;
     }
   }
@@ -203,7 +203,7 @@ const Portadas = (function () {
         preparando = null; nueva = r; quitada = false; pintar();
       }, e => {
         if (mio !== turno || preparando !== p) return;
-        console.error(e);
+        Cueva.registrar('No se ha podido leer la imagen', e);
         preparando = null; nueva = null; entrada.value = '';
         error((e && e.mensaje) || MSG_LEER, true);
         pintar();

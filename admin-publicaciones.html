@@ -23,6 +23,7 @@
       </div>
       <div class="avatar" aria-label="Tu perfil"></div>
     </div>
+    <nav class="migas" aria-label="Ruta"><ol><li><a class="migas-admin" href="admin.html"><svg class="migas-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><span>Administración</span></a></li><li data-miga-seccion aria-current="page">Publicaciones</li><li data-miga-vista hidden></li></ol></nav>
     <h1 class="largo">Publicaciones</h1>
     <p class="sub">Administración de las publicaciones en redes.</p>
   </header>
@@ -52,7 +53,7 @@
       <div id="lista"></div>
     </section>
 
-    <section id="vista-form" hidden>
+    <section id="vista-form" hidden data-miga-de="form-titulo">
       <form class="card formulario" id="form" novalidate>
         <h2 id="form-titulo" tabindex="-1" data-foco>Nueva publicación</h2>
         <p class="msg" data-estado hidden></p>
