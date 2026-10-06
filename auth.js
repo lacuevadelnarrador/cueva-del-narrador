@@ -85,6 +85,20 @@ const Cueva = (function () {
   function pintarAvatar() {
     document.querySelectorAll('.avatar').forEach(a => { a.textContent = leer(CLAVE_INICIAL) || ''; });
   }
+  // El círculo de la inicial lleva a "Mi perfil". Las páginas lo traen como <div class="avatar">; aquí se cambia por
+  // un enlace de verdad con los mismos atributos (así sigue oculto para los visitantes con data-solo="socio" hidden).
+  function enlazarAvatares() {
+    const enPerfil = (location.pathname.split('/').pop() || '') === 'perfil.html';
+    document.querySelectorAll('div.avatar').forEach(d => {
+      const a = document.createElement('a');
+      for (const at of d.attributes) a.setAttribute(at.name, at.value);
+      a.href = 'perfil.html';
+      a.setAttribute('aria-label', 'Tu perfil');
+      if (enPerfil) a.setAttribute('aria-current', 'page');
+      a.textContent = d.textContent;
+      d.replaceWith(a);
+    });
+  }
 
   let navVisitante = null;
   function pintarSesion(activa) {
@@ -209,6 +223,7 @@ const Cueva = (function () {
     salir().then(() => location.replace('index.html'));
   });
 
+  if (document.body) enlazarAvatares();
   if (document.body && document.body.dataset.acceso === 'publico') publica();
   if (document.body) avisoDeLaUrl();
 
