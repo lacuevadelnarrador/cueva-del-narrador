@@ -9,7 +9,7 @@
   const CONTACTO = 'lacuevadelnarrador@gmail.com';
   const COLUMNAS = 'id,nombre_completo,nombre_pila,edad,telefono,instagram,tiktok,foto_url,generos_favoritos,motivacion,' +
     'como_nos_conocio,libro_publicado,rgpd_imagen,rgpd_publicaciones,fecha_inscripcion,fundador';
-  // foto_url también es editable, pero esta pantalla aún no la cambia: por eso no se envía.
+  // foto_url y foto_mini también son editables, pero la foto se guarda aparte (fotos.js): este formulario nunca las envía.
   const EDITABLES = ['nombre_completo', 'nombre_pila', 'edad', 'telefono', 'instagram', 'tiktok', 'generos_favoritos', 'motivacion', 'como_nos_conocio', 'libro_publicado'];
   const MOTIVOS = ['Terminar proyectos', 'Publicar', 'Mejora general', 'Falta de ideas', 'Síndrome del impostor', 'Ortografía', 'Maquetación', 'Crear obras largas', 'Falta de motivación'];
   const CONOCIO = ['Instagram', 'TikTok', 'Boca a boca', 'Cartel en librería', 'Otro'];
@@ -69,7 +69,11 @@
   const titulo = document.getElementById('perfil-nombre');
   const foto = document.getElementById('perfil-foto');
   const pastillas = document.getElementById('perfil-pastillas');
-  const pistaFoto = document.getElementById('perfil-pista-foto');
+  const fotoAcciones = document.getElementById('foto-acciones');
+  const fotoCambiar = document.getElementById('foto-cambiar');
+  const fotoQuitar = document.getElementById('foto-quitar');
+  // Foto grande que se está mostrando (solo en memoria): ruta y su blob: (se libera al cambiarla o quitarla).
+  let fotoVista = { ruta: '', url: null, cargando: false }, fotoTurno = 0;
 
   // ---------- Botón "volver" ----------
   // Si se llegó desde otra página de la web, vuelve a ella; si no (enlace directo), va al inicio.
@@ -130,19 +134,7 @@
     titulo.textContent = nombre;
     document.title = 'Mi perfil · La Cueva del Narrador';
     const inicial = inicialDe(socio ? (socio.nombre_pila || socio.nombre_completo) : nombreCuenta);
-    const url = socio && Cueva.urlSegura(socio.foto_url);
-    foto.textContent = '';
-    if (url) {
-      const img = document.createElement('img');
-      img.alt = '';
-      img.addEventListener('error', () => { foto.textContent = inicial; });
-      img.src = url;
-      foto.appendChild(img);
-    } else {
-      foto.textContent = inicial;
-    }
-    foto.classList.toggle('vacio', !inicial && !url);
-    pistaFoto.hidden = !socio || !!url;
+    pintarFoto(inicial);
     document.querySelector('.perfil-eyebrow').hidden = !socio;
     const ps = [];
     if (socio) {
@@ -154,6 +146,62 @@
     pastillas.innerHTML = ps.join('');
     pastillas.hidden = !ps.length;
   }
+
+  // ---------- Foto (avatar grande) ----------
+  // Mientras carga, o si no hay foto o falla, se ve la inicial. La foto se descarga con la sesión (Fotos.cargar).
+  function ponerInicial(inicial) {
+    foto.textContent = inicial;
+    foto.setAttribute('aria-hidden', 'true');
+    foto.classList.toggle('vacio', !inicial);
+  }
+  function ponerImagen(url, inicial) {
+    const img = document.createElement('img');
+    img.alt = 'Tu foto de perfil';
+    img.addEventListener('error', () => ponerInicial(inicial));
+    img.src = url;
+    foto.textContent = '';
+    foto.appendChild(img);
+    foto.removeAttribute('aria-hidden');
+    foto.classList.remove('vacio');
+  }
+  function pintarFoto(inicial) {
+    const ruta = socio && typeof socio.foto_url === 'string' ? socio.foto_url : '';
+    pintarBotonesFoto(!!ruta);
+    if (ruta && fotoVista.ruta === ruta && fotoVista.url) { ponerImagen(fotoVista.url, inicial); return; }
+    ponerInicial(inicial);
+    if (ruta && fotoVista.ruta === ruta && fotoVista.cargando) return; // ya se está descargando
+    Fotos.liberar(fotoVista.url);
+    fotoVista = { ruta, url: null, cargando: !!ruta };
+    if (!ruta) return;
+    const turno = ++fotoTurno;
+    Fotos.cargar(ruta).then(url => {
+      if (turno !== fotoTurno || !socio || socio.foto_url !== ruta) { Fotos.liberar(url); return; }
+      fotoVista = { ruta, url, cargando: false };
+      if (url) ponerImagen(url, inicialDe(socio.nombre_pila || socio.nombre_completo));
+    });
+  }
+  function pintarBotonesFoto(hay) {
+    fotoAcciones.hidden = !socio;
+    document.getElementById('foto-cambiar-tx').textContent = hay ? 'Cambiar foto' : 'Añadir foto';
+    fotoQuitar.hidden = !hay;
+  }
+  // Tras cambiar o quitar la foto: cabecera y círculo de la barra (con la miniatura nueva, o la inicial).
+  function fotoCambiada(fila) {
+    if (!socio || !fila || fila.id !== socio.id) return;
+    socio.foto_url = fila.foto_url || null;
+    Cueva.avatarMini(fila.foto_mini || null);
+    pintarCabecera();
+  }
+  fotoCambiar.addEventListener('click', () => {
+    if (!socio || Fotos.ocupado()) return;
+    Fotos.cambiar({ socioId: socio.id, rutaAnterior: socio.foto_url || null, aviso: !socio.foto_url, foco: 'foto-cambiar', alGuardar: fotoCambiada });
+  });
+  fotoQuitar.addEventListener('click', () => {
+    if (!socio || !socio.foto_url || Fotos.ocupado()) return;
+    Fotos.quitar({ socioId: socio.id, ruta: socio.foto_url, foco: 'foto-cambiar', alQuitar: fotoCambiada });
+  });
+  window.addEventListener('pagehide', () => { Fotos.liberar(fotoVista.url); fotoVista = { ruta: '', url: null, cargando: false }; });
+  window.addEventListener('pageshow', e => { if (e.persisted && socio) pintarCabecera(); });
 
   // ---------- Tarjetas ----------
   const tarjeta = (i, id, icono, tituloT, cuerpo) =>

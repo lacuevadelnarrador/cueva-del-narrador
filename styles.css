@@ -788,3 +788,47 @@ html.instalada,html.instalada body{overscroll-behavior-y:contain}
 @media (hover:hover){
   .asis-switch:hover .perfil-switch-pista{border-color:var(--chipline)}
 }
+
+/* ---------- Fotos de perfil (fotos.js, perfil.html, panel de Socios y Pasar lista) ---------- */
+/* Todo con prefijo .foto-. Miniatura dentro de un círculo (avatar de la barra, listados): centrada, redonda y sin deformar */
+.foto-circulo{position:relative}
+.foto-circulo>.foto-mini{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;border-radius:50%;display:block;background:var(--aqua)}
+.soc-fila.inactiva .foto-mini,.asis-fila.inactiva .foto-mini{filter:grayscale(1);opacity:.75}
+/* Selector de archivo oculto (lo abre el botón "Añadir foto") */
+.foto-entrada{position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0}
+/* "Mi perfil": botones bajo el avatar grande (sobre la cabecera oscura en los dos modos) */
+.foto-acciones{display:flex;flex-direction:column;align-items:center;margin:-2px 0 10px}
+.foto-botones{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.foto-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:8px 16px;border-radius:999px;background:rgba(15,29,32,.3);color:#fff;border:1.5px solid rgba(255,255,255,.6);font-family:'Oswald',sans-serif;font-weight:500;font-size:14px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:background-color .2s var(--ease)}
+.foto-btn svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.foto-btn:active{transform:scale(.97)}
+.foto-btn:disabled{opacity:.6;cursor:progress}
+.foto-pista{font-size:13px;font-style:italic;color:#EBEDEF;margin-top:8px}
+@media (hover:hover){ .foto-btn:hover{background:rgba(15,29,32,.5)} }
+/* Mientras hay un diálogo de fotos abierto, la página de detrás no se desplaza */
+html.foto-modal,html.foto-modal body{overflow:hidden}
+.foto-dialogo{overscroll-behavior:contain;max-height:calc(100dvh - 24px);overflow:auto}
+.foto-dialogo-recorte{max-width:440px}
+.foto-dialogo-recorte .pista{margin-bottom:14px}
+/* Recorte: marco cuadrado (la foto final es cuadrada) con máscara circular de ayuda */
+.foto-marco{position:relative;width:min(100%,320px);aspect-ratio:1/1;margin:0 auto 14px;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;border-radius:var(--r-s);background:#0F1D20;cursor:grab;outline:1px solid var(--line)}
+.foto-marco:active{cursor:grabbing}
+.foto-marco:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.foto-marco[aria-disabled="true"]{cursor:progress}
+.foto-lienzo{position:absolute;left:0;top:0;max-width:none;display:block;transform-origin:0 0;pointer-events:none}
+.foto-mascara{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,255,255,.9);box-shadow:0 0 0 999px rgba(15,29,32,.55);pointer-events:none}
+.foto-zoom{margin-bottom:10px}
+.foto-zoom label{font-family:'Oswald',sans-serif;font-size:15px;text-transform:uppercase;letter-spacing:.04em}
+.foto-zoom-fila{display:flex;align-items:center;gap:10px;font-family:'Oswald',sans-serif;font-size:20px;color:var(--muted)}
+.foto-zoom-fila input[type=range]{flex:1;min-width:0;min-height:44px;accent-color:var(--accent);touch-action:pan-x;cursor:pointer}
+.foto-zoom-fila input[type=range]:disabled{cursor:default}
+.foto-zoom .pista{margin:0}
+.foto-dialogo-recorte .msg.err{margin-bottom:10px}
+.foto-estado{font-size:14px;color:var(--muted)}
+.foto-estado:empty{display:none}
+/* Panel de socios: tarjeta "Foto" de la ficha */
+.foto-ficha{display:flex;flex-wrap:wrap;align-items:center;gap:16px}
+.foto-ficha-img{position:relative;flex:none;width:96px;height:96px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:var(--aqua);color:var(--teal-deep);font-family:'Oswald',sans-serif;font-weight:700;font-size:42px;line-height:1;box-shadow:0 0 0 3px var(--amber)}
+.foto-ficha-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.foto-ficha-tx{flex:1;min-width:180px}
+.foto-ficha-tx .botones-form{margin:8px 0}

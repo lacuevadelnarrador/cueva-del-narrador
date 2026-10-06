@@ -165,7 +165,7 @@
       }
       const [p, s, c, g] = await Promise.all([
         sb.from('perfiles').select(COL_PERFIL),
-        sb.from('socios').select('id,codigo,nombre_completo,nombre_pila,telefono,fundador'),
+        sb.from('socios').select('id,codigo,nombre_completo,nombre_pila,telefono,fundador,foto_mini'),
         sb.from('cursos').select('id,codigo,nombre,periodo'),
         sb.from('generos').select('nombre').order('nombre')
       ]);
@@ -227,6 +227,11 @@
       '<span class="soc-inicial" aria-hidden="true">' + esc(inicialDe(s.nombre_pila || s.nombre_completo)) + '</span>' +
       '<span class="st"><b>' + esc(s.nombre_completo || s.nombre_pila || 'Sin nombre') + '</b><small>' + esc(s.codigo || 'Sin código') + '</small>' + etiquetas(s, p) + '</span></button>').join('')
       : '<p class="empty">' + (!SOCIOS.length ? 'Todavía no hay fichas de socios.' : 'Ningún socio coincide con la búsqueda o el filtro.') + '</p>';
+    // Miniaturas (de la misma consulta del listado, sin descargas): por DOM, nunca dentro del HTML
+    el('lista').querySelectorAll('.soc-fila[data-id]').forEach(b => {
+      const s = socioDe(b.dataset.id);
+      if (s && s.foto_mini) Cueva.ponerMini(b.querySelector('.soc-inicial'), s.foto_mini);
+    });
   }
 
   // ---------- Fichas pendientes ----------
@@ -411,11 +416,71 @@
   function reponer(id, html) { const x = el(id); if (x) x.outerHTML = html; }
 
   function pintarFicha() {
-    el('ficha').innerHTML = htmlCabecera() +
+    el('ficha').innerHTML = htmlCabecera() + htmlFoto() +
       '<form class="card formulario" id="form-ficha" novalidate>' + htmlFormFicha() + '</form>' +
       htmlCuenta() + htmlCuotas() + htmlAsistencia() + htmlBajas();
     prepararForm(el('form-ficha'));
+    cargarFotoFicha();
   }
+
+  // ---------- Foto de la ficha (foto grande por Storage; mismo módulo que "Mi perfil", con el id de ESTE socio) ----------
+  let fotoFicha = { id: null, ruta: '', url: null }, fotoTurno = 0;
+  function liberarFotoFicha() {
+    fotoTurno++;
+    Fotos.liberar(fotoFicha.url);
+    fotoFicha = { id: null, ruta: '', url: null };
+    const img = document.querySelector('#foto-ficha-img img');
+    if (img) img.remove();
+  }
+  function htmlFoto() {
+    const s = ficha.socio, hay = !!s.foto_url;
+    return '<section class="card soc-tarjeta foto-tarjeta" id="ficha-foto" aria-labelledby="t-foto"><h2 id="t-foto">Foto</h2>' +
+      '<div class="foto-ficha"><span class="foto-ficha-img" id="foto-ficha-img" aria-hidden="true">' + esc(inicialDe(s.nombre_pila || s.nombre_completo)) + '</span>' +
+      '<div class="foto-ficha-tx"><p class="pista" id="foto-ficha-estado">' + (hay ? 'Cargando la foto…' : 'Sin foto: se muestra la inicial.') + '</p>' +
+      '<div class="botones-form"><button type="button" class="btn sec" id="foto-cambiar" data-foto-cambiar>Cambiar foto</button>' +
+      (hay ? '<button type="button" class="btn sec" data-foto-quitar>Quitar foto</button>' : '') + '</div>' +
+      '<p class="pista">Solo la ven este socio y la administración del club.</p></div></div></section>';
+  }
+  function cargarFotoFicha() {
+    if (!ficha) return;
+    const s = ficha.socio, ruta = typeof s.foto_url === 'string' ? s.foto_url : '', caja = el('foto-ficha-img'), estado = el('foto-ficha-estado');
+    const mostrar = url => {
+      const img = document.createElement('img');
+      img.alt = 'Foto de ' + nombreDe();
+      img.addEventListener('error', () => { img.remove(); caja.setAttribute('aria-hidden', 'true'); });
+      img.src = url;
+      caja.appendChild(img);
+      caja.removeAttribute('aria-hidden');
+      if (estado) estado.textContent = 'Tiene foto.';
+    };
+    if (ruta && fotoFicha.id === s.id && fotoFicha.ruta === ruta && fotoFicha.url) { mostrar(fotoFicha.url); return; }
+    liberarFotoFicha();
+    if (!ruta) return;
+    const turno = fotoTurno, id = s.id;
+    Fotos.cargar(ruta).then(url => {
+      if (turno !== fotoTurno || !ficha || ficha.socio.id !== id || ficha.socio.foto_url !== ruta) { Fotos.liberar(url); return; }
+      const e = el('foto-ficha-estado');
+      if (!url) { if (e) e.textContent = 'No se ha podido cargar la foto: se muestra la inicial.'; return; }
+      fotoFicha = { id, ruta, url };
+      mostrar(url);
+    });
+  }
+  // Tras cambiar o quitar la foto: ficha, listado y (si es la propia) el círculo de la barra.
+  function fotoCambiada(fila) {
+    if (!fila) return;
+    const i = SOCIOS.findIndex(x => x.id === fila.id);
+    if (i >= 0) SOCIOS[i] = Object.assign({}, SOCIOS[i], { foto_url: fila.foto_url || null, foto_mini: fila.foto_mini || null });
+    if (fila.id === yo) Cueva.avatarMini(fila.foto_mini || null);
+    if (ficha && ficha.socio.id === fila.id) {
+      ficha.socio = Object.assign({}, ficha.socio, { foto_url: fila.foto_url || null });
+      reponer('ficha-foto', htmlFoto());
+      cargarFotoFicha();
+    }
+    pintarLista();
+  }
+  // Al salir de la ficha (atrás) o de la página, se libera la foto.
+  window.addEventListener('popstate', () => setTimeout(() => { if (el('vista-ficha').hidden) liberarFotoFicha(); }));
+  window.addEventListener('pagehide', liberarFotoFicha);
 
   function htmlCabecera() {
     const s = ficha.socio, p = ficha.perfil;
@@ -727,9 +792,18 @@
     }
     SOCIOS = SOCIOS.filter(x => x.id !== id);
     Admin.aviso('Ficha de ' + nombre + ' eliminada. La cuenta queda desactivada; si hay que borrarla, hazlo aparte en Supabase.', 'ok');
-    if (ficha && ficha.socio.id === id) { ficha = null; Admin.cerrar(); }
+    if (ficha && ficha.socio.id === id) { ficha = null; liberarFotoFicha(); Admin.cerrar(); }
     pintarLista();
     cargarLista(true);
+    // Con la ficha ya borrada en la base de datos, se borran sus fotos del almacén.
+    try {
+      await Fotos.borrarTodas(id);
+    } catch (e) {
+      Cueva.registrar('No se han podido borrar las fotos de una ficha eliminada', e);
+      await preguntar('Fotos sin borrar',
+        '<p>La ficha se ha eliminado, pero no se han podido borrar sus fotos. Habrá que borrarlas desde Supabase &gt; Storage &gt; fotos-socios.</p>',
+        [{ v: 'no', t: 'Entendido' }]);
+    }
   }
 
   // ---------- Crear ficha ----------
@@ -908,6 +982,11 @@
     if ((b = t.closest('[data-descartar]'))) descartar(b.form);
     else if ((b = t.closest('[data-activo]'))) cambiarActivo(b.form, b.dataset.activo === 'true');
     else if ((b = t.closest('[data-eliminar]'))) eliminar(b.form);
+    else if ((b = t.closest('[data-foto-cambiar]'))) {
+      if (ficha && !Fotos.ocupado()) Fotos.cambiar({ socioId: ficha.socio.id, rutaAnterior: ficha.socio.foto_url || null, aviso: false, foco: 'foto-cambiar', alGuardar: fotoCambiada });
+    } else if ((b = t.closest('[data-foto-quitar]'))) {
+      if (ficha && ficha.socio.foto_url && !Fotos.ocupado()) Fotos.quitar({ socioId: ficha.socio.id, ruta: ficha.socio.foto_url, foco: 'foto-cambiar', alQuitar: fotoCambiada });
+    }
     else if ((b = t.closest('[data-generar]'))) generarDelSocio(b.form, b.dataset.generar);
     else if ((b = t.closest('#form-cuotas .tab'))) {
       ficha.curso = b.dataset.curso;

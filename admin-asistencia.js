@@ -79,7 +79,7 @@ const Asistencia = (function () {
     Admin.abrir('vista-asistencia');
     Cueva.cargar(el('asis-cuerpo'),
       () => Admin.iniciar().then(sb => Promise.all([
-        sb.from('socios').select('id,codigo,nombre_completo'),
+        sb.from('socios').select('id,codigo,nombre_completo,foto_mini'),
         sb.from('perfiles').select('id,activo'),
         sb.from('asistencia').select('socio_id,asistio').eq('evento_id', evento.id)
       ])).then(([so, pe, as]) => ({ error: so.error || pe.error || as.error, data: { socios: so.data || [], perfiles: pe.data || [], filas: as.data || [] } })),
@@ -90,6 +90,7 @@ const Asistencia = (function () {
         // Salen los socios activos con ficha y, además, cualquiera (aunque ahora esté inactivo) con fila de este evento.
         const lista = socios.filter(s => activo.get(String(s.id)) || guardada.has(String(s.id))).map(s => ({
           id: s.id, codigo: s.codigo || '', nombre: s.nombre_completo || s.codigo || 'Sin nombre',
+          mini: s.foto_mini || null,
           inactivo: !activo.get(String(s.id)),
           busca: norm(s.nombre_completo) + ' ' + norm(s.codigo) + ' ' + norm(s.codigo).replace(/[^a-z0-9]/g, '')
         })).sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }) || String(a.codigo).localeCompare(String(b.codigo)));
@@ -129,6 +130,11 @@ const Asistencia = (function () {
           '</button></li>';
       }).join('') + '</ul>' +
       '<p class="empty" id="asis-nadie" hidden></p>';
+    // Miniaturas (de la misma consulta de socios): por DOM, nunca dentro del HTML
+    el('asis-lista').querySelectorAll('.asis-fila').forEach(li => {
+      const s = estado.socios[+li.dataset.i];
+      if (s && s.mini) Cueva.ponerMini(li.querySelector('.soc-inicial'), s.mini);
+    });
     pintarContador();
     pintarFiltro();
   }
