@@ -103,6 +103,9 @@
           <div id="lista-docs"></div>
         </div>
         <p class="pista subseccion" id="docs-nuevo" hidden>Guarda el evento para poder añadirle documentos y enlaces.</p>
+
+        <!-- Asistencia: lo pinta admin-asistencia.js (solo en eventos ya guardados) -->
+        <div class="subseccion asis-bloque" id="asistencia" role="group" aria-labelledby="asis-bloque-titulo" hidden></div>
       </form>
     </section>
 
@@ -140,6 +143,19 @@
         </div>
       </form>
     </section>
+
+    <section id="vista-asistencia" hidden data-miga="Asistencia">
+      <form class="card formulario asis" id="form-asis" novalidate>
+        <h2 id="asis-titulo" tabindex="-1" data-foco>Pasar lista</h2>
+        <p class="asis-evento" id="asis-evento"></p>
+        <p class="msg" data-estado hidden></p>
+        <div id="asis-cuerpo"></div>
+        <div class="botones-form">
+          <button type="submit" class="btn" id="asis-guardar" hidden>Guardar</button>
+          <button type="button" class="btn sec" id="asis-cancelar">Cancelar</button>
+        </div>
+      </form>
+    </section>
   </main>
 
   <nav class="nav" aria-label="Navegación principal">
@@ -154,6 +170,7 @@
 <script src="supabase-config.js"></script>
 <script src="auth.js"></script>
 <script src="admin.js"></script>
+<script src="admin-asistencia.js"></script>
 <script>
 const esc=Admin.esc, el=id=>document.getElementById(id), form=el('form'), formDoc=el('form-doc');
 // Todos los eventos llevan curso y pueden tener enlaces de interés. Los de charla llevan además ponente, apuntes y actividades.
@@ -175,13 +192,15 @@ const nEnlaces=n=>n+(n===1?' enlace':' enlaces');
 // Los enlaces de interés son documentos con formato URL; los apuntes y las actividades, PDF o Word.
 const esEnlace=d=>d.formato==='URL';
 const cuenta=docs=>({docs:docs.filter(d=>!esEnlace(d)).length,enlaces:docs.filter(esEnlace).length});
-// Aviso de borrado: " y también su documento", " y también sus 2 enlaces", " y también sus 3 documentos y 2 enlaces"...
-const tambien=n=>{
-  if(!n.docs&&!n.enlaces) return '';
-  const docs=n.docs===1?'su documento':'sus '+n.docs+' documentos';
-  if(!n.enlaces) return ' y también '+docs;
-  const enlaces=n.enlaces===1?'su enlace':(n.docs?'':'sus ')+n.enlaces+' enlaces';
-  return ' y también '+(n.docs?docs+' y '+enlaces:enlaces);
+// Aviso de borrado: " y también su documento", " y también sus 2 enlaces", " y también sus 3 documentos y 2 enlaces",
+// " y también su lista de asistencia", " y también sus 3 documentos, 2 enlaces y su lista de asistencia"...
+const tambien=(n,lista)=>{
+  const partes=[];
+  if(n.docs) partes.push(n.docs===1?'su documento':'sus '+n.docs+' documentos');
+  if(n.enlaces) partes.push(n.enlaces===1?'su enlace':(n.docs?'':'sus ')+n.enlaces+' enlaces');
+  if(lista) partes.push('su lista de asistencia');
+  if(!partes.length) return '';
+  return ' y también '+(partes.length===1?partes[0]:partes.slice(0,-1).join(', ')+' y '+partes[partes.length-1]);
 };
 
 // Los retos no se crean aquí: salen de la tabla retos (Administración > Retos).
@@ -248,20 +267,25 @@ function pintar(){
       // Las charlas muestran curso, documentos y enlaces; las sesiones y "otros", solo sus enlaces.
       const n=cuenta(e.documentos);
       const deCharla=esCharla(e.tipo)?[curso?'Curso '+(curso.codigo||nombreCurso(curso)):'Sin curso',nDocs(n.docs),nEnlaces(n.enlaces)]:[nEnlaces(n.enlaces)];
-      const meta=[Admin.fecha(e.fecha),Admin.hora(e.hora)&&Admin.hora(e.hora)+' h',e.lugar,e.tipo?t.n:'Sin tipo'].concat(deCharla).filter(Boolean).map(esc).join(' · ');
+      // Cualquier tipo de evento con lista pasada: "Asistencia: X/N" (X = asistieron, N = filas guardadas).
+      const as=Asistencia.resumen(e.id);
+      const meta=[Admin.fecha(e.fecha),Admin.hora(e.hora)&&Admin.hora(e.hora)+' h',e.lugar,e.tipo?t.n:'Sin tipo'].concat(deCharla,as?['Asistencia: '+as.x+'/'+as.n]:[]).filter(Boolean).map(esc).join(' · ');
       return '<button type="button" class="fila" data-id="'+esc(e.id)+'"><span class="date" style="background:'+t.c+';color:'+t.t+'"><b>'+esc(Admin.dia(e.fecha))+'</b><small>'+esc(Admin.diaSemana(e.fecha))+'</small></span><span class="st"><b>'+esc(e.titulo)+'</b><small>'+meta+'</small></span></button>';
     }).join('')).join('')
     :'<p class="empty">'+(EVENTOS.length?'No hay eventos con estos filtros.':CURSOS.length?'Todavía no hay eventos.':'Todavía no hay cursos. Hay que crearlos primero en la base de datos.')+'</p>';
 }
 
-// Carga eventos (con sus documentos) y cursos. Devuelve una promesa que se cumple cuando ya están pintados.
+// Carga eventos (con sus documentos), cursos y la asistencia de todos los eventos (una sola lectura, agrupada en el cliente).
+// Devuelve una promesa que se cumple cuando ya están pintados.
 function cargarLista(){
   return new Promise(listo=>Cueva.cargar(el('lista'),
     ()=>Admin.iniciar().then(sb=>Promise.all([
       sb.from('eventos').select('id,fecha,hora,titulo,tipo,lugar,detalle,curso_id,ponente,documentos(id,evento_id,nombre,formato,url,orden)').order('fecha').order('hora',{nullsFirst:true}),
-      sb.from('cursos').select('id,codigo,nombre,periodo').order('codigo',{ascending:false})
-    ])).then(([ev,cu])=>({error:ev.error||cu.error,data:{eventos:ev.data||[],cursos:cu.data||[]}})),
-    ({eventos,cursos})=>{
+      sb.from('cursos').select('id,codigo,nombre,periodo').order('codigo',{ascending:false}),
+      Asistencia.leerResumen(sb)
+    ])).then(([ev,cu,as])=>({error:ev.error||cu.error||as.error,data:{eventos:ev.data||[],cursos:cu.data||[],asistencia:as.data||[]}})),
+    ({eventos,cursos,asistencia})=>{
+      Asistencia.ponerResumen(asistencia);
       EVENTOS=eventos.filter(e=>e.fecha&&e.tipo!=='reto').map(e=>Object.assign({},e,{documentos:(e.documentos||[]).slice().sort(porOrden)}));
       CURSOS=cursos;
       const sel=el('curso_id'), antes=sel.value;
@@ -336,6 +360,7 @@ function abrirForm(ev,yaAbierto){
   pintarTipo();
   detalleObligatorio();
   pintarDocs();
+  Asistencia.pintarBloque(editando); // cualquier tipo de evento, solo si ya está guardado
   if(yaAbierto) Admin.mostrar('vista-form'); else Admin.abrir('vista-form');
 }
 form.elements.fecha.addEventListener('input',detalleObligatorio);
@@ -385,10 +410,13 @@ form.addEventListener('submit',async e=>{
 el('borrar').addEventListener('click',async()=>{
   if(!editando) return;
   const sb=Admin.sb(), ev=editando, id=ev.id; // instantánea: tras las esperas no se vuelve a leer el registro abierto
-  // Se cuentan documentos y enlaces en la base de datos justo antes de preguntar.
+  // Se cuentan documentos, enlaces y filas de asistencia en la base de datos justo antes de preguntar.
+  // La asistencia la borra la base de datos en cascada; aquí solo se avisa.
   let n=cuenta(ev.documentos);
   try{const r=await sb.from('documentos').select('formato').eq('evento_id',id);if(!r.error&&r.data)n=cuenta(r.data);}catch(e){}
-  const si=await Admin.confirmar('Se borrará el evento «'+ev.titulo+'» del '+Admin.fecha(ev.fecha)+tambien(n)+'. Esta acción no se puede deshacer.');
+  const filasAsis=await Asistencia.contar(id);
+  const lista=filasAsis==null?!!Asistencia.resumen(id):filasAsis>0;
+  const si=await Admin.confirmar('Se borrará el evento «'+ev.titulo+'» del '+Admin.fecha(ev.fecha)+tambien(n,lista)+'. Esta acción no se puede deshacer.');
   if(!si) return;
   const ok=await Admin.escribir(form,()=>sb.from('eventos').delete().eq('id',id).select('id'),'Evento borrado.');
   if(ok){Admin.cerrar(form);cargarLista();}
@@ -432,10 +460,16 @@ el('lista-docs').addEventListener('click',e=>{
 // Tras guardar o borrar un documento: se recargan los datos y se vuelve al evento (el del documento) con la lista al día.
 async function volverAEvento(id){
   Admin.cerrar(formDoc);
+  await refrescarEvento(id);
+}
+// Recarga los datos y vuelve a pintar documentos y asistencia del evento id (si ya no existe, se vuelve a la lista).
+async function refrescarEvento(id){
   await cargarLista();
   editando=buscar(id);
-  if(editando) pintarDocs(); else Admin.mostrar('vista-lista');
+  if(editando){pintarDocs();Asistencia.pintarBloque(editando);} else Admin.mostrar('vista-lista');
 }
+// Pasar lista (admin-asistencia.js): tras guardar o borrar la lista, se vuelve a este evento con el resumen al día.
+Asistencia.configurar({form,evento:()=>editando,alRefrescar:refrescarEvento});
 
 formDoc.addEventListener('submit',async e=>{
   e.preventDefault();
