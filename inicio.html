@@ -128,7 +128,7 @@
         d=>estante('est-recomendados',d,'Todavía no hay recomendaciones. ¡Sé el primero en recomendar un libro!',true));
       sb.from('retos').select('inicio,plazo,palabras,incluir').lte('inicio',hoy).order('inicio',{ascending:false}).limit(1)
         .then(r=>{ if(r.error) throw r.error; pintarReto(r.data[0]||null); })
-        .catch(e=>{ console.error(e); pintarReto(null,Cueva.mensaje(e)); });
+        .catch(e=>{ Cueva.registrar('No se ha podido cargar el reto',e); pintarReto(null,Cueva.mensaje(e)); });
     }).catch(e=>{
       zonas.forEach(z=>Cueva.error(z,e,iniciar));
       pintarReto(null,Cueva.mensaje(e));

@@ -23,6 +23,7 @@
       </div>
       <div class="avatar" aria-label="Tu perfil"></div>
     </div>
+    <nav class="migas" aria-label="Ruta"><ol><li><a class="migas-admin" href="admin.html"><svg class="migas-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><span>Administración</span></a></li><li data-miga-seccion aria-current="page">Libros</li><li data-miga-vista hidden></li></ol></nav>
     <h1>Libros</h1>
     <p class="sub">Biblioteca del club, préstamos y recomendados.</p>
   </header>
@@ -60,7 +61,7 @@
       </div>
     </section>
 
-    <section id="vista-libro" hidden>
+    <section id="vista-libro" hidden data-miga-de="libro-titulo">
       <form class="card formulario" id="form-libro" novalidate>
         <h2 id="libro-titulo" tabindex="-1" data-foco>Nuevo libro</h2>
         <p class="msg" data-estado hidden></p>
@@ -131,7 +132,7 @@
       </form>
     </section>
 
-    <section id="vista-prestar" hidden>
+    <section id="vista-prestar" hidden data-miga="Préstamo">
       <form class="card formulario" id="form-prestar" novalidate>
         <h2 tabindex="-1" data-foco>Prestar libro</h2>
         <p class="pista de-charla" id="prestar-libro"></p>
@@ -152,7 +153,7 @@
       </form>
     </section>
 
-    <section id="vista-devolver" hidden>
+    <section id="vista-devolver" hidden data-miga="Devolución">
       <form class="card formulario" id="form-devolver" novalidate>
         <h2 tabindex="-1" data-foco>Devolver libro</h2>
         <p class="pista de-charla" id="devolver-info"></p>
@@ -168,7 +169,7 @@
       </form>
     </section>
 
-    <section id="vista-reco" hidden>
+    <section id="vista-reco" hidden data-miga-de="reco-titulo">
       <form class="card formulario" id="form-reco" novalidate>
         <h2 id="reco-titulo" tabindex="-1" data-foco>Nuevo recomendado</h2>
         <p class="msg" data-estado hidden></p>
@@ -373,7 +374,7 @@ document.querySelectorAll('[data-nuevo-genero]').forEach(caja=>{
       ponerGeneros(GENEROS.concat(filas[0].nombre)); marcar(filas[0].nombre);
       entrada.value='';
       Admin.aviso('Género «'+filas[0].nombre+'» añadido.','ok');
-    }catch(e){console.error(e);fallo(Admin.mensajeError(e));}
+    }catch(e){Cueva.registrar('No se ha podido añadir el género',e);fallo(Admin.mensajeError(e));}
     finally{soltar();}
   }
   boton.addEventListener('click',anadir);
@@ -400,7 +401,7 @@ async function guardarConPortada(form,foto,escribirFila,textoOk){
     try{
       if(!foto.portada.nueva&&foto.portada.preparando) Admin.estado(form,'Preparando la portada…');
       nueva=await Portadas.imagenDe(foto.portada);
-    }catch(e){console.error(e);Admin.fallo(form,e);return null;} // la imagen elegida no se ha podido ajustar
+    }catch(e){Cueva.registrar('No se ha podido preparar la portada',e);Admin.fallo(form,e);return null;} // la imagen elegida no se ha podido ajustar
     const portada=Object.assign({},foto.portada,{nueva});
     return await Admin.escribir(form,()=>conPortada(portada,foto.datos.titulo,escribirFila),textoOk);
   }finally{soltar();guardando=false;}
@@ -535,7 +536,7 @@ async function guardarLibro(id,fila,internos,estado){
     const filas=exigirId(await sb.from('libros').update(fila).eq('id',id).select('id,codigo'),id);
     estado.guardada=true;
     try{exigir(await sb.from('libros_internos').upsert(Object.assign({libro_id:id},internos),{onConflict:'libro_id'}).select('libro_id'));}
-    catch(e){console.error(e);throw {mensaje:'Se han guardado el título, el autor, los géneros y la portada, pero no el origen ni el coste. '+Admin.mensajeError(e)};}
+    catch(e){Cueva.registrar('No se han podido guardar el origen y el coste',e);throw {mensaje:'Se han guardado el título, el autor, los géneros y la portada, pero no el origen ni el coste. '+Admin.mensajeError(e)};}
     return {data:filas,error:null};
   }
   // Libro nuevo: primero libros y luego libros_internos. Si lo segundo falla, se borra el libro (que no quede a medias).
@@ -544,10 +545,10 @@ async function guardarLibro(id,fila,internos,estado){
   try{
     exigir(await sb.from('libros_internos').upsert(Object.assign({libro_id:nuevo.id},internos),{onConflict:'libro_id'}).select('libro_id'));
   }catch(e){
-    console.error(e);
+    Cueva.registrar('No se han podido guardar el origen y el coste',e);
     const motivo=Admin.mensajeError(e);
     let deshecho=false;
-    try{const b=await sb.from('libros').delete().eq('id',nuevo.id).select('id');deshecho=!b.error&&Array.isArray(b.data)&&b.data.length>0;}catch(x){console.error(x);}
+    try{const b=await sb.from('libros').delete().eq('id',nuevo.id).select('id');deshecho=!b.error&&Array.isArray(b.data)&&b.data.length>0;}catch(x){Cueva.registrar('No se ha podido deshacer el alta del libro',x);}
     if(!deshecho){
       estado.guardada=true; // el libro sigue existiendo con su portada: no se borra el archivo
       throw {mensaje:'No se han podido guardar el origen y el coste, y tampoco se ha podido deshacer el alta. Borra a mano el libro '+nuevo.codigo+'. ('+motivo+')'};
@@ -585,7 +586,7 @@ async function comprobarPrestado(id,esperado){
     if(r.data.prestado===esperado) return null;
     return 'Se ha guardado '+que+', pero el libro no aparece como «'+(esperado?'prestado':'disponible')+'» en la base de datos: parece que el disparador no ha funcionado. Avisa a quien mantiene la base de datos.';
   }catch(e){
-    console.error(e);
+    Cueva.registrar('No se ha podido comprobar el estado del libro',e);
     return 'Se ha guardado '+que+', pero no se ha podido comprobar el estado del libro. Recarga la página para verlo.';
   }
 }

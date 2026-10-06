@@ -46,11 +46,18 @@ const Cueva = (function () {
     ? 'No hay conexión con el servidor. Comprueba tu internet y vuelve a intentarlo.'
     : 'No hemos podido cargar los datos. Inténtalo de nuevo dentro de un momento.';
 
+  // Registro de errores en la consola SIN datos: solo un texto corto y el código del error. Nunca el objeto completo:
+  // los errores de la base de datos traen en "details" (y a veces en "message") la fila entera, con datos personales.
+  function registrar(texto, e) {
+    const codigo = e && (e.code || e.status || e.statusCode || e.name);
+    console.error(texto + (codigo ? ' (código: ' + codigo + ')' : ''));
+  }
+
   function cargando(el, texto) {
     el.innerHTML = '<p class="empty cargando" role="status">' + esc(texto || 'Cargando…') + '</p>';
   }
   function error(el, e, reintentar) {
-    console.error(e);
+    registrar('No se han podido cargar los datos', e);
     el.innerHTML = '<div class="empty fallo" role="alert"><p>' + esc(mensaje(e)) + '</p>' + (reintentar ? '<button type="button" class="chip">Reintentar</button>' : '') + '</div>';
     if (reintentar) el.querySelector('button').addEventListener('click', reintentar);
   }
@@ -227,7 +234,7 @@ const Cueva = (function () {
   if (document.body && document.body.dataset.acceso === 'publico') publica();
   if (document.body) avisoDeLaUrl();
 
-  return { esc, urlSegura, cliente, haySesionLocal, privada, admin, esAdmin, aviso, perfilActivo, guardarInicial, salir, esErrorDeRed, mensaje, cargando, error, cargar };
+  return { esc, urlSegura, cliente, haySesionLocal, privada, admin, esAdmin, aviso, perfilActivo, guardarInicial, salir, esErrorDeRed, mensaje, registrar, cargando, error, cargar };
 })();
 
 // INTERFAZ DEL MÓVIL (todas las páginas): aviso "Gira el móvil" y "arrastrar para refrescar" en la app instalada.

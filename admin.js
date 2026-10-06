@@ -52,10 +52,23 @@ const Admin = (function () {
   const vistas = () => [...document.querySelectorAll('main > [id^="vista-"]')];
   function mostrar(id) {
     vistas().forEach(v => { v.hidden = v.id !== id; });
+    migas(document.getElementById(id));
     window.scrollTo(0, 0);
     const v = document.getElementById(id);
     const foco = v && v.querySelector('[data-foco]');
     if (foco) foco.focus({ preventScroll: true });
+  }
+  // Tercer nivel de las migas de la cabecera ("Administración › Socios › Ficha"). Solo textos genéricos, nunca datos:
+  // data-miga="texto fijo", o data-miga-de="id" de un título que solo lleva textos fijos ("Nuevo evento", "Editar reto"...).
+  function migas(v) {
+    const seccion = document.querySelector('.migas [data-miga-seccion]'), vista = document.querySelector('.migas [data-miga-vista]');
+    if (!seccion || !vista) return;
+    const origen = v && v.dataset.migaDe && document.getElementById(v.dataset.migaDe);
+    const t = (v && v.dataset.miga) || (origen ? origen.textContent.trim() : '');
+    vista.textContent = t;
+    vista.hidden = !t;
+    if (t) { vista.setAttribute('aria-current', 'page'); seccion.removeAttribute('aria-current'); }
+    else { seccion.setAttribute('aria-current', 'page'); vista.removeAttribute('aria-current'); }
   }
   function abrir(id) {
     history.pushState({ vista: id }, '');
@@ -289,7 +302,7 @@ const Admin = (function () {
       if (textoOk) Cueva.aviso(textoOk, 'ok');
       return r.data;
     } catch (e) {
-      console.error(e);
+      Cueva.registrar('No se ha podido guardar', e);
       fallo(form, e);
       return null;
     } finally {
