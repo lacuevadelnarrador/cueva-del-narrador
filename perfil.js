@@ -7,8 +7,9 @@
 (function () {
   const esc = Cueva.esc;
   const CONTACTO = 'lacuevadelnarrador@gmail.com';
-  const COLUMNAS = 'id,nombre_completo,nombre_pila,edad,telefono,instagram,tiktok,foto_url,generos_favoritos,motivacion,' +
+  const COLUMNAS = 'id,codigo,nombre_completo,nombre_pila,edad,telefono,instagram,tiktok,foto_url,generos_favoritos,motivacion,' +
     'como_nos_conocio,libro_publicado,rgpd_imagen,rgpd_publicaciones,fecha_inscripcion,fundador';
+  // codigo solo se lee (para el carné): no está en EDITABLES.
   // foto_url y foto_mini también son editables, pero la foto se guarda aparte (fotos.js): este formulario nunca las envía.
   const EDITABLES = ['nombre_completo', 'nombre_pila', 'edad', 'telefono', 'instagram', 'tiktok', 'generos_favoritos', 'motivacion', 'como_nos_conocio', 'libro_publicado'];
   const MOTIVOS = ['Terminar proyectos', 'Publicar', 'Mejora general', 'Falta de ideas', 'Síndrome del impostor', 'Ortografía', 'Maquetación', 'Crear obras largas', 'Falta de motivación'];
@@ -35,7 +36,11 @@
     correo: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
     escudo: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
     admin: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
-    salir: '<path d="M14 4h4a2 2 0 012 2v12a2 2 0 01-2 2h-4M10 16l-4-4 4-4M6 12h10"/>'
+    salir: '<path d="M14 4h4a2 2 0 012 2v12a2 2 0 01-2 2h-4M10 16l-4-4 4-4M6 12h10"/>',
+    carne: '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M5.5 16c.6-1.5 1.7-2.3 3-2.3s2.4.8 3 2.3M14 10h4M14 14h4"/>',
+    bajar: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
+    compartir: '<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/>',
+    camara: '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'
   };
   const ic = (k, cls) => '<svg class="perfil-ic' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + ICONOS[k] + '</svg>';
   const ESTADOS_CUOTA = {
@@ -73,7 +78,8 @@
   const fotoCambiar = document.getElementById('foto-cambiar');
   const fotoQuitar = document.getElementById('foto-quitar');
   // Foto grande que se está mostrando (solo en memoria): ruta y su blob: (se libera al cambiarla o quitarla).
-  let fotoVista = { ruta: '', url: null, cargando: false }, fotoTurno = 0;
+  // promesa: la descarga en curso (el carné la aprovecha en vez de descargar la foto otra vez).
+  let fotoVista = { ruta: '', url: null, cargando: false, promesa: null }, fotoTurno = 0;
 
   // ---------- Botón "volver" ----------
   // Si se llegó desde otra página de la web, vuelve a ella; si no (enlace directo), va al inicio.
@@ -171,12 +177,12 @@
     ponerInicial(inicial);
     if (ruta && fotoVista.ruta === ruta && fotoVista.cargando) return; // ya se está descargando
     Fotos.liberar(fotoVista.url);
-    fotoVista = { ruta, url: null, cargando: !!ruta };
+    fotoVista = { ruta, url: null, cargando: !!ruta, promesa: null };
     if (!ruta) return;
     const turno = ++fotoTurno;
-    Fotos.cargar(ruta).then(url => {
+    fotoVista.promesa = Fotos.cargar(ruta).then(url => {
       if (turno !== fotoTurno || !socio || socio.foto_url !== ruta) { Fotos.liberar(url); return; }
-      fotoVista = { ruta, url, cargando: false };
+      fotoVista = { ruta, url, cargando: false, promesa: null };
       if (url) ponerImagen(url, inicialDe(socio.nombre_pila || socio.nombre_completo));
     });
   }
@@ -191,17 +197,19 @@
     socio.foto_url = fila.foto_url || null;
     Cueva.avatarMini(fila.foto_mini || null);
     pintarCabecera();
+    refrescarCarne();
   }
-  fotoCambiar.addEventListener('click', () => {
+  function cambiarFoto(foco) {
     if (!socio || Fotos.ocupado()) return;
-    Fotos.cambiar({ socioId: socio.id, rutaAnterior: socio.foto_url || null, aviso: !socio.foto_url, foco: 'foto-cambiar', alGuardar: fotoCambiada });
-  });
+    Fotos.cambiar({ socioId: socio.id, rutaAnterior: socio.foto_url || null, aviso: !socio.foto_url, foco, alGuardar: fotoCambiada });
+  }
+  fotoCambiar.addEventListener('click', () => cambiarFoto('foto-cambiar'));
   fotoQuitar.addEventListener('click', () => {
     if (!socio || !socio.foto_url || Fotos.ocupado()) return;
     Fotos.quitar({ socioId: socio.id, ruta: socio.foto_url, foco: 'foto-cambiar', alQuitar: fotoCambiada });
   });
-  window.addEventListener('pagehide', () => { Fotos.liberar(fotoVista.url); fotoVista = { ruta: '', url: null, cargando: false }; });
-  window.addEventListener('pageshow', e => { if (e.persisted && socio) pintarCabecera(); });
+  window.addEventListener('pagehide', () => { Fotos.liberar(fotoVista.url); fotoVista = { ruta: '', url: null, cargando: false, promesa: null }; liberarCarne(); });
+  window.addEventListener('pageshow', e => { if (e.persisted && socio) { pintarCabecera(); observarCarne(); } });
 
   // ---------- Tarjetas ----------
   const tarjeta = (i, id, icono, tituloT, cuerpo) =>
@@ -216,12 +224,15 @@
         '<div id="perfil-vista">' + htmlVista() + '</div>' +
         '<form class="formulario perfil-form" id="perfil-form" novalidate hidden></form>') +
       tarjeta(1, 'inscripcion', 'ficha', 'Tu inscripción', htmlInscripcion()) +
-      tarjeta(2, 'cuotas', 'cuotas', 'Mis cuotas', '<div id="perfil-cuotas-cuerpo">' + htmlCuotas() + '</div>') +
-      tarjeta(3, 'asistencia', 'asistencia', 'Mi asistencia', htmlAsistencia()) +
-      htmlFinal(4);
+      (window.Carne ? tarjeta(2, 'carne', 'carne', 'Mi carné', htmlCarne()) : '') +
+      tarjeta(3, 'cuotas', 'cuotas', 'Mis cuotas', '<div id="perfil-cuotas-cuerpo">' + htmlCuotas() + '</div>') +
+      tarjeta(4, 'asistencia', 'asistencia', 'Mi asistencia', htmlAsistencia()) +
+      htmlFinal(5);
+    observarCarne();
   }
 
   function pintarSinFicha() {
+    liberarCarne();
     pintarCabecera();
     contenido.innerHTML =
       '<section class="perfil-tarjeta perfil-sin-ficha" style="--i:0" aria-labelledby="t-sin-ficha">' +
@@ -281,6 +292,167 @@
       permiso('Publicación de mis textos', s.rgpd_publicaciones === true) +
       '</ul>' +
       '<p class="pista perfil-pie">Si quieres cambiar alguno de estos datos, escríbenos a <a href="mailto:' + CONTACTO + '" rel="noopener noreferrer">' + CONTACTO + '</a></p>';
+  }
+
+  // b2) Mi carné: lo dibuja carne.js en este navegador cuando la tarjeta aparece en pantalla. Solo el del propio socio,
+  //     con los datos de su ficha. Los lienzos y archivos viven en memoria y se sueltan al salir de la página.
+  let carne = { turno: 0, caras: null, archivos: null, obs: null, enlace: null };
+  function htmlCarne() {
+    const compartir = Carne.compartible();
+    return '<p class="carne-intro">Tu carné de socio, listo para guardar en el móvil o imprimir.</p>' +
+      '<p class="carne-estado" id="carne-estado" role="status"></p>' +
+      '<div class="carne-cargando" id="carne-cargando" aria-hidden="true"><span class="carne-hueco"></span><span class="carne-hueco"></span></div>' +
+      '<div class="carne-error" id="carne-error" hidden><button class="btn sec" type="button" data-carne="reintentar">Reintentar</button></div>' +
+      '<div class="carne-vista" id="carne-vista" hidden>' +
+      '<figure class="carne-cara"><div class="carne-lienzo" id="carne-anverso"></div><figcaption>Anverso</figcaption></figure>' +
+      '<figure class="carne-cara"><div class="carne-lienzo" id="carne-reverso"></div><figcaption>Reverso</figcaption></figure></div>' +
+      '<div class="carne-aviso" id="carne-aviso" hidden></div>' +
+      '<div class="carne-botones" id="carne-botones">' +
+      '<button class="btn" type="button" data-carne="pdf" disabled>' + ic('bajar') + 'Descargar PDF</button>' +
+      '<button class="btn sec" type="button" data-carne="png" disabled>' + ic('bajar') + 'Descargar imagen</button>' +
+      (compartir ? '<button class="btn sec" type="button" data-carne="compartir" disabled>' + ic('compartir') + 'Compartir</button>' : '') +
+      '</div><div class="carne-alternativa" id="carne-alternativa" hidden></div>';
+  }
+  const $c = id => document.getElementById(id);
+  function estadoCarne(e) { // 'cargando' | 'listo' | 'error'
+    if (!$c('perfil-carne')) return;
+    $c('carne-cargando').hidden = e !== 'cargando';
+    $c('carne-vista').hidden = e !== 'listo';
+    $c('carne-error').hidden = e !== 'error';
+    $c('carne-estado').textContent = e === 'cargando' ? 'Preparando tu carné…' : e === 'error' ? 'No hemos podido preparar tu carné. Inténtalo de nuevo.' : '';
+    $c('carne-estado').hidden = e === 'listo';
+    document.querySelectorAll('#carne-botones button').forEach(b => { b.disabled = e !== 'listo'; });
+    if (e !== 'listo') { $c('carne-anverso').textContent = ''; $c('carne-reverso').textContent = ''; $c('carne-aviso').hidden = true; }
+  }
+  // Genera el carné cuando la tarjeta se acerca a la pantalla (o enseguida si ya se ve).
+  function observarCarne() {
+    const caja = $c('perfil-carne');
+    if (!caja || !socio || !window.Carne) return;
+    if (carne.obs) carne.obs.disconnect();
+    estadoCarne('cargando');
+    if (!('IntersectionObserver' in window)) { prepararCarne(); return; }
+    carne.obs = new IntersectionObserver(ents => {
+      if (!ents.some(x => x.isIntersecting)) return;
+      carne.obs.disconnect();
+      carne.obs = null;
+      prepararCarne();
+    }, { rootMargin: '300px 0px' });
+    carne.obs.observe(caja);
+  }
+  function quitarEnlace() {
+    if (carne.enlace) { Carne.soltarUrl(carne.enlace); carne.enlace = null; }
+    const alt = $c('carne-alternativa');
+    if (alt) { alt.hidden = true; alt.textContent = ''; }
+  }
+  function soltarCarne() {
+    carne.turno++;
+    if (window.Carne) Carne.soltar(carne.caras);
+    carne.caras = null;
+    carne.archivos = null;
+    quitarEnlace();
+  }
+  // Al salir de la página (o si la cuenta no tiene ficha): fuera lienzos, archivos y object URL.
+  function liberarCarne() {
+    soltarCarne();
+    if (carne.obs) { carne.obs.disconnect(); carne.obs = null; }
+    if (window.Carne) Carne.liberarUrls();
+  }
+  // Tras cambiar la foto o el nombre: se vuelve a dibujar con los datos nuevos.
+  function refrescarCarne() {
+    if (!$c('perfil-carne')) return;
+    soltarCarne();
+    observarCarne();
+  }
+  // La foto grande que ya se descargó para la cabecera se aprovecha; si no, se descarga (y se libera al terminar).
+  async function fotoParaCarne(ruta) {
+    if (!ruta) return { url: null, propia: false };
+    if (fotoVista.ruta === ruta && !fotoVista.url && fotoVista.promesa) await fotoVista.promesa;
+    if (fotoVista.ruta === ruta && fotoVista.url) return { url: fotoVista.url, propia: false };
+    return { url: await Fotos.cargar(ruta), propia: true };
+  }
+  async function prepararCarne() {
+    if (!$c('perfil-carne') || !socio) return;
+    soltarCarne();
+    const turno = carne.turno;
+    estadoCarne('cargando');
+    const ruta = typeof socio.foto_url === 'string' ? socio.foto_url : '';
+    const datos = { nombre: socio.nombre_completo || socio.nombre_pila || '', codigo: socio.codigo || '' };
+    let foto = { url: null, propia: false };
+    try {
+      foto = await fotoParaCarne(ruta);
+      if (turno !== carne.turno) return;
+      let r = await Carne.dibujar({ nombre: datos.nombre, codigo: datos.codigo, foto: foto.url });
+      // Si la foto de la cabecera ya no se puede leer, se descarga otra vez (una sola vez).
+      if (ruta && !r.conFoto && !foto.propia && turno === carne.turno) {
+        Carne.soltar(r);
+        foto = { url: await Fotos.cargar(ruta), propia: true };
+        if (turno !== carne.turno) return;
+        r = await Carne.dibujar({ nombre: datos.nombre, codigo: datos.codigo, foto: foto.url });
+      }
+      if (turno !== carne.turno || !$c('perfil-carne')) { Carne.soltar(r); return; }
+      carne.caras = r;
+      carne.archivos = Carne.archivos(r, datos.codigo);
+      carne.archivos.catch(e => { if (turno === carne.turno) Cueva.registrar('No se han podido preparar los archivos del carné', e); });
+      pintarCarneListo(r, datos, ruta);
+    } catch (e) {
+      if (turno !== carne.turno) return;
+      Cueva.registrar('No se ha podido preparar el carné', e);
+      estadoCarne('error');
+    } finally {
+      if (foto.propia) Fotos.liberar(foto.url);
+    }
+  }
+  function pintarCarneListo(r, datos, ruta) {
+    const nombre = datos.nombre || 'Socio/a', codigo = datos.codigo || 'sin código';
+    [['carne-anverso', r.anverso, 'anverso'], ['carne-reverso', r.reverso, 'reverso']].forEach(([id, lienzo, cara]) => {
+      lienzo.className = 'carne-canvas';
+      lienzo.setAttribute('role', 'img');
+      lienzo.setAttribute('aria-label', 'Carné de socio de ' + nombre + ', número ' + codigo + ', ' + cara);
+      const caja = $c(id);
+      caja.textContent = '';
+      caja.appendChild(lienzo);
+    });
+    estadoCarne('listo');
+    const av = $c('carne-aviso');
+    if (!ruta) av.innerHTML = '<p>Tu carné saldrá sin foto hasta que la añadas.</p>' +
+      '<button class="btn sec" type="button" id="carne-foto" data-carne="foto">' + ic('camara') + 'Añadir foto</button>';
+    else if (!r.conFoto) av.innerHTML = '<p>No hemos podido cargar tu foto: de momento el carné sale sin ella.</p>' +
+      '<button class="btn sec" type="button" data-carne="reintentar">Reintentar</button>';
+    else av.innerHTML = '';
+    av.hidden = !av.innerHTML;
+  }
+  async function accionCarne(que) {
+    if (que === 'reintentar') { refrescarCarne(); return; }
+    if (que === 'foto') { cambiarFoto('carne-foto'); return; }
+    if (!carne.archivos) return;
+    const turno = carne.turno;
+    let a;
+    try { a = await carne.archivos; } catch (e) { Cueva.aviso('No hemos podido preparar el archivo. Inténtalo de nuevo.', 'err'); return; }
+    if (turno !== carne.turno) return;
+    if (que === 'compartir') {
+      try {
+        if (await Carne.compartir(a) === 'no') {
+          const b = document.querySelector('[data-carne="compartir"]');
+          if (b) b.hidden = true;
+          Cueva.aviso('Este navegador no permite compartir archivos. Usa «Descargar PDF» o «Descargar imagen».', 'err');
+        }
+      } catch (e) {
+        Cueva.registrar('No se ha podido compartir el carné', e);
+        Cueva.aviso('No se ha podido compartir. Prueba a descargarlo.', 'err');
+      }
+      return;
+    }
+    quitarEnlace();
+    const pdf = que === 'pdf';
+    const r = Carne.descargar(pdf ? a.pdf : a.png, pdf ? a.nombrePdf : a.nombrePng);
+    if (r.modo === 'enlace') {
+      carne.enlace = r.url;
+      const alt = $c('carne-alternativa');
+      alt.innerHTML = '<p>Este navegador no deja descargar el archivo directamente.</p>' +
+        '<a class="btn sec" id="carne-abrir" href="' + esc(r.url) + '" target="_blank" rel="noopener">' + (pdf ? 'Abrir el PDF' : 'Abrir la imagen') + ' en una pestaña nueva</a>';
+      alt.hidden = false;
+      $c('carne-abrir').focus();
+    } else if (r.modo === 'pestana') Cueva.aviso('Tu carné se ha abierto en otra pestaña: guárdalo desde allí.', 'ok');
   }
 
   // c) Mis cuotas: agrupadas por curso (pestañas si hay más de uno). Sin importes.
@@ -557,6 +729,7 @@
     guardando = true;
     bloquear(true);
     let ok = false;
+    const nombreAntes = socio.nombre_completo + '\n' + socio.nombre_pila;
     try {
       const r = await sb.from('socios').update(cambios).eq('id', uid).select(COLUMNAS);
       if (r.error) throw r.error;
@@ -575,6 +748,7 @@
     Cueva.guardarInicial(socio.nombre_pila || socio.nombre_completo);
     vista().innerHTML = htmlVista();
     pintarCabecera();
+    if (socio.nombre_completo + '\n' + socio.nombre_pila !== nombreAntes) refrescarCarne();
     cerrarEdicion();
     Cueva.aviso('Tus datos se han guardado.', 'ok');
   }
@@ -582,6 +756,8 @@
   // ---------- Eventos ----------
   contenido.addEventListener('click', e => {
     if (e.target.closest('#perfil-editar')) { abrirEdicion(); return; }
+    const bc = e.target.closest('[data-carne]');
+    if (bc) { if (!bc.disabled) accionCarne(bc.dataset.carne); return; }
     if (e.target.closest('#perfil-cancelar')) { if (!guardando) cerrarEdicion(); return; }
     if (e.target.closest('#perfil-anadir')) { anadirPropia(); document.getElementById('f-propia').focus(); return; }
     const sw = e.target.closest('#f-libro');

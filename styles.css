@@ -30,6 +30,9 @@
   }
 }
 
+/* Letra caligráfica del carné de socio (Great Vibes, licencia OFL: fonts/OFL-GreatVibes.txt). Solo se descarga si se usa. */
+@font-face{font-family:'Great Vibes';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/GreatVibes-Regular.woff2) format('woff2')}
+
 /* ---------- Base ---------- */
 *{box-sizing:border-box;margin:0}
 html{-webkit-text-size-adjust:100%;scroll-padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
@@ -639,6 +642,27 @@ html.instalada,html.instalada body{overscroll-behavior-y:contain}
 /* Cuenta sin ficha y enlaces finales */
 .perfil-sin-ficha p{margin-bottom:12px}
 .perfil-sin-ficha .btn{max-width:100%;text-transform:none;letter-spacing:0;overflow-wrap:anywhere}
+
+/* Mi carné (perfil.html). La tarjeta dibujada es un objeto físico: sus colores no cambian entre modo claro y oscuro. */
+.carne-intro{margin-bottom:12px}
+.carne-estado{font-size:15px;color:var(--muted);margin-bottom:10px}
+.carne-cargando,.carne-vista{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-bottom:16px}
+.carne-hueco{display:block;aspect-ratio:1011/638;border-radius:3.7%/5.8%;background:var(--bg);border:1.5px dashed var(--chipline);opacity:.6;animation:latir 1s ease-in-out infinite alternate}
+.carne-cara{margin:0;min-width:0}
+.carne-lienzo{aspect-ratio:1011/638}
+.carne-canvas{display:block;width:100%;height:auto;filter:drop-shadow(0 6px 12px rgba(15,29,32,.3))}
+.carne-cara figcaption{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:center;margin-top:8px}
+.carne-error{margin-bottom:16px}
+.carne-aviso{background:var(--bg);border-left:4px solid var(--amber);border-radius:var(--r-s);padding:12px 14px;margin-bottom:16px}
+.carne-aviso p{margin-bottom:10px}
+.carne-botones{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.carne-botones .btn{width:100%}
+.carne-alternativa{margin-top:14px}
+.carne-alternativa p{margin-bottom:8px;font-size:15px}
+.carne-alternativa .btn{max-width:100%;text-align:center}
+@media (min-width:600px){
+  .carne-cargando,.carne-vista{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+}
 
 @media (hover:hover){
   .perfil-volver:hover{background:rgba(15,29,32,.4)}
