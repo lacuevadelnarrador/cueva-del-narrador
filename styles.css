@@ -750,3 +750,41 @@ html.instalada,html.instalada body{overscroll-behavior-y:contain}
   .soc-matricula.pagada{border-color:#4F8A5E}
   .soc-matricula.pendiente{border-color:#B07A22}
 }
+
+/* ---------- Panel: pasar lista (admin-eventos.html, admin-asistencia.js) ---------- */
+/* Todo con prefijo .asis-; reutiliza .soc-inicial, .buscador, .chip y los interruptores de "Mi perfil" (.perfil-switch) */
+.asis-bloque h3{margin:0 0 8px}
+.asis-resumen{margin-bottom:12px}
+.asis-bloque .pista{margin-top:8px}
+.asis-zona-borrar{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line)}
+.formulario .asis-zona-borrar .btn.peligro{margin-left:0}
+.asis-evento{margin:4px 0 14px;color:var(--muted);overflow-wrap:anywhere}
+.asis-evento b{color:var(--ink)}
+.asis-contador{font-family:'Oswald',sans-serif;font-size:20px;letter-spacing:.03em;text-transform:uppercase;margin-bottom:12px}
+.asis-contador b{font-size:26px;color:var(--title)}
+.asis .buscador{margin-bottom:12px}
+.asis-masivo{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.asis-masivo .chip:disabled{opacity:.5;cursor:not-allowed}
+.asis .pista{margin-bottom:8px}
+.asis-lista{list-style:none;padding:0;margin:0 0 8px;display:grid;gap:0}
+.asis-fila{display:flex;align-items:center;gap:12px;min-height:60px;padding:8px 0;border-top:1px solid var(--line)}
+.asis-fila:first-child{border-top:0}
+.asis-fila .st{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.asis-fila b{line-height:1.25;overflow-wrap:anywhere}
+.asis-fila small{color:var(--muted);font-size:13px}
+.asis-fila.inactiva .soc-inicial{background:var(--bg);color:var(--muted);border:2px dashed var(--muted)}
+.asis-switch{flex:none;min-width:44px}
+/* El texto del estado tiene ancho fijo para que el interruptor no salte al cambiar */
+.asis-switch .asis-estado{min-width:8.5ch;text-align:left;font-size:14px}
+.asis-switch[aria-checked="true"] .asis-estado{color:var(--link)}
+.asis-switch:disabled{cursor:progress;opacity:.7}
+.asis[aria-busy="true"] .btn{cursor:progress}
+@media (max-width:380px){
+  .asis-fila{gap:8px}
+  .asis-fila .soc-inicial{width:36px;height:36px;font-size:17px}
+  .asis-switch{gap:6px;padding:0 2px}
+  .asis-switch .asis-estado{min-width:0;width:min-content;line-height:1.1}
+}
+@media (hover:hover){
+  .asis-switch:hover .perfil-switch-pista{border-color:var(--chipline)}
+}
