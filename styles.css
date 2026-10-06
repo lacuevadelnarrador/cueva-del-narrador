@@ -50,6 +50,10 @@ input:focus:not(:focus-visible){outline:none}
 /* 19 px en negrita = texto grande WCAG (3:1); blanco sobre #528A93 = 3,88:1 */
 .brand span{font-family:'Oswald',sans-serif;font-weight:700;font-size:19px;line-height:.98;text-transform:uppercase;letter-spacing:.02em;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.15)}
 .avatar{width:40px;height:40px;border-radius:50%;background:var(--aqua);color:var(--teal-deep);display:grid;place-items:center;font-family:'Oswald',sans-serif;font-weight:700;box-shadow:0 0 0 2px rgba(255,255,255,.35)}
+/* El avatar es un enlace a "Mi perfil" (lo convierte auth.js): zona táctil de 44 px sin cambiar su tamaño visible */
+a.avatar{position:relative;flex:none;text-decoration:none}
+a.avatar::before{content:"";position:absolute;inset:-2px;border-radius:50%}
+a.avatar:active{transform:scale(.94)}
 .tagline{font-family:'Oswald',sans-serif;font-weight:700;text-transform:uppercase;font-size:28px;line-height:1.05;letter-spacing:.01em;color:var(--amber);text-align:center;text-wrap:balance}
 .sub{font-style:italic;color:#EBEDEF;margin-top:6px;text-align:center}
 
@@ -492,4 +496,153 @@ html.instalada,html.instalada body{overscroll-behavior-y:contain}
 /* ---------- Movimiento reducido ---------- */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+
+/* ---------- Mi perfil (perfil.html) ---------- */
+/* Todo con prefijo .perfil-: no afecta a otras páginas */
+.perfil-sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.perfil-ic{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Cabecera: degradado de verde petróleo; el nombre y las pastillas quedan sobre la parte más oscura (contraste AA) */
+.perfil-head{position:relative;overflow:hidden;background:linear-gradient(200deg,#528A93 0,#3E6F77 40%,#2F5860 100%);color:#fff;padding:calc(20px + env(safe-area-inset-top,0px)) 20px 26px;border-radius:0 0 28px 28px;box-shadow:0 6px 18px rgba(31,58,64,.18)}
+.perfil-head::after{content:"";position:absolute;right:-70px;top:70px;width:220px;height:220px;border:3px solid rgba(169,221,226,.14);border-radius:50%;pointer-events:none}
+.perfil-head .top{gap:10px;position:relative;z-index:1}
+.perfil-head .brand{flex:1;min-width:0}
+.perfil-volver{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;background:rgba(15,29,32,.25);text-decoration:none;transition:background-color .2s var(--ease)}
+.perfil-volver svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.perfil-volver:active{transform:scale(.94)}
+.perfil-identidad{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px}
+.perfil-foto{width:96px;height:96px;border-radius:50%;overflow:hidden;display:grid;place-items:center;margin:4px 0 12px;background:var(--aqua);color:var(--teal-deep);font-family:'Oswald',sans-serif;font-weight:700;font-size:46px;line-height:1;box-shadow:0 0 0 4px #FFBA55,0 0 0 9px rgba(255,186,85,.22),0 12px 26px rgba(0,0,0,.28)}
+.perfil-foto img{width:100%;height:100%;object-fit:cover;display:block}
+.perfil-foto.vacio{background:linear-gradient(160deg,var(--aqua),#7FBCC3)}
+.perfil-eyebrow{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#EBEDEF}
+.perfil-identidad h1{font-size:clamp(26px,8vw,34px);letter-spacing:.01em;color:var(--amber);overflow-wrap:anywhere;max-width:100%}
+.perfil-pastillas{list-style:none;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:8px}
+.perfil-pastilla{display:inline-flex;align-items:center;gap:5px;min-height:28px;padding:3px 12px;border-radius:999px;background:#EBEDEF;color:#2F5860;font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.05em;text-transform:uppercase;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.perfil-pastilla.fundador{background:#FFBA55;color:#14262A}
+.perfil-pastilla .perfil-ic{width:14px;height:14px;stroke-width:2.8}
+.perfil-pista-foto{font-size:13px;font-style:italic;color:#EBEDEF;margin-top:6px}
+
+/* Tarjetas con aparición escalonada (sin movimiento si el sistema lo pide: regla general de abajo) */
+.perfil-contenido{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+.perfil-tarjeta{min-width:0;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--sh2);padding:18px 16px 20px;animation:perfil-entra .45s var(--ease) backwards;animation-delay:calc(var(--i,0) * 80ms)}
+.perfil-final{animation:perfil-entra .45s var(--ease) backwards;animation-delay:calc(var(--i,0) * 80ms)}
+@keyframes perfil-entra{from{opacity:0;transform:translateY(14px)}}
+.perfil-tarjeta h2{display:flex;align-items:center;gap:10px;font-size:22px;color:var(--title);margin-bottom:12px}
+.perfil-tarjeta-ic{flex:none;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(160deg,var(--teal),var(--teal-700));color:#fff;box-shadow:inset 0 -2px 0 rgba(0,0,0,.1)}
+.perfil-tarjeta-ic .perfil-ic{width:22px;height:22px;stroke-width:1.9}
+.perfil-subtitulo{font-size:14px;letter-spacing:.08em;color:var(--muted);margin:18px 0 10px}
+.perfil-tarjeta a:not(.btn):not(.item){color:var(--link);font-weight:600;text-underline-offset:3px;overflow-wrap:anywhere}
+.perfil-vacio{color:var(--muted);font-style:italic}
+
+/* a) Tus datos */
+.perfil-datos{margin:0 0 14px}
+.perfil-dato{display:grid;gap:2px;padding:10px 0;border-bottom:1px solid var(--line)}
+.perfil-dato:last-child{border-bottom:0}
+.perfil-dato dt{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.perfil-dato dd{margin:0;overflow-wrap:anywhere}
+.perfil-dato dd>a{display:inline-flex;align-items:center;min-height:44px}
+.perfil-nota{display:block;font-size:13px;color:var(--muted)}
+.perfil-etiquetas{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.perfil-etiquetas li{padding:3px 12px;border-radius:999px;background:var(--bg);border:1px solid var(--line);font-size:14px;overflow-wrap:anywhere;max-width:100%}
+
+/* Formulario de edición (reutiliza .campo, .entrada, .etiqueta, .btn...) */
+.perfil-form{margin-top:2px}
+.perfil-bloqueo{border:0;padding:0;margin:0;min-width:0}
+.perfil-obligatorio{margin-bottom:12px}
+.perfil-form .campo{margin-bottom:16px}
+.perfil-form .campo .pista{margin-top:-2px}
+.perfil-form .opciones{margin-bottom:16px}
+.perfil-form .etiqueta span{overflow-wrap:anywhere}
+.perfil-corta{max-width:120px}
+.perfil-arroba{display:flex;min-width:0}
+.perfil-arroba>span{flex:none;display:grid;place-items:center;min-width:44px;border:1.5px solid var(--muted);border-right:0;border-radius:var(--r-s) 0 0 var(--r-s);background:var(--bg);color:var(--muted);font-family:'Oswald',sans-serif;font-size:18px}
+.perfil-arroba .entrada{flex:1;min-width:0;border-radius:0 var(--r-s) var(--r-s) 0}
+.perfil-form .entrada:disabled{background:var(--bg);color:var(--muted);-webkit-text-fill-color:var(--muted);border-style:dashed;opacity:1}
+.perfil-propia{margin:12px 0 0!important}
+.perfil-campo-switch{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.perfil-switch-et{font-size:16px;font-weight:600}
+.perfil-switch{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 6px;border:0;border-radius:999px;background:none;color:var(--ink);font:inherit;cursor:pointer}
+.perfil-switch-pista{position:relative;flex:none;width:54px;height:32px;border-radius:999px;background:var(--bg);border:2px solid var(--muted);transition:background-color .2s var(--ease),border-color .2s var(--ease)}
+.perfil-switch-pista span{position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:50%;background:var(--muted);transition:transform .2s var(--ease),background-color .2s var(--ease)}
+.perfil-switch[aria-checked="true"] .perfil-switch-pista{background:var(--accent);border-color:var(--accent)}
+.perfil-switch[aria-checked="true"] .perfil-switch-pista span{transform:translateX(22px);background:#fff}
+.perfil-switch-texto{min-width:2ch;font-family:'Oswald',sans-serif;font-weight:700;text-transform:uppercase}
+.perfil-form-msg{margin:0 0 12px;padding:10px 12px;border-radius:var(--r-s);border-left:4px solid #B3412B;background:#FBE9E5;color:#7A2414;font-size:15px}
+.perfil-form[aria-busy="true"] .btn{cursor:progress}
+
+/* b) Tu inscripción */
+.perfil-permisos{list-style:none;padding:0;display:grid;gap:8px}
+.perfil-permiso{display:flex;align-items:center;gap:10px;min-height:48px;padding:10px 12px;border-radius:12px;background:var(--bg)}
+.perfil-permiso-et{flex:1;min-width:0}
+.perfil-permiso b{font-family:'Oswald',sans-serif;letter-spacing:.04em;text-transform:uppercase}
+.perfil-permiso .perfil-ic{stroke-width:2.6}
+.perfil-permiso.si .perfil-ic,.perfil-asis.si{color:#1B5E20}
+.perfil-permiso.no .perfil-ic,.perfil-asis.no{color:#A33A26}
+.perfil-pie{margin-top:14px}
+
+/* c) Mis cuotas: cuadrícula de fichas tipo calendario */
+.perfil-curso{font-style:italic;color:var(--muted);margin:-4px 0 8px}
+.perfil-tabs{margin-bottom:12px}
+.perfil-resumen{font-size:15px;margin-bottom:12px}
+.perfil-matricula{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;min-height:48px;padding:8px 12px;border-radius:12px;background:var(--bg);font-family:'Oswald',sans-serif;letter-spacing:.05em;text-transform:uppercase}
+.perfil-meses{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
+.perfil-mes{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:0 4px 9px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden;text-align:center}
+.perfil-mes-nombre{align-self:stretch;margin:0 -4px 3px;padding:4px 0;background:var(--teal-700);color:#fff;font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:.1em;text-transform:uppercase}
+.perfil-mes-anio{font-size:11px;line-height:1;color:var(--muted)}
+.perfil-mes.pagada{border-color:#8FBF9F}
+.perfil-mes.pendiente{border-color:#E0A23C}
+.perfil-mes.actual{box-shadow:0 0 0 2px var(--amber),var(--sh1)}
+.perfil-punto{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 1.5px #14262A;vertical-align:middle}
+.perfil-mes .perfil-punto{position:absolute;top:8px;right:7px}
+.perfil-leyenda{margin-top:10px}
+.perfil-estado{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
+.perfil-estado .perfil-ic{width:14px;height:14px;stroke-width:2.8}
+.perfil-estado.pagada{background:#D7EDDC;color:#1B5E20}
+.perfil-estado.pendiente{background:#FFE8C2;color:#6E4300}
+.perfil-estado.exenta{background:#E3E7EA;color:#3B4A4E}
+.perfil-estado.sin{padding:2px 4px;font-family:'Lora',serif;font-style:italic;text-transform:none;letter-spacing:0;color:var(--muted);white-space:normal}
+
+/* d) Mi asistencia: anillo de progreso y lista */
+.perfil-asistencia-resumen{display:flex;align-items:center;gap:16px}
+.perfil-asistencia-resumen p{display:grid;gap:4px;min-width:0}
+.perfil-anillo{position:relative;flex:none;width:104px;height:104px}
+.perfil-anillo svg{display:block;width:100%;height:100%}
+.perfil-anillo circle{fill:none;stroke-width:10}
+.perfil-anillo .fondo{stroke:var(--bg)}
+.perfil-anillo .valor{stroke:var(--teal-700);stroke-linecap:round;animation:perfil-anillo 1s var(--ease) .3s backwards}
+@keyframes perfil-anillo{from{stroke-dashoffset:var(--c)}}
+.perfil-anillo-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-weight:700;font-size:28px;color:var(--ink)}
+.perfil-anillo-pct small{font-size:15px;margin-left:2px}
+.perfil-sesiones{list-style:none;padding:0;display:grid;gap:8px}
+.perfil-sesion{display:grid;gap:4px;padding:10px 12px;border-radius:12px;background:var(--bg);border-left:4px solid #8FBF9F}
+.perfil-sesion.no{border-left-color:#E8A9A9}
+.perfil-sesion-fecha{font-size:13px;color:var(--muted)}
+.perfil-sesion-titulo{font-weight:600;line-height:1.3;overflow-wrap:anywhere}
+.perfil-sesion-pie{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px}
+.perfil-tipo{padding:2px 10px;border-radius:999px;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.perfil-asis{display:inline-flex;align-items:center;gap:4px;font-size:14px;font-weight:600}
+.perfil-asis .perfil-ic{width:16px;height:16px;stroke-width:2.8}
+
+/* Cuenta sin ficha y enlaces finales */
+.perfil-sin-ficha p{margin-bottom:12px}
+.perfil-sin-ficha .btn{max-width:100%;text-transform:none;letter-spacing:0;overflow-wrap:anywhere}
+
+@media (hover:hover){
+  .perfil-volver:hover{background:rgba(15,29,32,.4)}
+  .perfil-switch:hover .perfil-switch-pista{border-color:var(--chipline)}
+}
+@media (prefers-color-scheme:dark){
+  .perfil-permiso.si .perfil-ic,.perfil-asis.si{color:#8FD19E}
+  .perfil-permiso.no .perfil-ic,.perfil-asis.no{color:#F2A08E}
+  .perfil-estado.pagada{background:#1F4A2B;color:#CDEFD5}
+  .perfil-estado.pendiente{background:#4A3510;color:#FFE1A8}
+  .perfil-estado.exenta{background:#2D3F44;color:#D5DEE0}
+  .perfil-mes.pagada{border-color:#4F8A5E}
+  .perfil-mes.pendiente{border-color:#B07A22}
+  .perfil-anillo .fondo{stroke:#17292D}
+  .perfil-anillo .valor{stroke:var(--aqua)}
+  .perfil-switch[aria-checked="true"] .perfil-switch-pista{background:var(--aqua);border-color:var(--aqua)}
+  .perfil-switch[aria-checked="true"] .perfil-switch-pista span{background:#14262A}
+  .perfil-form-msg{background:#3A2420;color:#F6C9BE;border-left-color:#E8735A}
 }
