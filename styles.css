@@ -427,6 +427,21 @@ select.entrada{cursor:pointer}
 .panel-admin .barra-admin{margin-bottom:0}
 .fila .mini{flex:none;width:40px;height:58px;border-radius:2px 6px 6px 2px;object-fit:cover;display:flex;align-items:flex-end;padding:5px;font-family:'Oswald',sans-serif;font-weight:700;font-size:20px;line-height:1;box-shadow:inset 3px 0 0 rgba(0,0,0,.16),0 3px 6px -3px rgba(31,58,64,.45)}
 .fila .st .estado{align-self:flex-start;margin-top:4px}
+/* Selección múltiple (recomendados): barra con el contador y casillas de 44px de objetivo táctil */
+.seleccion{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 14px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-m)}
+.seleccion .cuenta{flex:1 1 100%;margin:0;color:var(--ink);font-weight:600}
+.seleccion .msg{flex:1 1 100%;margin:0}
+.seleccion .btn.peligro{margin-left:auto}
+.seleccion .btn:disabled{opacity:.55;cursor:not-allowed}
+.fila.sel-fila::after{display:none}
+.sel-fila .sel-casilla{flex:none;width:24px;height:24px;margin:10px;accent-color:#B3412B;cursor:pointer}
+.sel-fila:has(.sel-casilla:checked){border-color:#B3412B;box-shadow:inset 0 0 0 1px #B3412B}
+/* Copia de seguridad (admin-copia) */
+.copia>p{margin-bottom:12px}
+.copia .copia-progreso{margin:4px 0 6px;color:var(--ink);font-size:15px}
+.copia-barra{display:block;width:100%;height:12px;margin-bottom:14px;accent-color:var(--accent)}
+.copia-barra[hidden]{display:none}
+.copia #resultado{overflow-wrap:anywhere}
 .etiquetas{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
 .etiqueta{position:relative;display:inline-flex}
 .etiqueta input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}

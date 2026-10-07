@@ -55,8 +55,16 @@
         <input class="buscador" id="q-recos" type="search" placeholder="Buscar por título o autor" aria-label="Buscar recomendados por título o autor" autocomplete="off">
         <div class="barra-admin">
           <p class="cuenta" id="cuenta-recos" aria-live="polite"></p>
+          <button type="button" class="btn sec" id="seleccionar-recos" hidden>Seleccionar</button>
           <button type="button" class="btn" id="anadir-reco" hidden>+ Añadir</button>
         </div>
+        <form class="seleccion" id="form-seleccion" aria-label="Selección de recomendados" novalidate hidden>
+          <p class="cuenta" id="cuenta-seleccion" role="status">0 seleccionados</p>
+          <p class="msg" data-estado hidden></p>
+          <button type="button" class="btn sec" id="seleccionar-todos">Seleccionar todos</button>
+          <button type="button" class="btn sec" id="cancelar-seleccion">Cancelar</button>
+          <button type="submit" class="btn peligro" id="borrar-seleccion" disabled>Borrar seleccionados (0)</button>
+        </form>
         <div id="lista-recos"></div>
       </div>
     </section>
@@ -663,13 +671,83 @@ function pintarRecos(){
   const lista=RECOS.filter(r=>!q||norm(r.titulo+' '+r.autor).includes(q));
   const n=RECOS.length;
   el('cuenta-recos').textContent=(lista.length===n?'':lista.length+' de ')+n+(n===1?' recomendado':' recomendados');
+  el('seleccionar-recos').hidden=seleccionando||!n;
+  el('anadir-reco').hidden=seleccionando;
   el('lista-recos').innerHTML=lista.length?lista.map(r=>{
     const meta=[r.autor,r.generos.join(', ')].filter(Boolean).map(esc).join(' · ');
     const por=[r.recomendado_por?'Recomienda: '+r.recomendado_por:'',r.temporada?'Temporada '+r.temporada:''].filter(Boolean).map(esc).join(' · ');
-    return '<button type="button" class="fila libro-fila" data-id="'+esc(r.id)+'">'+mini(r.titulo,r.portada_url)
-      +'<span class="st"><b>'+esc(r.titulo)+'</b><small>'+meta+'</small>'+(por?'<small>'+por+'</small>':'')+'</span></button>';
+    const texto=mini(r.titulo,r.portada_url)+'<span class="st"><b>'+esc(r.titulo)+'</b><small>'+meta+'</small>'+(por?'<small>'+por+'</small>':'')+'</span>';
+    // En modo selección cada fila es una casilla (toda la fila sirve para marcarla).
+    return seleccionando
+      ?'<label class="fila libro-fila sel-fila"><input type="checkbox" class="sel-casilla" value="'+esc(r.id)+'" aria-label="'+esc(r.titulo||'Sin título')+'"'+(SELEC.has(String(r.id))?' checked':'')+'>'+texto+'</label>'
+      :'<button type="button" class="fila libro-fila" data-id="'+esc(r.id)+'">'+texto+'</button>';
   }).join(''):'<p class="empty">'+(n?'Ningún recomendado coincide con la búsqueda.':'Todavía no hay recomendados. Añade el primero.')+'</p>';
+  pintarSeleccion();
 }
+
+// ---------- Selección múltiple de recomendados (para borrar varios a la vez) ----------
+// La selección se guarda por id y se mantiene aunque cambie la búsqueda. "Seleccionar todos / ninguno"
+// actúa sobre los recomendados que se ven con la búsqueda actual.
+let seleccionando=false;
+const SELEC=new Set(), formSel=el('form-seleccion');
+const visiblesRecos=()=>[...el('lista-recos').querySelectorAll('.sel-casilla')];
+const plural=(n,uno,varios)=>n+' '+(n===1?uno:varios);
+function pintarSeleccion(){
+  // Solo cuentan los que siguen existiendo (tras recargar la lista puede haber desaparecido alguno).
+  [...SELEC].forEach(id=>{if(!RECOS.some(r=>String(r.id)===id)) SELEC.delete(id);});
+  const n=SELEC.size, vis=visiblesRecos();
+  formSel.hidden=!seleccionando;
+  el('cuenta-seleccion').textContent=plural(n,'seleccionado','seleccionados');
+  el('borrar-seleccion').textContent='Borrar seleccionados ('+n+')';
+  if(!ocupado()) el('borrar-seleccion').disabled=!n;
+  const todos=vis.length>0&&vis.every(c=>c.checked);
+  el('seleccionar-todos').textContent=todos?'Seleccionar ninguno':'Seleccionar todos';
+  if(!ocupado()) el('seleccionar-todos').disabled=!vis.length;
+}
+function modoSeleccion(on){
+  if(ocupado()) return;
+  seleccionando=on; SELEC.clear(); Admin.estado(formSel,'');
+  pintarRecos();
+  if(on){const c=visiblesRecos()[0];(c||el('seleccionar-todos')).focus();}
+  else if(!el('seleccionar-recos').hidden) el('seleccionar-recos').focus();
+  else el('q-recos').focus();
+}
+el('seleccionar-recos').addEventListener('click',()=>modoSeleccion(true));
+el('cancelar-seleccion').addEventListener('click',()=>modoSeleccion(false));
+el('seleccionar-todos').addEventListener('click',()=>{
+  const vis=visiblesRecos(), todos=vis.length>0&&vis.every(c=>c.checked);
+  vis.forEach(c=>{c.checked=!todos;if(todos)SELEC.delete(c.value);else SELEC.add(c.value);});
+  pintarSeleccion();
+});
+el('lista-recos').addEventListener('change',e=>{
+  const c=e.target.closest('.sel-casilla'); if(!c) return;
+  if(c.checked) SELEC.add(c.value); else SELEC.delete(c.value);
+  pintarSeleccion();
+});
+// Escape sale del modo selección (si no se está borrando).
+formSel.addEventListener('keydown',e=>{if(e.key==='Escape'&&seleccionando){e.preventDefault();modoSeleccion(false);}});
+el('lista-recos').addEventListener('keydown',e=>{if(e.key==='Escape'&&seleccionando){e.preventDefault();modoSeleccion(false);}});
+
+formSel.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!seleccionando||ocupado()) return;
+  const elegidos=RECOS.filter(r=>SELEC.has(String(r.id))), n=elegidos.length;
+  if(!n) return;
+  const si=await Admin.confirmar('¿Borrar '+plural(n,'libro recomendado','libros recomendados')+'? No se puede deshacer.');
+  if(!si){el('borrar-seleccion').focus();return;}
+  const sb=Admin.sb(), ids=elegidos.map(r=>r.id);
+  // Mismo patrón que el borrado de uno: página bloqueada y se comprueba con .select() qué filas se han borrado de verdad.
+  const ok=await Admin.escribir(formSel,()=>sb.from('recomendaciones').delete().in('id',ids).select('id'));
+  if(!ok){el('borrar-seleccion').focus();return;} // el error queda escrito en la barra de selección y la selección se conserva
+  const borrados=elegidos.filter(r=>ok.some(f=>String(f.id)===String(r.id)));
+  // Las portadas solo se borran de los recomendados que la base de datos confirma como borrados.
+  borrados.forEach(r=>{if(r.portada_url) Portadas.borrar(sb,r.portada_url);});
+  if(borrados.length===n) Admin.aviso(n===1?'Recomendado borrado.':'Se han borrado '+n+' recomendados.','ok');
+  else Admin.aviso('Solo se han borrado '+borrados.length+' de '+n+' recomendados: puede que otra persona haya borrado alguno o que no tengas permiso. Revisa la lista.','err');
+  seleccionando=false; SELEC.clear();
+  await cargarRecos();
+  (el('seleccionar-recos').hidden?el('q-recos'):el('seleccionar-recos')).focus();
+});
 function cargarRecos(){
   return new Promise(listo=>Cueva.cargar(el('lista-recos'),
     ()=>Admin.iniciar().then(sb=>Promise.all([
