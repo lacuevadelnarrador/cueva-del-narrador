@@ -732,6 +732,10 @@ html.instalada,html.instalada body{overscroll-behavior-y:contain}
 .soc-crear-cuenta{background:var(--bg);border-radius:var(--r-s);padding:10px 14px;margin-bottom:12px;overflow-wrap:anywhere}
 .soc-cuenta-fila{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px}
 .soc-tarjeta .msg.aviso{margin-bottom:12px}
+/* Correo de acceso (bloque "Cuenta") */
+.soc-correo-fila{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.soc-correo-actual{flex:1 1 220px;min-width:0;overflow-wrap:anywhere}
+.soc-correo-pista{flex-basis:100%;margin:0}
 .soc-tarjeta .msg[data-estado],.soc-bajas .msg[data-estado]{margin:12px 0 0}
 /* Cuotas: las fichas son botones */
 .soc-mes{width:100%;min-height:44px;height:100%;font:inherit;color:inherit;cursor:pointer;transition:transform .12s var(--ease)}

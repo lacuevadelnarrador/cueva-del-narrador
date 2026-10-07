@@ -300,7 +300,7 @@
       interruptor(p, 'libro_publicado', 'Libro publicado', s.libro_publicado) +
       '<div class="campo"><label for="' + p + '-correo">Correo de la cuenta</label>' +
       '<input class="entrada" id="' + p + '-correo" type="email" value="' + esc(correo || '') + '" readonly aria-describedby="' + p + '-correo-pista">' +
-      '<p class="pista" id="' + p + '-correo-pista">Solo lectura: es el correo con el que entra en la app.</p></div>' +
+      '<p class="pista" id="' + p + '-correo-pista">Solo lectura: es el correo con el que entra en la app.' + (p === 'f' ? ' Se cambia en el bloque «Cuenta».' : '') + '</p></div>' +
       '<h3 class="soc-seccion">Inscripción y consentimientos</h3>' +
       campo(p, 'fecha_inscripcion', 'Fecha de inscripción', s.fecha_inscripcion, { tipo: 'date', pista: 'Puede quedar vacía si es fundador/a.' }) +
       interruptor(p, 'fundador', 'Fundador/a', s.fundador) +
@@ -505,6 +505,9 @@
     if (!roles.some(r => r[0] === p.rol)) roles.push([p.rol, String(p.rol || 'Sin rol')]);
     return '<form class="card soc-tarjeta" id="form-cuenta" novalidate aria-labelledby="t-cuenta"><h2 id="t-cuenta">Cuenta</h2>' +
       (p.id === yo ? '<p class="msg aviso">Es tu propia cuenta: la base de datos no te deja quitarte el rol de administrador ni desactivarte.</p>' : '') +
+      '<div class="soc-correo-fila"><p class="soc-correo-actual">Correo de acceso: <b>' + esc(p.email || 'Sin correo') + '</b></p>' +
+      (p.id === yo ? '<p class="pista soc-correo-pista">Para cambiar tu propio correo, pídeselo a otro administrador.</p>'
+        : '<button type="button" class="btn sec" data-correo>Cambiar correo</button>') + '</div>' +
       '<div class="soc-cuenta-fila"><p>Estado: <b>' + (activa ? 'Activa' : 'Desactivada') + '</b></p>' +
       '<button type="button" class="btn sec" data-activo="' + !activa + '">' + (activa ? 'Desactivar cuenta' : 'Activar cuenta') + '</button></div>' +
       '<div class="campo"><label for="f-rol">Rol</label><select class="entrada" id="f-rol" data-rol="' + esc(p.rol) + '">' +
@@ -672,6 +675,81 @@
     actualizarPerfil(r[0]);
     if (ficha && ficha.socio.id === id) repintarCuenta();
     pintarLista();
+  }
+
+  // ---------- Correo de acceso (función cambiar_correo_socio de la base de datos) ----------
+  // La base de datos lo cambia en la cuenta, su identidad y el perfil, y cierra las sesiones abiertas de esa cuenta.
+  // Mismas reglas que la base de datos; sus mensajes se muestran tal cual.
+  const CORREO = /^[^@\s]+@[^@\s]+\.[^@\s]+$/, MAX_CORREO = 254;
+  const MENSAJES_CORREO = ['Solo los administradores pueden cambiar un correo.', 'No puedes cambiar tu propio correo desde aquí. Pide a otro administrador que lo haga.',
+    'El correo no tiene un formato válido.', 'No existe esa cuenta.', 'Ese ya es el correo de la cuenta.', 'Ya existe otra cuenta con ese correo.'];
+  const normCorreo = t => String(t == null ? '' : t).trim().toLowerCase();
+  function mensajeCorreo(e) {
+    const t = String((e && e.message) || '');
+    const m = MENSAJES_CORREO.find(x => t.includes(x));
+    if (m) return m;
+    if (e && e.code === '23505') return 'Ya existe otra cuenta con ese correo.';
+    return Admin.mensajeError(e);
+  }
+
+  function abrirCambioCorreo() {
+    if (!ficha || !ficha.perfil || ficha.perfil.id === yo || document.querySelector('dialog[open]')) return;
+    const id = ficha.perfil.id, actual = normCorreo(ficha.perfil.email); // instantánea
+    const d = crearDialogo('<form id="form-correo" novalidate><h2 id="dlg-titulo">Cambiar el correo de acceso</h2>' +
+      '<div class="campo"><label for="dlg-correo">Correo nuevo</label>' +
+      '<input class="entrada" id="dlg-correo" name="correo" type="email" inputmode="email" autocomplete="off" autocapitalize="none" spellcheck="false" required></div>' +
+      '<p id="dlg-texto">Esta persona recibirá el código de acceso en la dirección nueva. Si estaba conectada, se cerrará su sesión y tendrá que volver a entrar. ' +
+      'Comprueba bien la dirección: si está mal escrita, no podrá entrar.</p>' +
+      '<p class="msg" data-estado hidden></p>' +
+      '<div class="botones-form"><button type="button" class="btn sec" data-cerrar>Cancelar</button><button type="submit" class="btn">Cambiar correo</button></div></form>');
+    d.classList.add('soc-correo-dialogo');
+    d.setAttribute('aria-describedby', 'dlg-texto');
+    const form = d.querySelector('form'), campo = form.elements.correo;
+    Admin.obligatorios(form);
+    campo.focus();
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (form.getAttribute('aria-busy')) return; // ya se está guardando
+      const nuevo = normCorreo(campo.value); // instantánea
+      const ok = Admin.validar(form, () => !nuevo ? null
+        : nuevo.length > MAX_CORREO ? { correo: 'Escribe ' + MAX_CORREO + ' caracteres como máximo (ahora hay ' + nuevo.length + ').' }
+        : !CORREO.test(nuevo) ? { correo: 'El correo no tiene un formato válido.' }
+        : nuevo === actual ? { correo: 'Ese ya es el correo de la cuenta.' } : null);
+      if (!ok) return;
+      const soltar = Admin.bloquear(form);
+      Admin.estado(form, 'Guardando…');
+      let correo = null;
+      try {
+        const r = await sb.rpc('cambiar_correo_socio', { p_socio: id, p_correo: nuevo });
+        if (r.error) throw r.error;
+        if (typeof r.data !== 'string' || !r.data.trim()) throw { sinFilas: true };
+        correo = r.data.trim();
+        Admin.estado(form, '');
+      } catch (err) {
+        Cueva.registrar('No se ha podido cambiar el correo', err);
+        Admin.estado(form, mensajeCorreo(err), true); // el diálogo sigue abierto con lo escrito
+      } finally {
+        soltar();
+      }
+      if (!correo) return;
+      d.close();
+      correoCambiado(id, correo);
+      Admin.aviso('Correo actualizado. Esa persona recibirá el código en la dirección nueva.', 'ok');
+    });
+  }
+  // Tras el cambio: cabecera, cuenta, el campo de solo lectura de la ficha (sin repintar el formulario, que puede
+  // tener cambios sin guardar), el listado y las fichas pendientes.
+  function correoCambiado(id, correo) {
+    actualizarPerfil({ id, email: correo });
+    if (ficha && ficha.socio.id === id) {
+      repintarCuenta();
+      const c = el('f-correo');
+      if (c) c.value = correo;
+      const b = document.querySelector('#form-cuenta [data-correo]');
+      if (b && Admin.visible(b)) b.focus({ preventScroll: true });
+    }
+    pintarLista();
+    pintarPendientes();
   }
 
   async function recargarCuotas(id) {
@@ -981,6 +1059,7 @@
     let b;
     if ((b = t.closest('[data-descartar]'))) descartar(b.form);
     else if ((b = t.closest('[data-activo]'))) cambiarActivo(b.form, b.dataset.activo === 'true');
+    else if ((b = t.closest('[data-correo]'))) abrirCambioCorreo();
     else if ((b = t.closest('[data-eliminar]'))) eliminar(b.form);
     else if ((b = t.closest('[data-foto-cambiar]'))) {
       if (ficha && !Fotos.ocupado()) Fotos.cambiar({ socioId: ficha.socio.id, rutaAnterior: ficha.socio.foto_url || null, aviso: false, foco: 'foto-cambiar', alGuardar: fotoCambiada });
