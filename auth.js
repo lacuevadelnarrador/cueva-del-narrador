@@ -273,6 +273,57 @@ const Cueva = (function () {
     }).catch(() => {});
   }
 
+  // ---------- Registro de visitas (informes de uso) ----------
+  // Una llamada a registrar_visita por carga de página, solo con el nombre de la página: la base de datos suma 1 al
+  // contador del día y, si hay sesión, guarda la fecha del último acceso del socio. Las páginas de administración no
+  // se cuentan. Las de socios (y "mas", que es pública pero está en la lista de socios) solo se cuentan con sesión.
+  // Es silenciosa: no espera a nada de la página y, si falla, no muestra ni escribe nada.
+  const VISITAS = {
+    index: 'publica', retos: 'publica', 'nuestra-biblioteca': 'publica', club: 'publica', entidades: 'publica',
+    contacto: 'publica', instalar: 'publica', privacidad: 'publica', acceso: 'publica',
+    inicio: 'socios', calendario: 'socios', curso: 'socios', biblioteca: 'socios', mas: 'socios', perfil: 'socios'
+  };
+  // Para no contar dos veces una recarga inmediata: solo se guarda en esta pestaña la última página y la hora.
+  const CLAVE_VISITA = 'cueva-visita', VENTANA_VISITA = 60000;
+  function repetida(pagina) {
+    try {
+      const v = JSON.parse(sessionStorage.getItem(CLAVE_VISITA) || 'null');
+      const ahora = Date.now();
+      if (v && v.p === pagina && ahora - v.t >= 0 && ahora - v.t < VENTANA_VISITA) return true;
+      sessionStorage.setItem(CLAVE_VISITA, JSON.stringify({ p: pagina, t: ahora }));
+    } catch (e) {}
+    return false;
+  }
+  async function enviarVisita(pagina) {
+    let sesion = null;
+    if (haySesionLocal()) {
+      const sb = await cliente();
+      const { data } = await sb.auth.getSession(); // espera a que la sesión esté restaurada (y renovada si hacía falta)
+      sesion = data && data.session;
+      if (sesion) { await sb.rpc('registrar_visita', { p_pagina: pagina }); return; }
+    }
+    if (VISITAS[pagina] !== 'publica') return;
+    // Sin sesión no se descarga supabase-js solo para esto: una petición directa con la clave pública.
+    await fetch(SUPABASE_URL + '/rest/v1/rpc/registrar_visita', {
+      method: 'POST', keepalive: true, credentials: 'omit',
+      headers: { apikey: SUPABASE_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_pagina: pagina })
+    });
+  }
+  function visita() {
+    const pagina = (location.pathname.split('/').pop() || 'index.html').replace(/\.html$/, '');
+    if (!VISITAS[pagina] || !navigator.onLine) return;
+    if (VISITAS[pagina] === 'socios' && !haySesionLocal()) return;
+    if (repetida(pagina)) return;
+    enviarVisita(pagina).catch(() => {});
+  }
+  // Cuando la página ya está cargada y el navegador está libre, para no competir con lo que se pinta.
+  function visitaEnReposo() {
+    const lanzar = () => { try { visita(); } catch (e) {} };
+    const enReposo = () => window.requestIdleCallback ? requestIdleCallback(lanzar, { timeout: 3000 }) : setTimeout(lanzar, 1);
+    if (document.readyState === 'complete') enReposo(); else window.addEventListener('load', enReposo, { once: true });
+  }
+
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-accion="salir"]');
     if (!b) return;
@@ -283,6 +334,7 @@ const Cueva = (function () {
   if (document.body) enlazarAvatares();
   if (document.body && document.body.dataset.acceso === 'publico') publica();
   if (document.body) avisoDeLaUrl();
+  visitaEnReposo();
 
   return { esc, urlSegura, cliente, haySesionLocal, privada, admin, esAdmin, aviso, perfilActivo, guardarInicial, salir, esErrorDeRed, mensaje, registrar, cargando, error, cargar,
     miniValida, ponerMini, avatarMini };

@@ -860,3 +860,35 @@ html.foto-modal,html.foto-modal body{overflow:hidden}
 .foto-ficha-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
 .foto-ficha-tx{flex:1;min-width:180px}
 .foto-ficha-tx .botones-form{margin:8px 0}
+/* ---------- Panel: informes de uso (admin-informes.html) ---------- */
+/* Todo con prefijo .inf-; reutiliza .chips/.chip, .card, .pista, .empty y .nota-i */
+.inf{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;--inf-barra:var(--teal-700)}
+@media (prefers-color-scheme:dark){ .inf{--inf-barra:var(--aqua)} }
+.inf .inf-periodo{padding-top:0}
+.inf>.pista{margin-top:-14px}
+.inf-bloque h2{font-size:20px;color:var(--title);margin-bottom:12px}
+.inf-bloque .empty{background:none;border:0;padding:8px 0}
+.inf-total{margin-bottom:12px}
+.inf-total b{font-family:'Oswald',sans-serif;font-size:24px;color:var(--title);margin-right:2px}
+.inf-graf{display:flex;align-items:flex-end;gap:2px;height:140px;margin-top:10px;border-bottom:1px solid var(--muted)}
+.inf-col{flex:1 1 0;min-width:0;height:var(--v);min-height:3px;background:var(--inf-barra);border-radius:3px 3px 0 0}
+.inf-col.cero{background:var(--line)}
+.inf-ejes{display:flex;justify-content:space-between;margin-top:4px;font-size:13px;color:var(--muted)}
+.inf-tabla{margin-top:8px;font-size:14px}
+.inf-tabla summary{display:flex;align-items:center;min-height:44px;color:var(--link);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.inf-tabla table{width:100%;border-collapse:collapse}
+.inf-tabla th,.inf-tabla td{padding:4px 6px;border-bottom:1px solid var(--line);text-align:left;font-weight:400}
+.inf-tabla thead th{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.inf-tabla td{text-align:right;font-variant-numeric:tabular-nums}
+.inf-ranking{list-style:none;padding:0;display:grid;gap:14px}
+.inf-ranking li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:baseline}
+.inf-r-nom{font-weight:600}
+.inf-r-dato{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.inf-r-barra{grid-column:1/-1;height:10px;border-radius:999px;background:var(--bg);overflow:hidden}
+.inf-r-barra i{display:block;height:100%;min-width:2px;border-radius:999px;background:var(--inf-barra)}
+.inf-sub{font-size:16px;color:var(--ink);margin:16px 0 4px}
+.inf-faltan{list-style:none;padding:0}
+.inf-faltan li{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 12px;padding:10px 0;border-top:1px solid var(--line)}
+.inf-faltan .st{display:flex;flex-direction:column;min-width:0}
+.inf-faltan .st b{overflow-wrap:anywhere}
+.inf-faltan small,.inf-ultimo{font-size:14px;color:var(--muted)}
