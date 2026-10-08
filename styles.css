@@ -76,6 +76,7 @@ a.avatar:active{transform:scale(.94)}
 .reto-pastillas{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
 .reto-pastillas .chip{text-decoration:none}
 .reto-pastillas .chip.suave,.reto-pastillas .chip.suave:hover{background:var(--ent-ok-bg);border-color:var(--ent-ok-bg);color:var(--ent-ok)}
+.chip .perfil-ic{width:14px;height:14px;margin-left:6px;stroke-width:2.6}
 .deadline .reto-etiquetas{font-size:13px;font-style:normal;margin-top:-2px;overflow-wrap:anywhere}
 .reto-etiquetas span{white-space:nowrap}
 
