@@ -61,16 +61,23 @@ a.avatar:active{transform:scale(.94)}
 .sub{font-style:italic;color:#EBEDEF;margin-top:6px;text-align:center}
 
 /* Arco de cueva */
-.arch{background:var(--bg);color:var(--ink);border-radius:999px 999px 0 0;margin:24px 8px 0;padding:56px 24px 28px;position:relative}
+.arch{background:var(--bg);color:var(--ink);border-radius:999px 999px 0 0;margin:24px 8px 0;padding:44px 18px 18px;position:relative}
 .arch::before{content:"";position:absolute;inset:-8px -8px 0;border:2px solid rgba(169,221,226,.55);border-bottom:0;border-radius:999px 999px 0 0;pointer-events:none}
 .arch .tag{position:absolute;top:-6px;left:50%;transform:translateX(-50%) rotate(-2deg);background:var(--amber);color:var(--teal-deep);border:0;border-radius:4px;font-family:'Oswald',sans-serif;font-weight:700;padding:6px 16px;text-transform:uppercase;font-size:14px;letter-spacing:.05em;white-space:nowrap;box-shadow:0 4px 10px rgba(31,58,64,.25)}
-.arch h1{font-size:42px;color:var(--title);text-align:center;margin:8px 0 12px}
-.arch .rule{font-size:16px;text-align:center;margin-bottom:16px}
+.arch h1{font-size:42px;color:var(--title);text-align:center;margin:4px 0 6px}
+.arch .rule{font-size:16px;text-align:center;margin-bottom:8px}
 .words{list-style:none;padding:0;display:grid;gap:8px;margin-bottom:16px}
 .words li{background:var(--card);border-left:5px solid var(--amber);border-radius:0 var(--r-s) var(--r-s) 0;padding:10px 14px;font-style:italic;font-size:17px;box-shadow:var(--sh1)}
-.deadline{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
+.deadline{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px}
 .deadline p{color:var(--muted);font-size:14px;font-style:italic}
-.arch .vermas{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 12px;color:var(--link);font-size:14px;text-decoration:underline;text-underline-offset:3px}
+/* Tarjeta del reto (inicio.html e index.html): lista más compacta, una fila de pastillas (.chip) y una línea de etiquetas */
+.arch .words{gap:6px;margin-bottom:10px}
+.arch .words li{padding:7px 14px}
+.reto-pastillas{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.reto-pastillas .chip{text-decoration:none}
+.reto-pastillas .chip.suave,.reto-pastillas .chip.suave:hover{background:var(--ent-ok-bg);border-color:var(--ent-ok-bg);color:var(--ent-ok)}
+.deadline .reto-etiquetas{font-size:13px;font-style:normal;margin-top:-2px;overflow-wrap:anywhere}
+.reto-etiquetas span{white-space:nowrap}
 
 /* ---------- Botones ---------- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;background:var(--accent);color:#fff;border:0;border-radius:999px;padding:10px 22px;font-family:'Oswald',sans-serif;font-weight:500;font-size:15px;line-height:1.2;text-transform:uppercase;letter-spacing:.04em;text-decoration:none;cursor:pointer;box-shadow:var(--sh1);transition:transform .12s var(--ease),box-shadow .2s var(--ease),filter .2s var(--ease)}
@@ -913,3 +920,54 @@ html.foto-modal,html.foto-modal body{overflow:hidden}
 .inf-faltan .st{display:flex;flex-direction:column;min-width:0}
 .inf-faltan .st b{overflow-wrap:anywhere}
 .inf-faltan small,.inf-ultimo{font-size:14px;color:var(--muted)}
+
+/* ---------- Entregas de los retos (retos.html y admin-retos.html) ---------- */
+/* Todo con prefijo .ent- (y .entrega en la página de retos); reutiliza .btn, .chip, .msg, .pista y .perfil-switch */
+:root{--ent-ok:#2E6B3A;--ent-ok-bg:#E3F1E5;--ent-err:#A33A25}
+@media (prefers-color-scheme:dark){ :root{--ent-ok:#A8DDB0;--ent-ok-bg:#1E3A2A;--ent-err:#F2A08E} }
+.entrega{margin:16px 0 0;padding:14px 0 0;border-top:1px solid var(--line)}
+.cuerpo .entrega{margin-top:12px}
+.entrega .ent-estado{display:block;width:fit-content;font-family:'Oswald',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:14px;color:var(--muted);margin-bottom:8px}
+.entrega .ent-estado.ok{color:var(--ent-ok);background:var(--ent-ok-bg);border-radius:6px;padding:2px 10px}
+.entrega .ent-estado:focus{outline:none}
+.entrega .ent-estado:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.entrega .ent-archivo{font-size:15px;overflow-wrap:anywhere;margin-bottom:4px}
+.entrega .ent-msg{font-size:15px;margin:10px 0 0;overflow-wrap:anywhere}
+.entrega .ent-msg:empty{display:none}
+.entrega .ent-msg.err{color:var(--ent-err);font-weight:600}
+.entrega .btn{max-width:100%}
+.entrega .pista{margin-top:6px}
+.entrega .btn:disabled{opacity:.55;cursor:not-allowed}
+.entrega .ent-sinred{font-size:14px;color:var(--muted);margin:8px 0 0}
+main[aria-busy="true"] .entrega .btn{cursor:progress}
+/* Panel de administración */
+.reto-adm{margin-bottom:14px}
+.reto-adm .fila{margin-bottom:6px}
+.reto-adm .ent-boton{margin-left:4px}
+.ent-boton[aria-expanded="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.ent-panel{margin:10px 0 4px;padding:14px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh1)}
+.ent-panel>.empty{margin:0}
+.ent-panel .msg[data-estado]{margin:0 0 12px;overflow-wrap:anywhere}
+.ent-cabecera{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.ent-resumen{font-weight:600;margin:6px 0 10px}
+.ent-zip{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-bottom:12px}
+.ent-zip .btn{max-width:100%}
+.ent-zip .btn:disabled{opacity:.55;cursor:not-allowed}
+.ent-zip .pista,.ent-progreso{margin:0}
+.ent-barra{width:100%;height:10px;accent-color:var(--accent)}
+.ent-lista{list-style:none;padding:0;margin:0}
+.ent-fila{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;padding:12px 0;border-top:1px solid var(--line)}
+.ent-datos{display:flex;flex-direction:column;min-width:0;flex:1 1 180px}
+.ent-datos b{overflow-wrap:anywhere}
+.ent-datos small{font-size:14px;color:var(--muted);overflow-wrap:anywhere}
+.ent-fila .ent-estado{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.ent-fila .ent-estado.ok{color:var(--ent-ok)}
+.ent-acciones{display:flex;flex-wrap:wrap;gap:8px}
+.ent-acciones .ent-borrar{border-color:#B3412B;color:#B3412B}
+.ent-otras{font-size:18px;color:var(--title);margin:16px 0 4px}
+.ent-panel[aria-busy="true"] .chip,.ent-panel[aria-busy="true"] .btn{cursor:progress}
+@media (prefers-color-scheme:dark){ .ent-acciones .ent-borrar{border-color:var(--ent-err);color:var(--ent-err)} }
+/* Instagram como paso secundario: línea discreta (retos.html y tarjeta del reto de inicio.html) */
+.compartir-ig{font-size:14px;line-height:1.5;color:var(--muted);margin:14px 0 0;overflow-wrap:anywhere}
+/* Enlace dentro del texto: la zona táctil llega a 44 px con relleno vertical, sin mover las líneas */
+.enlace-ig{color:var(--link);text-decoration:underline;text-underline-offset:3px;padding:13px 0;font-weight:600}

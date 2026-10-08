@@ -34,8 +34,11 @@
       <ul class="words" id="reto-lista"></ul>
       <div class="deadline">
         <p id="reto-plazo"></p>
-        <a class="btn" href="https://www.instagram.com/lacuevadelnarrador/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".6" fill="currentColor"/></svg>Súbelo a Instagram y etiquétanos</a>
-        <a class="vermas" href="retos.html">Ver todos los retos</a>
+        <div class="reto-pastillas">
+          <a class="chip" href="retos.html" id="reto-enlace">Ver los retos</a>
+          <a class="chip" href="https://www.instagram.com/lacuevadelnarrador/" target="_blank" rel="noopener">Instagram <span aria-hidden="true">↗</span><span class="perfil-sr"> (se abre en otra pestaña)</span></a>
+        </div>
+        <p class="reto-etiquetas"><span>#lacuevadelnarrador</span> · <span>@lacuevadelnarrador</span></p>
       </div>
     </section>
   </header>
@@ -74,6 +77,7 @@
 <script src="tipos.js"></script>
 <script src="supabase-config.js"></script>
 <script src="auth.js"></script>
+<script src="entregas.js"></script>
 <script>
 (function(){
   const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
@@ -126,8 +130,10 @@
         d=>estante('est-biblioteca',d,'Ahora mismo no hay libros disponibles.',false));
       Cueva.cargar(zonas[2],()=>sb.from('recomendaciones').select('titulo,autor,portada_url,recomendado_por').order('alta',recientes).limit(MAX),
         d=>estante('est-recomendados',d,'Todavía no hay recomendaciones. ¡Sé el primero en recomendar un libro!',true));
-      sb.from('retos').select('inicio,plazo,palabras,incluir').lte('inicio',hoy).order('inicio',{ascending:false}).limit(1)
-        .then(r=>{ if(r.error) throw r.error; pintarReto(r.data[0]||null); })
+      // El enlace de la tarjeta cambia según la entrega del socio en este reto (entregas.js).
+      sb.from('retos').select('id,entregas_abiertas,inicio,plazo,palabras,incluir').lte('inicio',hoy).order('inicio',{ascending:false}).limit(1)
+        .then(r=>{ if(r.error) throw r.error; const reto=r.data[0]||null; pintarReto(reto);
+          EstadoEntrega.sesion(sb).then(uid=>EstadoEntrega.enlaceInicio(el('reto-enlace'),sb,reto,uid)); })
         .catch(e=>{ Cueva.registrar('No se ha podido cargar el reto',e); pintarReto(null,Cueva.mensaje(e)); });
     }).catch(e=>{
       zonas.forEach(z=>Cueva.error(z,e,iniciar));

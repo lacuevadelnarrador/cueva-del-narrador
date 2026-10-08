@@ -813,14 +813,31 @@
     });
   }
 
-  // Eliminar ficha: doble confirmación; primero se desactiva la cuenta (si la base de datos lo impide, no se borra nada)
-  // y después se borra la fila de socios (la base de datos borra en cascada sus cuotas y su asistencia).
+  // Archivos de las entregas de los retos de un socio (almacén privado "entregas") y sus filas de la tabla entregas.
+  // Si no se puede borrar algún archivo, lanza el error y no se toca nada más.
+  async function borrarEntregas(id) {
+    const r = await sb.from('entregas').select('ruta').eq('socio_id', id);
+    if (r.error) throw r.error;
+    const filas = r.data || [], rutas = filas.map(x => x.ruta).filter(Boolean);
+    if (!filas.length) return;
+    if (rutas.length) {
+      const b = await sb.storage.from('entregas').remove(rutas);
+      if (b.error) throw b.error;
+    }
+    const d = await sb.from('entregas').delete().eq('socio_id', id).select('reto_id');
+    if (d.error) throw d.error;
+    if (!Array.isArray(d.data) || d.data.length < filas.length) throw { sinFilas: true };
+  }
+
+  // Eliminar ficha: doble confirmación; primero se desactiva la cuenta (si la base de datos lo impide, no se borra nada),
+  // después se borran sus entregas de los retos (archivos y filas) y por último la fila de socios (la base de datos
+  // borra en cascada sus cuotas y su asistencia).
   async function eliminar(form) {
     if (form.getAttribute('aria-busy') || !ficha) return;
     const s = ficha.socio, p = ficha.perfil, id = s.id, nombre = nombreDe(), codigo = String(s.codigo || ''); // instantánea
     const paso1 = await preguntar('Eliminar ficha',
       '<p>Vas a eliminar la ficha de <b>' + esc(nombre) + '</b> (' + esc(codigo) + '). Se borrará:</p>' +
-      '<ul class="soc-borrar-lista"><li>La ficha con sus datos personales.</li><li>Todas sus cuotas.</li><li>Todo su registro de asistencia.</li></ul>' +
+      '<ul class="soc-borrar-lista"><li>La ficha con sus datos personales.</li><li>Todas sus cuotas.</li><li>Todo su registro de asistencia.</li><li>Sus textos entregados en los retos.</li></ul>' +
       '<p><b>No se puede deshacer.</b> La cuenta de acceso se desactiva y, si hay que borrarla, se borra aparte en Supabase. ' +
       'Los préstamos de libros con su nombre se conservan, como indica la política de privacidad.</p>',
       [{ v: 'no', t: 'Cancelar', clase: 'sec' }, { v: 'si', t: 'Continuar', clase: 'peligro' }]);
@@ -848,6 +865,9 @@
         desactivada = true;
         actualizarPerfil(r.data[0]);
       }
+      // Sus textos entregados en los retos: los archivos no se borran con SQL, así que se borran antes que la ficha.
+      paso = 'entregas';
+      await borrarEntregas(id);
       paso = 'ficha';
       const r2 = await sb.from('socios').delete().eq('id', id).select('id');
       if (r2.error) throw r2.error;
