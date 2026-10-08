@@ -324,11 +324,78 @@ const Cueva = (function () {
     if (document.readyState === 'complete') enReposo(); else window.addEventListener('load', enReposo, { once: true });
   }
 
+  // ---------- Cerrar sesión (Perfil y Más) ----------
+  // Cierre en todos los dispositivos. Si falla (sin conexión, error del servidor) devuelve false y NO toca la
+  // sesión local. 401/403/404: la sesión ya no vale en el servidor; se da por cerrada.
+  async function salirEnTodos() {
+    try {
+      const sb = await cliente();
+      const { error } = await sb.auth.signOut({ scope: 'global' });
+      if (error && ![401, 403, 404].includes(error.status)) { registrar('No se ha podido cerrar la sesión en todos los dispositivos', error); return false; }
+    } catch (e) { registrar('No se ha podido cerrar la sesión en todos los dispositivos', e); return false; }
+    borrar(CLAVE_SESION); borrar(CLAVE_INICIAL);
+    return true;
+  }
+
+  // Pregunta dónde cerrar la sesión. Modal nativo (encierra el foco; "dialog[open]" desactiva "arrastrar para refrescar").
+  function elegirSalida(origen) {
+    if (typeof HTMLDialogElement !== 'function') { origen.disabled = true; salir().then(() => location.replace('index.html')); return; }
+    if (document.querySelector('dialog.dialogo-salir[open]')) return;
+    const d = document.createElement('dialog');
+    d.className = 'dialogo dialogo-salir';
+    d.setAttribute('aria-modal', 'true');
+    d.setAttribute('aria-labelledby', 'salir-titulo');
+    d.setAttribute('aria-describedby', 'salir-texto');
+    d.innerHTML = '<h2 id="salir-titulo">Cerrar sesión</h2><p id="salir-texto">¿Dónde quieres cerrar la sesión?</p>' +
+      '<div class="salir-opciones">' +
+      '<button type="button" class="btn" value="local">Solo en este dispositivo</button>' +
+      '<div><button type="button" class="btn sec" value="global" aria-describedby="salir-ayuda">En todos mis dispositivos</button>' +
+      '<p class="ayuda" id="salir-ayuda">Cierra la sesión en el móvil, el ordenador y cualquier otro sitio donde hayas entrado. Puede tardar hasta una hora en notarse en otros dispositivos.</p></div>' +
+      '<p class="salir-msg" role="alert"></p>' +
+      '<button type="button" class="btn sec" value="no">Cancelar</button>' +
+      '</div>';
+    document.body.appendChild(d);
+    const botones = [...d.querySelectorAll('button')];
+    const global = d.querySelector('[value="global"]');
+    const msg = d.querySelector('.salir-msg');
+    const sinRed = !navigator.onLine;
+    if (sinRed) { global.disabled = true; msg.textContent = 'Necesitas conexión para cerrar la sesión en todos los dispositivos.'; }
+    const ocupado = si => {
+      if (si) d.setAttribute('aria-busy', 'true'); else d.removeAttribute('aria-busy');
+      botones.forEach(b => { b.disabled = si || (b === global && sinRed); });
+    };
+    let limpio = false;
+    const limpiar = () => {
+      if (limpio) return;
+      limpio = true;
+      d.remove();
+      if (origen.isConnected) origen.focus({ preventScroll: true });
+    };
+    const cerrar = () => { if (d.open) d.close(); limpiar(); };
+    // Escape: se cierra y limpia en el acto, sin esperar al evento "close" (el navegador puede retrasarlo
+    // si la página está en segundo plano). Mientras se procesa, Escape no hace nada.
+    d.addEventListener('cancel', e => { e.preventDefault(); if (d.getAttribute('aria-busy') !== 'true') cerrar(); });
+    d.addEventListener('close', limpiar);
+    d.addEventListener('click', async e => {
+      const b = e.target.closest('button');
+      if (!b || b.disabled || d.getAttribute('aria-busy') === 'true') return;
+      if (b.value === 'no') { cerrar(); return; }
+      ocupado(true);
+      if (b.value === 'local') { await salir(); location.replace('index.html'); return; }
+      msg.textContent = '';
+      if (await salirEnTodos()) { location.replace('index.html'); return; }
+      ocupado(false);
+      msg.textContent = 'No se ha podido cerrar la sesión en todos los dispositivos. Comprueba la conexión e inténtalo de nuevo.';
+      global.focus();
+    });
+    d.showModal();
+    botones[0].focus();
+  }
+
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-accion="salir"]');
     if (!b) return;
-    b.disabled = true;
-    salir().then(() => location.replace('index.html'));
+    elegirSalida(b);
   });
 
   if (document.body) enlazarAvatares();
