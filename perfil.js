@@ -246,7 +246,7 @@
   function htmlFinal(i) {
     return '<div class="menu perfil-final" style="--i:' + i + '">' +
       '<a class="item" href="privacidad.html"><span class="ic">' + ic('escudo') + '</span><span class="tx"><b>Privacidad</b><small>Qué datos guardamos y para qué.</small></span></a>' +
-      '<button class="item" type="button" data-accion="salir"><span class="ic">' + ic('salir') + '</span><span class="tx"><b>Cerrar sesión</b><small>Salir de tu cuenta en este dispositivo.</small></span></button>' +
+      '<button class="item" type="button" data-accion="salir"><span class="ic">' + ic('salir') + '</span><span class="tx"><b>Cerrar sesión</b><small>En este dispositivo o en todos.</small></span></button>' +
       '</div>';
   }
 

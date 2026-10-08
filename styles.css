@@ -480,6 +480,12 @@ h4.grupo{font-family:'Oswald',sans-serif;text-transform:uppercase;font-weight:50
 .dialogo h2{font-size:24px;color:var(--title);margin-bottom:10px}
 .dialogo p{margin-bottom:16px}
 .dialogo .botones-form{justify-content:flex-end}
+/* Diálogo "Cerrar sesión": botones apilados a todo el ancho */
+.salir-opciones{display:grid;gap:10px}
+.salir-opciones .btn{width:100%}
+.dialogo .salir-opciones .ayuda{margin:6px 4px 0}
+.dialogo .salir-msg{margin:0;font-size:14px;color:var(--ink)}
+.dialogo .salir-msg:empty{display:none}
 @media (prefers-color-scheme:dark){
   .entrada{color-scheme:dark}
   .error-campo,.ast{color:#F2A08E}
