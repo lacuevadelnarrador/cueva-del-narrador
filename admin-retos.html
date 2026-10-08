@@ -94,6 +94,8 @@
 <script src="supabase-config.js"></script>
 <script src="auth.js"></script>
 <script src="admin.js"></script>
+<script src="zip.js"></script>
+<script src="admin-entregas.js"></script>
 <script>
 const esc=Admin.esc, el=id=>document.getElementById(id), form=el('form');
 let RETOS=[], editando=null;
@@ -102,14 +104,18 @@ function pintar(){
   el('cuenta').textContent=RETOS.length+(RETOS.length===1?' reto':' retos');
   el('lista').innerHTML=RETOS.length?RETOS.map(r=>{
     const meta=['Empieza el '+Admin.fecha(r.inicio),r.plazo&&'plazo hasta el '+Admin.fecha(r.plazo),r.palabras&&r.palabras+' palabras',r.mes].filter(Boolean).map(esc).join(' · ');
-    return '<button type="button" class="fila" data-id="'+esc(r.id)+'"><span class="tp" style="background:#A9DDE2" aria-hidden="true"></span><span class="st"><b>'+esc(r.titulo)+'</b><small>'+meta+'</small></span></button>';
+    const caja='entregas-'+esc(r.id);
+    // Cada reto: la fila de siempre (abre el formulario) y debajo el botón "Entregas", que despliega su panel (admin-entregas.js).
+    return '<div class="reto-adm"><button type="button" class="fila" data-id="'+esc(r.id)+'"><span class="tp" style="background:#A9DDE2" aria-hidden="true"></span><span class="st"><b>'+esc(Entregas.nombreReto(r))+' · '+esc(r.titulo)+'</b><small>'+meta+'</small></span></button>'+
+      '<button type="button" class="chip ent-boton" data-entregas="'+esc(r.id)+'" aria-expanded="false" aria-controls="'+caja+'">Entregas</button>'+
+      '<div class="ent-panel" id="'+caja+'" role="region" aria-label="Entregas del '+esc(Entregas.nombreReto(r))+'" hidden></div></div>';
   }).join(''):'<p class="empty">Todavía no hay retos.</p>';
 }
 
 // Del más reciente al más antiguo, por fecha de inicio.
 function cargarLista(){
   Cueva.cargar(el('lista'),
-    ()=>Admin.iniciar().then(sb=>sb.from('retos').select('id,titulo,mes,inicio,plazo,palabras,incluir,nota').order('inicio',{ascending:false})),
+    ()=>Admin.iniciar().then(sb=>sb.from('retos').select('id,numero,entregas_abiertas,titulo,mes,inicio,plazo,palabras,incluir,nota').order('inicio',{ascending:false})),
     filas=>{RETOS=filas;el('anadir').hidden=false;pintar();});
 }
 
@@ -124,6 +130,8 @@ function abrirForm(r){
 
 el('anadir').addEventListener('click',()=>abrirForm(null));
 el('lista').addEventListener('click',e=>{
+  const ent=e.target.closest('[data-entregas]');
+  if(ent){const r=RETOS.find(x=>String(x.id)===ent.dataset.entregas); if(r) Entregas.alternar(ent,r); return;}
   const b=e.target.closest('.fila'); if(!b) return;
   const r=RETOS.find(x=>String(x.id)===b.dataset.id); if(r) abrirForm(r);
 });
@@ -147,10 +155,15 @@ form.addEventListener('submit',async e=>{
 el('borrar').addEventListener('click',async()=>{
   if(!editando) return;
   const id=editando.id; // se toma antes de la pregunta: después de una espera no se vuelve a leer el registro abierto
-  const si=await Admin.confirmar('Se borrará el reto «'+editando.titulo+'». Esta acción no se puede deshacer.');
+  const si=await Admin.confirmar('Se borrará el reto «'+editando.titulo+'» y todos los textos que los socios hayan entregado en él. Esta acción no se puede deshacer.');
   if(!si) return;
   const sb=Admin.sb();
-  const ok=await Admin.escribir(form,()=>sb.from('retos').delete().eq('id',id).select('id'),'Reto borrado.');
+  // Los archivos de las entregas no se borran con SQL: primero se vacía su carpeta del almacén (y sus filas de entregas).
+  // Si eso falla, el reto no se borra.
+  const ok=await Admin.escribir(form,async()=>{
+    await Entregas.borrarArchivosReto(id);
+    return sb.from('retos').delete().eq('id',id).select('id');
+  },'Reto borrado.');
   if(ok){Admin.cerrar(form);cargarLista();}
 });
 

@@ -3,7 +3,7 @@
 // Aquí solo se guardan los archivos de la propia web (páginas, estilos, imágenes), que no llevan datos.
 // Los datos de socios vienen de Supabase y NUNCA se guardan en caché: sin sesión o sin conexión no están disponibles.
 // Las fotos de los socios tampoco: vienen del almacén privado de Supabase y se descargan con la sesión.
-const VERSION = 'cueva-v28';
+const VERSION = 'cueva-v29';
 const ARCHIVOS = [
   './',
   'index.html',
@@ -23,6 +23,7 @@ const ARCHIVOS = [
   'perfil.html',
   'perfil.js',
   'retos.html',
+  'entregas.js',
   'admin.html',
   'admin-eventos.html',
   'admin-retos.html',
@@ -37,6 +38,8 @@ const ARCHIVOS = [
   'admin-asistencia.js',
   'admin-informes.js',
   'admin-copia.js',
+  'admin-entregas.js',
+  'zip.js',
   'fotos.js',
   'carne.js',
   'styles.css',

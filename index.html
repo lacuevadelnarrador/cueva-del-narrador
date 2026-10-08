@@ -40,8 +40,11 @@ try { if (localStorage.getItem('cueva-sesion')) location.replace('inicio.html' +
       <ul class="words" id="reto-lista"></ul>
       <div class="deadline">
         <p id="reto-plazo"></p>
-        <a class="btn" href="https://www.instagram.com/lacuevadelnarrador/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".6" fill="currentColor"/></svg>Súbelo a Instagram y etiquétanos</a>
-        <a class="vermas" href="retos.html">Ver todos los retos</a>
+        <div class="reto-pastillas">
+          <a class="chip" href="retos.html" id="reto-enlace">Ver los retos</a>
+          <a class="chip" href="https://www.instagram.com/lacuevadelnarrador/" target="_blank" rel="noopener">Instagram <span aria-hidden="true">↗</span><span class="perfil-sr"> (se abre en otra pestaña)</span></a>
+        </div>
+        <p class="reto-etiquetas"><span>#lacuevadelnarrador</span> · <span>@lacuevadelnarrador</span></p>
       </div>
     </section>
   </header>
@@ -97,6 +100,7 @@ try { if (localStorage.getItem('cueva-sesion')) location.replace('inicio.html' +
 <script src="tipos.js"></script>
 <script src="supabase-config.js"></script>
 <script src="auth.js"></script>
+<script src="entregas.js"></script>
 <script>
 (function(){
   const esc=Cueva.esc;
@@ -115,8 +119,15 @@ try { if (localStorage.getItem('cueva-sesion')) location.replace('inicio.html' +
     el('reto-plazo').textContent=reto&&reto.plazo?(reto.plazo>=hoy?'Plazo: hasta el '+fechaL(reto.plazo)+'.':'El plazo terminó el '+fechaL(reto.plazo)+'.'):'';
   }
   pintarReto(null,'Cargando…');
+  // El enlace de la tarjeta dice "Ver los retos". Solo con una sesión guardada (un socio que entra en la portada) se
+  // comprueba su entrega como en inicio.html (entregas.js); los visitantes no hacen ninguna petición más.
   Cueva.cliente()
-    .then(sb=>sb.from('retos').select('inicio,plazo,palabras,incluir').lte('inicio',hoy).order('inicio',{ascending:false}).limit(1))
+    .then(async sb=>{
+      const uid=await EstadoEntrega.sesion(sb);
+      const r=await sb.from('retos').select('inicio,plazo,palabras,incluir'+(uid?',id,entregas_abiertas':'')).lte('inicio',hoy).order('inicio',{ascending:false}).limit(1);
+      if(!r.error&&uid) EstadoEntrega.enlaceInicio(el('reto-enlace'),sb,r.data[0]||null,uid);
+      return r;
+    })
     .then(r=>{ if(r.error) throw r.error; pintarReto(r.data[0]||null); })
     .catch(e=>{ Cueva.registrar('No se ha podido cargar el reto',e); pintarReto(null,Cueva.mensaje(e)); });
 })();

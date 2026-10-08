@@ -32,9 +32,10 @@
     <section aria-label="Cómo participar">
       <div class="sec-head"><h2>Cómo participar</h2></div>
       <ol class="pasos">
-        <li>Escribe tu texto siguiendo las condiciones del reto.</li>
-        <li>Súbelo a Instagram.</li>
-        <li>Etiquétanos para que podamos leerte.</li>
+        <li>Lee el reto: el tema, el número de palabras y lo que tiene que incluir tu texto.</li>
+        <li>Escribe tu texto en un documento Word o PDF.</li>
+        <li id="paso-subir">Si eres socio, súbelo desde aquí con tu sesión iniciada.</li>
+        <li>Compártelo también en Instagram con el hashtag #lacuevadelnarrador y etiquetando a <a class="enlace-ig" href="https://www.instagram.com/lacuevadelnarrador/" target="_blank" rel="noopener">@lacuevadelnarrador</a>.</li>
       </ol>
     </section>
 
@@ -54,6 +55,7 @@
 </div>
 <script src="supabase-config.js"></script>
 <script src="auth.js"></script>
+<script src="entregas.js"></script>
 <script>
 const esc=Cueva.esc;
 const h=new Date();
@@ -61,6 +63,10 @@ const hoy=h.getFullYear()+'-'+String(h.getMonth()+1).padStart(2,'0')+'-'+String(
 const fecha=f=>new Date(f+'T12:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'long'});
 const plazoTxt=r=>!r.plazo?'':(r.plazo>=hoy?'Plazo: hasta el '+fecha(r.plazo)+'.':'El plazo terminó el '+fecha(r.plazo)+'.');
 const condiciones=r=>(r.palabras?'Escribe '+r.palabras+' palabras':'Escribe tu texto')+((r.incluir||[]).length?' que incluyan:':'.');
+// Hueco para la entrega de un reto: solo existe con sesión (los retos traen id); los visitantes no lo tienen.
+const hueco=r=>r.id!=null?'<div class="entrega" data-reto="'+esc(r.id)+'"></div>':'';
+// Instagram es secundario: una línea discreta debajo de la entrega del reto actual (también para visitantes y tras entregar).
+const INSTAGRAM='<p class="compartir-ig">Compártelo también en Instagram con el hashtag #lacuevadelnarrador y etiquetando a <a class="enlace-ig" href="https://www.instagram.com/lacuevadelnarrador/" target="_blank" rel="noopener">@lacuevadelnarrador</a>.</p>';
 
 // Los retos son públicos: se leen sin sesión. Solo se piden los que ya han empezado.
 function pintar(RETOS){
@@ -69,16 +75,262 @@ const actual=orden.find(r=>r.inicio<=hoy);
 const anteriores=orden.filter(r=>r!==actual&&r.inicio<=hoy);
 
 document.getElementById('actual').innerHTML=actual
- ?'<div class="reto-card"><span class="etq">Reto actual</span><h2>'+esc(actual.titulo)+'</h2><p class="rule">'+esc(condiciones(actual))+'</p>'+((actual.incluir||[]).length?'<ul class="words">'+actual.incluir.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'')+(actual.nota?'<p class="notar">'+esc(actual.nota)+'</p>':'')+'<p class="plazo">'+esc(plazoTxt(actual))+'</p>'+ '<a class="btn" href="https://www.instagram.com/lacuevadelnarrador/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".6" fill="currentColor"/></svg>Súbelo a Instagram y etiquétanos</a>' +'</div>'
+ ?'<div class="reto-card"><span class="etq">Reto actual</span><h2>'+esc(actual.titulo)+'</h2><p class="rule">'+esc(condiciones(actual))+'</p>'+((actual.incluir||[]).length?'<ul class="words">'+actual.incluir.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'')+(actual.nota?'<p class="notar">'+esc(actual.nota)+'</p>':'')+'<p class="plazo">'+esc(plazoTxt(actual))+'</p>'+hueco(actual)+INSTAGRAM+'</div>'
  :'<p class="empty">Todavía no hay ningún reto en marcha. ¡Muy pronto!</p>';
 
 document.getElementById('anteriores').innerHTML=anteriores.length?anteriores.map(r=>
- '<details class="charla"><summary><span class="tp" style="background:#A9DDE2" aria-hidden="true"></span><span class="st"><b>'+esc(r.titulo)+'</b><small>'+esc(r.mes)+'</small></span></summary><div class="cuerpo"><p class="tema">'+esc(condiciones(r))+'</p>'+((r.incluir||[]).length?'<ul class="words">'+r.incluir.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'')+(r.nota?'<p class="tema">'+esc(r.nota)+'</p>':'')+'</div></details>').join('')
+ '<details class="charla"><summary><span class="tp" style="background:#A9DDE2" aria-hidden="true"></span><span class="st"><b>'+esc(r.titulo)+'</b><small>'+esc(r.mes)+'</small></span></summary><div class="cuerpo"><p class="tema">'+esc(condiciones(r))+'</p>'+((r.incluir||[]).length?'<ul class="words">'+r.incluir.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'')+(r.nota?'<p class="tema">'+esc(r.nota)+'</p>':'')+hueco(r)+'</div></details>').join('')
  :'<p class="empty">Aún no hay retos anteriores.</p>';
+Entrega.iniciar(orden.filter(r=>r.inicio<=hoy));
 }
+
+// ---------- Entregas de los retos (solo socios con sesión y ficha) ----------
+// Se entrega una sola vez: rpc iniciar_entrega (da la ruta) → subida al almacén privado "entregas" → rpc confirmar_entrega.
+// La fecha límite (plazo) es solo orientativa: lo que abre o cierra las entregas es retos.entregas_abiertas.
+// Privacidad: no se guarda nada en localStorage/sessionStorage y la consola solo recibe errores sin datos (Cueva.registrar).
+const Entrega=(function(){
+  const MAX=3145728; // 3 MB, como el almacén
+  const TIPOS={pdf:'application/pdf',docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'};
+  const NOMBRE={pdf:'un PDF',docx:'un documento de Word (.docx)'};
+  const FIRMA={pdf:[0x25,0x50,0x44,0x46,0x2D],docx:[0x50,0x4B]}; // "%PDF-" y "PK" (zip)
+  let sesion=null;          // { sb, uid } si hay sesión al cargar los retos
+  let retos=new Map();      // id → reto (con numero y entregas_abiertas)
+  let mias=new Map();       // reto_id → mi fila de entregas
+  let mensajes=new Map();   // reto_id → { texto, error }
+  let sinConfirmar=new Set(); // retos con el archivo ya subido y la confirmación pendiente
+  let elegido=null, ocupado=false, listo=false;
+  // Selector de archivo oculto: se crea la primera vez que se pulsa "Subir mi texto" (los visitantes no lo tienen).
+  let input=null;
+  function selector(){
+    if(input) return input;
+    input=document.createElement('input');
+    input.type='file'; input.accept='.pdf,.docx'; input.hidden=true; input.tabIndex=-1;
+    input.setAttribute('aria-hidden','true');
+    input.addEventListener('change',()=>{
+      const archivo=input.files&&input.files[0], id=elegido;
+      input.value=''; elegido=null;
+      if(archivo&&id) entregar(id,archivo);
+    });
+    document.body.appendChild(input);
+    return input;
+  }
+
+  // Consulta de los retos: con sesión se piden también id, numero y entregas_abiertas.
+  async function consulta(sb,columnas){
+    const uid=await EstadoEntrega.sesion(sb);
+    sesion=uid?{sb,uid}:null;
+    return sb.from('retos').select(columnas+(sesion?',id,numero,entregas_abiertas':'')).lte('inicio',hoy).order('inicio',{ascending:false});
+  }
+
+  const huecos=()=>[...document.querySelectorAll('.entrega[data-reto]')];
+  const quitarHuecos=()=>huecos().forEach(x=>x.remove());
+  const nombreReto=r=>'Reto '+(r&&r.numero!=null?r.numero:'');
+  // Paso 3 de "Cómo participar": el texto de visitante viene en la página; se cambia solo para un socio con ficha.
+  const pasoSocio=()=>{const p=document.getElementById('paso-subir'); if(p) p.textContent='Súbelo desde aquí, con el botón «Subir mi texto» de este reto. Solo se puede entregar una vez, así que revísalo antes.';};
+
+  // Lee mi ficha y mis entregas (entregas.js). Sin ficha (por ejemplo, la cuenta del club) no se muestra nada de entregas.
+  async function iniciar(lista){
+    listo=false;
+    if(!sesion){quitarHuecos();return;}
+    retos=new Map(lista.filter(r=>r.id!=null).map(r=>[String(r.id),r]));
+    if(!retos.size) return;
+    const {sb,uid}=sesion;
+    huecos().forEach(x=>{x.innerHTML='<p class="ent-msg cargando" role="status">Cargando tu entrega…</p>';});
+    try{
+      const r=await EstadoEntrega.leer(sb,uid,[...retos.values()].map(x=>x.id));
+      if(!r.ficha){quitarHuecos();return;}
+      mias=r.mias;
+      listo=true;
+      pasoSocio();
+      huecos().forEach(pintarUno);
+    }catch(e){
+      Cueva.registrar('No se han podido cargar las entregas',e);
+      huecos().forEach(x=>{
+        x.innerHTML='<p class="ent-msg err" role="alert">'+esc(Cueva.mensaje(e))+'</p><button type="button" class="chip" data-reintentar>Reintentar</button>';
+      });
+    }
+  }
+
+  function pintarUno(caja){
+    const id=caja.dataset.reto, r=retos.get(id), e=mias.get(id), m=mensajes.get(id);
+    if(!r){caja.remove();return;}
+    const sinRed=!navigator.onLine;
+    const msg='<p class="ent-msg'+(m&&m.error?' err':'')+'" role="'+(m&&m.error?'alert':'status')+'">'+(m?esc(m.texto):'')+'</p>';
+    let html;
+    const estado=EstadoEntrega.de(r,e);
+    if(estado==='entregado'){
+      html='<p class="ent-estado ok" tabindex="-1">Entregado el '+esc(EstadoEntrega.diaMadrid(e.entregado))+'</p>'+
+        (e.nombre_archivo?'<p class="ent-archivo">'+esc(e.nombre_archivo)+'</p>':'');
+    }else if(sinConfirmar.has(id)){
+      html='<p class="ent-estado" tabindex="-1">Sin entregar</p><button type="button" class="btn" data-confirmar'+(sinRed||ocupado?' disabled':'')+'>Terminar la entrega</button>';
+    }else if(estado==='abierta'){
+      html='<p class="ent-estado" tabindex="-1">Sin entregar</p><button type="button" class="btn" data-subir'+(sinRed||ocupado?' disabled':'')+'>Subir mi texto</button>'+
+        '<p class="pista">PDF o Word (.docx), hasta 3 MB. Solo se puede entregar una vez.</p>';
+    }else{
+      html='<p class="ent-estado" tabindex="-1">Entregas cerradas</p>';
+    }
+    caja.innerHTML=html+msg;
+    if(sinRed&&caja.querySelector('[data-subir],[data-confirmar]')) caja.insertAdjacentHTML('beforeend','<p class="ent-sinred">Necesitas conexión para entregar tu texto.</p>');
+  }
+  const repintar=id=>{const c=huecos().find(x=>x.dataset.reto===id); if(c) pintarUno(c); return c;};
+  function avisar(id,texto,error){
+    if(texto) mensajes.set(id,{texto,error:!!error}); else mensajes.delete(id);
+    return repintar(id);
+  }
+
+  // ---------- Comprobaciones del archivo (antes de nada) ----------
+  async function revisar(archivo){
+    const m=/\.([^.]+)$/.exec(archivo.name||''), ext=m?m[1].toLowerCase():'';
+    if(!TIPOS[ext]) return {error:'Solo se pueden entregar archivos PDF o Word (.docx).'};
+    if(archivo.size<1) return {error:'El archivo está vacío.'};
+    if(archivo.size>MAX) return {error:'El archivo ocupa más de 3 MB, que es el máximo. Reduce su tamaño (por ejemplo, quitando imágenes) y vuelve a intentarlo.'};
+    let cabeza;
+    try{cabeza=new Uint8Array(await archivo.slice(0,FIRMA[ext].length).arrayBuffer());}catch(e){return {error:'No se ha podido leer el archivo. Vuelve a elegirlo.'};}
+    if(!FIRMA[ext].every((b,i)=>cabeza[i]===b)) return {error:'El archivo no parece '+NOMBRE[ext]+' de verdad. Comprueba que lo has guardado en ese formato.'};
+    return {ext,tipo:TIPOS[ext]};
+  }
+
+  // ---------- Diálogo de confirmación ----------
+  function confirmar(texto){
+    if(typeof HTMLDialogElement!=='function') return Promise.resolve(window.confirm(texto));
+    return new Promise(ok=>{
+      const d=document.createElement('dialog');
+      d.className='dialogo';
+      d.setAttribute('aria-labelledby','ent-dlg-titulo');
+      d.setAttribute('aria-describedby','ent-dlg-texto');
+      d.innerHTML='<h2 id="ent-dlg-titulo">Entregar tu texto</h2><p id="ent-dlg-texto">'+esc(texto)+'</p>'+
+        '<div class="botones-form"><button type="button" class="btn sec" value="no">Cancelar</button><button type="button" class="btn" value="si">Entregar</button></div>';
+      document.body.appendChild(d);
+      let hecho=false;
+      const terminar=si=>{if(hecho) return; hecho=true; if(d.open) d.close(); d.remove(); ok(si);};
+      d.addEventListener('click',e=>{const b=e.target.closest('button'); if(b) terminar(b.value==='si');});
+      // Escape: se cierra y limpia en el acto, sin esperar al evento "close" (que el navegador puede retrasar si la página está en segundo plano).
+      d.addEventListener('cancel',e=>{e.preventDefault();terminar(false);});
+      d.addEventListener('close',()=>terminar(false));
+      d.showModal();
+      d.querySelector('[value="no"]').focus();
+    });
+  }
+
+  // ---------- Bloqueo de la página mientras se entrega ----------
+  const salir=e=>{e.preventDefault();e.returnValue='';};
+  function bloquear(si){
+    ocupado=si;
+    const main=document.querySelector('main');
+    if(si) main.setAttribute('aria-busy','true'); else main.removeAttribute('aria-busy');
+    // Cabecera, barra inferior, enlaces y retos anteriores quedan inertes; los botones de entrega se pintan desactivados.
+    document.querySelectorAll('.pagehead, .nav').forEach(x=>{x.inert=si;});
+    main.querySelectorAll('a, details > summary').forEach(x=>{x.inert=si;});
+    huecos().forEach(pintarUno);
+    if(si) window.addEventListener('beforeunload',salir); else window.removeEventListener('beforeunload',salir);
+  }
+
+  // Mensaje de un error de las funciones de la base de datos: sus textos ya vienen en castellano para el socio;
+  // cualquier otra cosa (técnica, de red) se cambia por un texto general.
+  const TECNICO=/violates|permission denied|function|relation|column|schema|syntax|null value|duplicate key|PGRST|JWT|fetch|network|timeout|[{}<>]/i;
+  function textoRpc(e,general){
+    if(Cueva.esErrorDeRed(e)) return 'No hay conexión con el servidor. Comprueba tu internet y vuelve a intentarlo.';
+    const t=String((e&&e.message)||'').trim();
+    if(t&&t.length<=200&&!TECNICO.test(t)) return t;
+    return general;
+  }
+  const yaExiste=e=>!!e&&(String(e.statusCode)==='409'||e.status===409||e.error==='Duplicate'||/already exists|duplicate/i.test(e.message||''));
+  function textoSubida(e){
+    if(Cueva.esErrorDeRed(e)) return 'No hay conexión con el servidor. Comprueba tu internet y vuelve a intentarlo.';
+    const c=String((e&&(e.statusCode||e.status))||'');
+    if(c==='413') return 'El archivo supera los 3 MB. Reduce su tamaño y vuelve a intentarlo.';
+    if(c==='415') return 'Solo se pueden entregar archivos PDF o Word (.docx).';
+    return 'No se ha podido subir tu texto. Vuelve a intentarlo dentro de un momento.';
+  }
+
+  async function confirmarEntrega(id){
+    const r=await sesion.sb.rpc('confirmar_entrega',{p_reto:Number(id)});
+    if(r.error) throw {paso:'confirmar',e:r.error};
+    const d=Array.isArray(r.data)?r.data[0]:r.data;
+    return {reto_id:Number(id),nombre_archivo:d&&d.nombre_archivo,entregado:d&&d.entregado,subido:true};
+  }
+  function terminado(id,fila){
+    sinConfirmar.delete(id);
+    mias.set(id,fila);
+    mensajes.delete(id);
+    const c=repintar(id);
+    Cueva.aviso('Tu texto se ha entregado.','ok');
+    const t=c&&c.querySelector('.ent-estado'); if(t) t.focus({preventScroll:true});
+  }
+  function fallo(id,x){
+    const e=x&&x.e!==undefined?x.e:x, paso=x&&x.paso;
+    Cueva.registrar(paso==='subir'?'No se ha podido subir una entrega':paso==='confirmar'?'No se ha podido confirmar una entrega':'No se ha podido empezar una entrega',e);
+    // Confirmación: si la base de datos explica el motivo (por ejemplo, que no encuentra el archivo), se vuelve a
+    // "Subir mi texto"; si es un fallo de red o desconocido, se ofrece "Terminar la entrega" (solo repite la confirmación).
+    const propio=paso==='confirmar'&&textoRpc(e,'')!==''&&!Cueva.esErrorDeRed(e);
+    if(paso==='confirmar'&&!propio) sinConfirmar.add(id); else sinConfirmar.delete(id);
+    const texto=paso==='subir'?textoSubida(e)
+      :paso==='confirmar'?(propio?textoRpc(e,'')
+        :'Tu archivo se ha subido, pero falta confirmar la entrega. '+(Cueva.esErrorDeRed(e)?'Comprueba tu conexión y pulsa':'Pulsa')+' «Terminar la entrega».')
+      :textoRpc(e,'No se ha podido empezar la entrega. Vuelve a intentarlo dentro de un momento.');
+    const c=avisar(id,texto,true);
+    const b=c&&c.querySelector('button'); if(b&&!b.disabled) b.focus({preventScroll:true});
+  }
+
+  // ---------- Entregar ----------
+  async function entregar(id,archivo){
+    const r=retos.get(id); if(!r||ocupado) return;
+    const nombre=archivo.name, tamano=archivo.size; // copia antes de esperar
+    const v=await revisar(archivo);
+    if(v.error){avisar(id,v.error,true);const c=huecos().find(x=>x.dataset.reto===id),b=c&&c.querySelector('[data-subir]');if(b)b.focus({preventScroll:true});return;}
+    avisar(id,'');
+    if(!(await confirmar('Solo puedes entregar una vez y después no podrás cambiarlo ni borrarlo. ¿Entregar «'+nombre+'» como tu texto del '+nombreReto(r)+'?'))){
+      const c=huecos().find(x=>x.dataset.reto===id),b=c&&c.querySelector('[data-subir]'); if(b) b.focus({preventScroll:true});
+      return;
+    }
+    if(!navigator.onLine){avisar(id,'No hay conexión. Conéctate a internet para entregar tu texto.',true);return;}
+    const {ext,tipo}=v, sb=sesion.sb;
+    bloquear(true);
+    avisar(id,'Subiendo tu texto…');
+    let fila=null,error=null;
+    try{
+      const ini=await sb.rpc('iniciar_entrega',{p_reto:Number(id),p_ext:ext,p_tamano:tamano});
+      if(ini.error) throw {paso:'iniciar',e:ini.error};
+      const d=Array.isArray(ini.data)?ini.data[0]:ini.data;
+      const ruta=typeof d==='string'?d:d&&(d.ruta||d.iniciar_entrega);
+      if(!ruta) throw {paso:'iniciar',e:{}};
+      const sub=await sb.storage.from('entregas').upload(ruta,archivo,{contentType:tipo,upsert:false});
+      // "Ya existe": una subida anterior que no se llegó a confirmar. Se sigue directamente con la confirmación.
+      if(sub.error&&!yaExiste(sub.error)) throw {paso:'subir',e:sub.error};
+      avisar(id,'Confirmando la entrega…');
+      fila=await confirmarEntrega(id);
+    }catch(x){error=x;}
+    finally{bloquear(false);}
+    if(error) fallo(id,error); else terminado(id,fila);
+  }
+  async function reintentarConfirmar(id){
+    if(ocupado||!navigator.onLine) return;
+    bloquear(true);
+    avisar(id,'Confirmando la entrega…');
+    let fila=null,error=null;
+    try{fila=await confirmarEntrega(id);}catch(x){error=x;}
+    finally{bloquear(false);}
+    if(error) fallo(id,error); else terminado(id,fila);
+  }
+
+  document.querySelector('main').addEventListener('click',e=>{
+    const b=e.target.closest('.entrega button'); if(!b||b.disabled||ocupado) return;
+    const id=b.closest('.entrega').dataset.reto;
+    if(b.hasAttribute('data-reintentar')){iniciar([...retos.values()]);return;}
+    if(b.hasAttribute('data-confirmar')){reintentarConfirmar(id);return;}
+    if(b.hasAttribute('data-subir')){elegido=id; const i=selector(); i.value=''; i.click();}
+  });
+  // Sin conexión, los botones se desactivan (y vuelven al recuperarla).
+  const red=()=>{if(listo&&!ocupado) huecos().forEach(pintarUno);};
+  window.addEventListener('online',red);
+  window.addEventListener('offline',red);
+
+  return {consulta,iniciar};
+})();
+
 document.getElementById('anteriores').innerHTML='';
 Cueva.cargar(document.getElementById('actual'),
-  ()=>Cueva.cliente().then(sb=>sb.from('retos').select('titulo,mes,inicio,plazo,palabras,incluir,nota').lte('inicio',hoy).order('inicio',{ascending:false})),
+  ()=>Cueva.cliente().then(sb=>Entrega.consulta(sb,'titulo,mes,inicio,plazo,palabras,incluir,nota')),
   pintar);
 if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
 </script>
