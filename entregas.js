@@ -42,7 +42,7 @@ const EstadoEntrega = (function () {
   }
 
   // Pastilla de la tarjeta del reto actual (inicio.html e index.html): "Ver los retos" mientras no se sepa otra cosa;
-  // "Sube tu reto" si puede entregar y "Reto entregado ✓" si ya lo hizo. Siempre lleva a la pestaña Retos.
+  // "Sube tu reto" si puede entregar y "Reto entregado" con un check en SVG si ya lo hizo. Siempre lleva a la pestaña Retos.
   // reto: el reto actual con id y entregas_abiertas (o null). Si algo falla, se queda en "Ver los retos".
   async function enlaceInicio(enlace, sb, reto, uid) {
     if (!enlace || !reto || reto.id == null || !uid) return;
@@ -52,7 +52,7 @@ const EstadoEntrega = (function () {
       const estado = de(reto, r.mias.get(String(reto.id)));
       // Pastilla rellena para subir; en tono suave cuando ya está entregado; con borde (la de partida) en los demás casos.
       if (estado === 'abierta') { enlace.textContent = 'Sube tu reto'; enlace.classList.add('on'); }
-      else if (estado === 'entregado') { enlace.innerHTML = 'Reto entregado <span aria-hidden="true">✓</span>'; enlace.classList.add('suave'); }
+      else if (estado === 'entregado') { enlace.innerHTML = 'Reto entregado <svg class="perfil-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12l5 5 9-10"/></svg>'; enlace.classList.add('suave'); }
     } catch (e) {
       Cueva.registrar('No se ha podido comprobar tu entrega', e);
     }
