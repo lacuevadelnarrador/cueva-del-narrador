@@ -312,7 +312,8 @@ const Admin = (function () {
 
   // ---------- Diálogo de confirmación ----------
   // Devuelve una promesa: true si se pulsa el botón de aceptar, false si se cancela (o con Escape).
-  function confirmar(pregunta, aceptar) {
+  // normal = true: el botón de aceptar no va en rojo (acciones que no borran, como enviar un aviso).
+  function confirmar(pregunta, aceptar, normal) {
     if (typeof HTMLDialogElement !== 'function') return Promise.resolve(window.confirm(pregunta));
     return new Promise(ok => {
       const d = document.createElement('dialog');
@@ -321,7 +322,7 @@ const Admin = (function () {
       d.setAttribute('aria-describedby', 'dialogo-texto');
       d.innerHTML = '<h2 id="dialogo-titulo">¿Seguro?</h2><p id="dialogo-texto">' + esc(pregunta) + '</p>' +
         '<div class="botones-form"><button type="button" class="btn sec" value="no">Cancelar</button>' +
-        '<button type="button" class="btn peligro" value="si">' + esc(aceptar || 'Borrar') + '</button></div>';
+        '<button type="button" class="btn' + (normal ? '' : ' peligro') + '" value="si">' + esc(aceptar || 'Borrar') + '</button></div>';
       document.body.appendChild(d);
       let hecho = false;
       const terminar = si => {

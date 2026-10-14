@@ -209,8 +209,20 @@ const Cueva = (function () {
     if (!perfil) { await salir(); location.replace('acceso.html?motivo=inactiva'); return nunca(); }
     guardarInicial(perfil.nombre);
     cargarMiniAvatar(sb, data.session.user.id);
+    avisarEntrada(sb);
     return { sb, perfil };
   }
+
+  // Quien necesite el cliente cuando la guardia de una página privada ha terminado bien (la campana de avisos)
+  // se apunta con alEntrar(fn). Se avisa una sola vez por página, aunque privada() se llame más veces (Reintentar).
+  let entrada = null;
+  const esperandoEntrada = [];
+  function avisarEntrada(sb) {
+    if (entrada) return;
+    entrada = sb;
+    esperandoEntrada.splice(0).forEach(fn => { try { fn(sb); } catch (e) { registrar('Error al preparar la página', e); } });
+  }
+  function alEntrar(fn) { if (entrada) fn(entrada); else esperandoEntrada.push(fn); }
 
   // Guardia del panel de administración: como privada() (sesión y cuenta activa) y además exige rol = 'admin'.
   // Si el socio no es administrador, vuelve a inicio.html con un aviso.
@@ -223,14 +235,25 @@ const Cueva = (function () {
   // ¿Es administrador el usuario de esta sesión? Se pregunta siempre a la base de datos
   // (nunca a un valor guardado en el dispositivo). Ante cualquier duda, responde false.
   async function esAdmin() {
-    if (!haySesionLocal()) return false;
-    try {
-      const sb = await cliente();
-      const { data } = await sb.auth.getSession();
-      if (!data.session) return false;
-      const perfil = await perfilActivo(sb, data.session.user.id);
-      return !!perfil && perfil.rol === 'admin';
-    } catch (e) { return false; }
+    const r = await sesionActiva();
+    return !!r && r.perfil.rol === 'admin';
+  }
+
+  // Páginas públicas: { sb, perfil } si hay sesión y la cuenta está activa; si no (o ante cualquier duda), null.
+  // Una sola consulta por página: la comparten esAdmin() y la campana de avisos de "Más".
+  let promesaActiva = null;
+  function sesionActiva() {
+    if (!promesaActiva) promesaActiva = (async () => {
+      if (!haySesionLocal()) return null;
+      try {
+        const sb = await cliente();
+        const { data } = await sb.auth.getSession();
+        if (!data.session) return null;
+        const perfil = await perfilActivo(sb, data.session.user.id);
+        return perfil ? { sb, perfil } : null;
+      } catch (e) { return null; }
+    })();
+    return promesaActiva;
   }
 
   // ---------- Avisos flotantes ----------
@@ -403,7 +426,7 @@ const Cueva = (function () {
   if (document.body) avisoDeLaUrl();
   visitaEnReposo();
 
-  return { esc, urlSegura, cliente, haySesionLocal, privada, admin, esAdmin, aviso, perfilActivo, guardarInicial, salir, esErrorDeRed, mensaje, registrar, cargando, error, cargar,
+  return { esc, urlSegura, cliente, haySesionLocal, privada, admin, esAdmin, sesionActiva, alEntrar, aviso, perfilActivo, guardarInicial, salir, esErrorDeRed, mensaje, registrar, cargando, error, cargar,
     miniValida, ponerMini, avatarMini };
 })();
 
