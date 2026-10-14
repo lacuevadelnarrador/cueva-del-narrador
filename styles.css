@@ -1041,3 +1041,20 @@ main[aria-busy="true"] .entrega .btn{cursor:progress}
 .avi-hist-pie{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;margin-top:6px;font-size:14px;color:var(--muted)}
 .avi-retirar.btn.sec{border-color:var(--avi-err);color:var(--avi-err)}
 .avi [aria-busy="true"] .btn,.avi [aria-busy="true"] .perfil-switch{cursor:progress}
+/* Ver avisos creados (admin-avisos.js, sección Estado): prefijo .avi-creados- y .avi-dest- */
+.avi-creados-abrir{margin-top:8px}
+.avi-creados{margin-top:14px}
+.avi-creados-dia.entrada{max-width:12em}
+.avi-creados-tipos,.avi-dest{list-style:none;padding:0;margin:0}
+.avi-creados-tipo{padding:12px 0;border-top:1px solid var(--line)}
+.avi-creados-cab{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px}
+.avi-creados-tx{min-width:0}
+.avi-creados-tx h3{font-size:17px;color:var(--ink);margin-bottom:2px;overflow-wrap:anywhere}
+.avi-creados-det{margin-top:10px;padding-left:12px;border-left:3px solid var(--line)}
+.avi-dest-fila{padding:8px 0}
+.avi-dest-fila+.avi-dest-fila{border-top:1px solid var(--line)}
+.avi-dest-cab{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px;overflow-wrap:anywhere}
+.avi-dest-leido{font-size:14px;color:var(--muted)}
+.avi-dest-leido.si{color:var(--link)}
+.avi-dest-texto{font-size:15px;overflow-wrap:anywhere;margin-top:2px}
+.avi-creados-det>.msg{margin-top:8px}

@@ -76,6 +76,7 @@ if ("serviceWorker" in navigator) window.addEventListener("load", () => navigato
 <script src="tipos.js"></script>
 <script src="supabase-config.js"></script>
 <script src="auth.js"></script>
+<script src="campana.js"></script>
 <script>
 document.getElementById("actividades").innerHTML=ACTIVIDADES.map(a=>'<article class="act"><span class="tp" style="background:'+tipo(a[0]).c+'" aria-hidden="true"></span><div><h3>'+a[1]+'</h3><p>'+a[2]+'</p></div></article>').join("");
 </script>

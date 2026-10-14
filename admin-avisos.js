@@ -1,6 +1,7 @@
 // PANEL: AVISOS (admin-avisos.html). Solo administradores (Admin.iniciar). Script de la base de datos: supabase_25_avisos.sql
 // - Avisos automáticos (avisos_config): solo se cambian "activo" y "dias"; cada cambio se guarda al momento.
 // - Estado (avisos_estado, una sola fila): cuándo pasó por última vez la tarea automática y cuántos avisos creó hoy.
+//   "Ver avisos creados" (supabase_26): RPC avisos_del_dia(p_dia) por tipo y destinatarios_avisos(p_dia, p_tipo) (máx. 300).
 // - Enviar un aviso: RPC enviar_aviso_libre (a todos los socios activos o a uno). Destinatarios = socios con ficha cuya
 //   cuenta está activa (perfiles.activo = true), lo mismo que usa la función.
 // - Historial: RPC historial_avisos_libres(); "Retirar" borra el aviso libre (y, en cascada, el de cada socio).
@@ -19,7 +20,9 @@
     'El texto debe tener entre 1 y 300 caracteres.',
     'El enlace no es válido.',
     'Ese socio no existe o no está activo.',
-    'Solo los administradores pueden ver este historial.'
+    'Solo los administradores pueden ver este historial.',
+    'Solo los administradores pueden ver este resumen.',
+    'Solo los administradores pueden ver este detalle.'
   ];
   const mensajeError = e => e && typeof e.message === 'string' && MENSAJES_BD.includes(e.message) ? e.message : Admin.mensajeError(e);
 
@@ -161,6 +164,138 @@
       (parada ? '<p class="msg err" role="alert">La tarea automática no parece estar funcionando</p>' : '') +
       '<p>Última comprobación: <b>' + (ultima ? esc(fechaHora(ultima)) : 'nunca') + '</b></p>' +
       '<p>Avisos creados hoy: <b>' + esc(numero(creados)) + '</b></p>';
+    prepararCreados();
+  }
+
+  // Avisos creados en un día, por tipo, y quién los recibió. Todo se pinta con textContent (createElement).
+  const MAX_DEST = 300;
+  const nuevo = (etiqueta, clase, texto) => {
+    const n = document.createElement(etiqueta);
+    if (clase) n.className = clase;
+    if (texto != null) n.textContent = texto;
+    return n;
+  };
+  const plural = (n, uno, varios) => numero(n) + ' ' + (Number(n) === 1 ? uno : varios);
+  // Carga en "caja" con aria-busy; si falla, mensaje en español y Reintentar. Ignora respuestas de una carga anterior.
+  function cargarEn(caja, consulta, pintar) {
+    const turno = (caja._turno = (caja._turno || 0) + 1);
+    caja.setAttribute('aria-busy', 'true');
+    Cueva.cargando(caja);
+    Promise.resolve().then(consulta).then(r => {
+      if (r.error) throw r.error;
+      return r.data || [];
+    }).then(d => {
+      if (caja._turno !== turno) return;
+      caja.replaceChildren();
+      pintar(d);
+      caja.removeAttribute('aria-busy');
+    }, e => {
+      if (caja._turno !== turno) return;
+      Cueva.registrar('No se han podido cargar los avisos creados', e);
+      const fallo = nuevo('div', 'empty fallo');
+      fallo.setAttribute('role', 'alert');
+      const otra = nuevo('button', 'chip', 'Reintentar');
+      otra.type = 'button';
+      otra.addEventListener('click', () => cargarEn(caja, consulta, pintar));
+      fallo.append(nuevo('p', '', mensajeError(e)), otra);
+      caja.replaceChildren(fallo);
+      caja.removeAttribute('aria-busy');
+    });
+  }
+
+  function prepararCreados() {
+    const hoy = diaMadrid(new Date());
+    const abrir = nuevo('button', 'btn sec avi-creados-abrir', 'Ver avisos creados');
+    abrir.type = 'button';
+    abrir.setAttribute('aria-expanded', 'false');
+    abrir.setAttribute('aria-controls', 'avi-creados');
+    const bloque = nuevo('div', 'avi-creados');
+    bloque.id = 'avi-creados';
+    bloque.hidden = true;
+    const campo = nuevo('div', 'campo');
+    const etiqueta = nuevo('label', '', 'Día');
+    etiqueta.htmlFor = 'avi-dia';
+    const dia = nuevo('input', 'entrada avi-creados-dia');
+    Object.assign(dia, { type: 'date', id: 'avi-dia', max: hoy, value: hoy });
+    dia.setAttribute('aria-describedby', 'avi-dia-error');
+    const errorDia = nuevo('p', 'error-campo');
+    errorDia.id = 'avi-dia-error';
+    errorDia.hidden = true;
+    campo.append(etiqueta, dia, errorDia);
+    const lista = nuevo('div', 'avi-creados-lista');
+    lista.id = 'avi-dia-lista';
+    lista.setAttribute('aria-live', 'polite');
+    bloque.append(nuevo('p', 'pista', 'Solo la administración ve este detalle.'), campo, lista);
+    el('tarea').append(abrir, bloque);
+
+    let cargado = false;
+    abrir.addEventListener('click', () => {
+      const ver = bloque.hidden;
+      bloque.hidden = !ver;
+      abrir.setAttribute('aria-expanded', String(ver));
+      if (ver && !cargado) { cargado = true; cargarDia(); }
+    });
+    dia.addEventListener('change', cargarDia);
+
+    function cargarDia() {
+      const v = dia.value;
+      const m = !/^\d{4}-\d{2}-\d{2}$/.test(v) ? 'Elige un día.' : v > diaMadrid(new Date()) ? 'Elige hoy o un día anterior.' : '';
+      errorDia.textContent = m;
+      errorDia.hidden = !m;
+      if (m) { dia.setAttribute('aria-invalid', 'true'); lista._turno = (lista._turno || 0) + 1; lista.replaceChildren(); lista.removeAttribute('aria-busy'); return; }
+      dia.removeAttribute('aria-invalid');
+      cargarEn(lista, () => sb.rpc('avisos_del_dia', { p_dia: v }), filas => pintarDia(v, filas));
+    }
+
+    function pintarDia(v, filas) {
+      if (!filas.length) { lista.append(nuevo('p', 'empty', 'No se crearon avisos ese día.')); return; }
+      const ul = nuevo('ul', 'avi-creados-tipos');
+      filas.forEach((f, i) => {
+        const li = nuevo('li', 'avi-creados-tipo');
+        const cab = nuevo('div', 'avi-creados-cab');
+        const tx = nuevo('div', 'avi-creados-tx');
+        const h = nuevo('h3', '', f.titulo || f.tipo || '');
+        h.id = 'avi-ct-' + i;
+        tx.append(h, nuevo('p', 'pista', plural(f.creados, 'creado', 'creados') + ' · ' + plural(f.leidos, 'leído', 'leídos')));
+        const quien = nuevo('button', 'btn sec avi-creados-quien', 'Ver quién');
+        quien.type = 'button';
+        quien.id = 'avi-cq-' + i;
+        quien.setAttribute('aria-expanded', 'false');
+        quien.setAttribute('aria-controls', 'avi-cd-' + i);
+        quien.setAttribute('aria-describedby', h.id);
+        cab.append(tx, quien);
+        const det = nuevo('div', 'avi-creados-det');
+        det.id = 'avi-cd-' + i;
+        det.hidden = true;
+        quien.addEventListener('click', () => {
+          const ver = det.hidden;
+          det.hidden = !ver;
+          quien.setAttribute('aria-expanded', String(ver));
+          if (ver && !det.dataset.cargado) {
+            det.dataset.cargado = '1';
+            cargarEn(det, () => sb.rpc('destinatarios_avisos', { p_dia: v, p_tipo: f.tipo }), d => pintarDestinatarios(det, d));
+          }
+        });
+        li.append(cab, det);
+        ul.append(li);
+      });
+      lista.append(ul);
+    }
+
+    function pintarDestinatarios(det, filas) {
+      if (!filas.length) { det.append(nuevo('p', 'empty', 'No hay destinatarios de este aviso.')); return; }
+      const ul = nuevo('ul', 'avi-dest');
+      filas.forEach(f => {
+        const li = nuevo('li', 'avi-dest-fila');
+        const cab = nuevo('p', 'avi-dest-cab');
+        cab.append(nuevo('b', '', f.socio || 'Socio sin nombre'), nuevo('span', 'avi-dest-leido' + (f.leido === true ? ' si' : ''), f.leido === true ? 'Leído' : 'Sin leer'));
+        li.append(cab);
+        if (f.texto) li.append(nuevo('p', 'avi-dest-texto', f.texto));
+        ul.append(li);
+      });
+      det.append(ul);
+      if (filas.length >= MAX_DEST) det.append(nuevo('p', 'msg aviso', 'Se muestran los ' + MAX_DEST + ' primeros destinatarios (el máximo).'));
+    }
   }
 
   // ---------- c) Enviar un aviso ----------
