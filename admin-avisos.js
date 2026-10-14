@@ -2,6 +2,7 @@
 // - Avisos automáticos (avisos_config): solo se cambian "activo" y "dias"; cada cambio se guarda al momento.
 // - Estado (avisos_estado, una sola fila): cuándo pasó por última vez la tarea automática y cuántos avisos creó hoy.
 //   "Ver avisos creados" (supabase_26): RPC avisos_del_dia(p_dia) por tipo y destinatarios_avisos(p_dia, p_tipo) (máx. 300).
+//   Notificaciones al móvil (supabase_27): RPC resumen_push() → socios activos, socios con push y dispositivos.
 // - Enviar un aviso: RPC enviar_aviso_libre (a todos los socios activos o a uno). Destinatarios = socios con ficha cuya
 //   cuenta está activa (perfiles.activo = true), lo mismo que usa la función.
 // - Historial: RPC historial_avisos_libres(); "Retirar" borra el aviso libre (y, en cascada, el de cada socio).
@@ -163,8 +164,25 @@
     el('tarea').innerHTML =
       (parada ? '<p class="msg err" role="alert">La tarea automática no parece estar funcionando</p>' : '') +
       '<p>Última comprobación: <b>' + (ultima ? esc(fechaHora(ultima)) : 'nunca') + '</b></p>' +
-      '<p>Avisos creados hoy: <b>' + esc(numero(creados)) + '</b></p>';
+      '<p>Avisos creados hoy: <b>' + esc(numero(creados)) + '</b></p>' +
+      '<p id="tarea-push">Notificaciones al móvil: <span class="pista">cargando…</span></p>';
     prepararCreados();
+    cargarResumenPush();
+  }
+
+  // Notificaciones al móvil (supabase_27): socios activos con al menos un dispositivo. Si falla, solo una nota discreta.
+  function cargarResumenPush() {
+    const p = el('tarea-push');
+    Promise.resolve().then(() => sb.rpc('resumen_push')).then(r => {
+      if (r.error) throw r.error;
+      const f = (Array.isArray(r.data) ? r.data[0] : r.data) || {};
+      const n = k => Number(f[k]) || 0;
+      p.innerHTML = 'Notificaciones al móvil: <b>' + esc(numero(n('socios_con_push'))) + ' de ' + esc(plural(n('socios_activos'), 'socio', 'socios')) +
+        '</b> (' + esc(plural(n('dispositivos'), 'dispositivo', 'dispositivos')) + ')';
+    }).catch(e => {
+      Cueva.registrar('No se ha podido cargar el resumen de notificaciones', e);
+      p.innerHTML = 'Notificaciones al móvil: <span class="pista">' + esc(mensajeError(e)) + '</span>';
+    });
   }
 
   // Avisos creados en un día, por tipo, y quién los recibió. Todo se pinta con textContent (createElement).

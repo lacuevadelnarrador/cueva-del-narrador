@@ -177,7 +177,38 @@ const Cueva = (function () {
     return r.data && r.data.activo === true ? r.data : null;
   }
 
+  // Notificaciones al móvil (push.js): al salir se borra la suscripción de este dispositivo (o, al salir en todos, todas
+  // las del socio) y se da de baja en el navegador, para que el móvil no siga recibiendo avisos de esta cuenta.
+  // El borrado necesita la sesión: va ANTES de signOut. Es lo mejor posible: con un límite de 4 s y, si falla, solo se
+  // registra y se sale igualmente. No depende de push.js (Más también cierra la sesión).
+  async function quitarSuscripcion(todas) {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+    const reg = await navigator.serviceWorker.getRegistration();
+    const sus = reg && reg.pushManager ? await reg.pushManager.getSubscription() : null;
+    if (!sus && !todas) return;
+    try {
+      const sb = await cliente();
+      let r = null;
+      if (todas) {
+        const ses = await sb.auth.getSession();
+        if (ses.error) throw ses.error;
+        const uid = ses.data.session && ses.data.session.user.id;
+        if (uid) r = await sb.from('suscripciones_push').delete().eq('socio_id', uid);
+      } else r = await sb.from('suscripciones_push').delete().eq('endpoint', sus.endpoint);
+      if (r && r.error) throw r.error;
+    } catch (e) {
+      registrar('No se ha podido borrar la suscripción a las notificaciones', e);
+    }
+    if (sus) await sus.unsubscribe();
+  }
+  async function limpiarPush(todas) {
+    try {
+      await Promise.race([quitarSuscripcion(todas), new Promise((ok, mal) => setTimeout(() => mal({ name: 'TiempoAgotado' }), 4000))]);
+    } catch (e) { registrar('No se han podido quitar las notificaciones de este dispositivo', e); }
+  }
+
   async function salir() {
+    await limpiarPush(false);
     try { const sb = await cliente(); await sb.auth.signOut({ scope: 'local' }); } catch (e) {}
     borrar(CLAVE_SESION); borrar(CLAVE_INICIAL);
   }
@@ -350,7 +381,9 @@ const Cueva = (function () {
   // ---------- Cerrar sesión (Perfil y Más) ----------
   // Cierre en todos los dispositivos. Si falla (sin conexión, error del servidor) devuelve false y NO toca la
   // sesión local. 401/403/404: la sesión ya no vale en el servidor; se da por cerrada.
+  // Las notificaciones de todos sus dispositivos se quitan antes, aunque después falle el cierre global.
   async function salirEnTodos() {
+    await limpiarPush(true);
     try {
       const sb = await cliente();
       const { error } = await sb.auth.signOut({ scope: 'global' });
