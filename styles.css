@@ -972,3 +972,72 @@ main[aria-busy="true"] .entrega .btn{cursor:progress}
 .compartir-ig{font-size:14px;line-height:1.5;color:var(--muted);margin:14px 0 0;overflow-wrap:anywhere}
 /* Enlace dentro del texto: la zona táctil llega a 44 px con relleno vertical, sin mover las líneas */
 .enlace-ig{color:var(--link);text-decoration:underline;text-underline-offset:3px;padding:13px 0;font-weight:600}
+/* ---------- Campana de avisos (campana.js: páginas de socios) ---------- */
+/* Todo con prefijo .campana- (.avisos ya son los mensajes flotantes). La cabecera es verde petróleo en los dos modos:
+   campana blanca sobre fondo translúcido e insignia ámbar con texto oscuro (contraste AA). */
+.campana-grupo{display:flex;align-items:center;gap:8px;flex:none}
+.campana{position:relative;flex:none;width:44px;height:44px;border:0;border-radius:50%;display:grid;place-items:center;padding:0;color:#fff;background:rgba(15,29,32,.25);cursor:pointer;transition:background-color .2s var(--ease)}
+.campana svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.campana:active{transform:scale(.94)}
+.campana-insignia{position:absolute;top:-2px;right:-4px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:var(--amber);color:var(--teal-deep);font-family:'Oswald',sans-serif;font-weight:700;font-size:12px;line-height:20px;text-align:center;box-shadow:0 0 0 2px var(--teal-700)}
+.campana-insignia[hidden]{display:none}
+@media (hover:hover){ .campana:hover{background:rgba(15,29,32,.4)} }
+/* Panel: hoja inferior en el móvil; desplegable bajo la campana a partir de 600 px (campana.js da la posición) */
+.campana-panel{margin:auto auto 0;width:100%;max-width:480px;max-height:85vh;max-height:85dvh;padding:0 0 env(safe-area-inset-bottom,0px);border:0;border-radius:20px 20px 0 0;background:var(--card);color:var(--ink);box-shadow:var(--sh2);flex-direction:column;overflow:hidden}
+.campana-panel[open]{display:flex}
+.campana-panel::backdrop{background:rgba(15,29,32,.55)}
+@media (min-width:600px){
+  .campana-panel{position:fixed;inset:var(--campana-top,80px) auto auto var(--campana-izq,auto);margin:0;width:360px;max-width:calc(100vw - 32px);max-height:min(70vh,560px);padding:0;border-radius:var(--r-m)}
+  .campana-panel::backdrop{background:rgba(15,29,32,.25)}
+}
+.campana-cab{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 8px 6px 20px;border-bottom:1px solid var(--line)}
+.campana-cab h2{font-size:22px;color:var(--title)}
+.campana-cerrar{flex:none;width:44px;height:44px;border:0;border-radius:50%;display:grid;place-items:center;background:none;color:var(--ink);cursor:pointer}
+.campana-cerrar svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round}
+.campana-msg{margin:10px 16px 0;padding:10px 14px;border-left:5px solid #C8553D;border-radius:0 var(--r-s) var(--r-s) 0;background:var(--bg);font-size:15px}
+.campana-msg:empty{display:none}
+.campana-cuerpo{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:4px 0}
+.campana-cuerpo>.empty{margin:16px;background:none}
+.campana-lista{list-style:none;padding:0;margin:0}
+.campana-lista li+li{border-top:1px solid var(--line)}
+.campana-aviso{display:flex;align-items:flex-start;gap:10px;width:100%;min-height:44px;padding:12px 20px 12px 14px;border:0;background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.campana-aviso:disabled{cursor:progress}
+.campana-punto{flex:none;width:10px;height:10px;margin-top:6px;border-radius:50%}
+.campana-aviso.nuevo .campana-punto{background:var(--link)}
+.campana-tx{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.campana-at{font-weight:400;overflow-wrap:anywhere}
+.campana-aviso.nuevo .campana-at{font-weight:700}
+.campana-texto{font-size:15px;color:var(--muted);overflow-wrap:anywhere}
+.campana-fecha{font-size:13px;color:var(--muted)}
+.campana-pie{padding:10px 16px 14px;border-top:1px solid var(--line);display:flex;justify-content:flex-end}
+.campana-todas:disabled{opacity:.55;cursor:default}
+.campana-panel[aria-busy="true"] .campana-todas{cursor:progress}
+@media (hover:hover){ .campana-aviso:not(:disabled):hover{background:var(--bg)} .campana-cerrar:hover{background:var(--bg)} }
+@media (prefers-reduced-motion:reduce){ .campana:active{transform:none} }
+
+/* ---------- Panel: avisos (admin-avisos.html) ---------- */
+/* Todo con prefijo .avi-; reutiliza .card, .formulario, .campo, .entrada, .perfil-switch, .opciones, .error-campo y .pista */
+.avi{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;--avi-err:#B3412B}
+@media (prefers-color-scheme:dark){ .avi{--avi-err:#F0A08F} }
+.avi-bloque h2{font-size:20px;color:var(--title);margin-bottom:12px}
+.formulario.avi-bloque h2{font-size:20px}
+.avi-bloque>p:not(.msg){margin-bottom:6px}
+.avi-bloque .empty{background:none;border:0;padding:8px 0}
+.avi-tipos{list-style:none;padding:0;margin:0}
+.avi-tipo{padding:14px 0;border-top:1px solid var(--line)}
+.avi-tipo-cab{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.avi-tipo-tx{min-width:0}
+.avi-tipo h3{font-size:17px;color:var(--ink);margin-bottom:2px}
+.avi-tipo .perfil-switch{flex:none}
+.avi-dias{margin:10px 0 0}
+.avi-dias-campos{display:flex;gap:8px}
+.avi-dia.entrada{width:5.5em;min-height:44px;text-align:center;padding:8px}
+.avi-cuenta{text-align:right;margin-top:-2px}
+.avi-hist{list-style:none;padding:0;margin:0}
+.avi-hist-fila{padding:14px 0;border-top:1px solid var(--line)}
+.avi-hist-meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px;font-size:13px;color:var(--muted);margin-bottom:4px}
+.avi-hist-fila h3{font-size:17px;color:var(--ink);margin-bottom:4px;overflow-wrap:anywhere}
+.avi-hist-texto{font-size:15px;overflow-wrap:anywhere;margin-bottom:4px}
+.avi-hist-pie{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;margin-top:6px;font-size:14px;color:var(--muted)}
+.avi-retirar.btn.sec{border-color:var(--avi-err);color:var(--avi-err)}
+.avi [aria-busy="true"] .btn,.avi [aria-busy="true"] .perfil-switch{cursor:progress}

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Avisos · Administración · La Cueva del Narrador</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#528A93">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="pagehead">
+    <div class="top">
+      <div class="brand">
+        <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
+        <span>La Cueva<br>del Narrador</span>
+      </div>
+      <div class="avatar" aria-label="Tu perfil"></div>
+    </div>
+    <nav class="migas" aria-label="Ruta"><ol><li><a class="migas-admin" href="admin.html"><svg class="migas-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><span>Administración</span></a></li><li data-miga-seccion aria-current="page">Avisos</li><li data-miga-vista hidden></li></ol></nav>
+    <h1>Avisos</h1>
+    <p class="sub">Avisos automáticos y mensajes a los socios.</p>
+  </header>
+
+  <main>
+    <a class="volver" href="admin.html">&#8249; Volver al panel</a>
+
+    <div id="estado"></div>
+
+    <div id="avisos-admin" class="avi" hidden>
+      <section class="card avi-bloque" id="sec-auto" aria-labelledby="t-auto">
+        <h2 id="t-auto">Avisos automáticos</h2>
+        <p class="msg avi-nota">Los avisos automáticos se generan cada hora entre las 9:00 y las 21:00 (hora de Madrid).</p>
+        <p class="msg" data-estado hidden></p>
+        <ul class="avi-tipos" id="tipos"></ul>
+      </section>
+
+      <section class="card avi-bloque" aria-labelledby="t-tarea">
+        <h2 id="t-tarea">Estado</h2>
+        <div id="tarea"></div>
+      </section>
+
+      <form class="card formulario avi-bloque" id="form-enviar" aria-labelledby="t-enviar" novalidate>
+        <h2 id="t-enviar">Enviar un aviso</h2>
+        <p class="msg" data-estado hidden></p>
+        <div class="campo">
+          <label for="av-titulo">Título</label>
+          <input class="entrada" id="av-titulo" name="titulo" type="text" maxlength="80" required autocomplete="off" aria-describedby="av-titulo-cuenta">
+          <p class="pista avi-cuenta" id="av-titulo-cuenta">0 de 80 caracteres</p>
+        </div>
+        <div class="campo">
+          <label for="av-texto">Texto</label>
+          <textarea class="entrada" id="av-texto" name="texto" maxlength="300" required aria-describedby="av-texto-cuenta"></textarea>
+          <p class="pista avi-cuenta" id="av-texto-cuenta">0 de 300 caracteres</p>
+        </div>
+        <div class="campo">
+          <label for="av-enlace">Enlace (opcional)</label>
+          <select class="entrada" id="av-enlace" name="enlace">
+            <option value="">Sin enlace</option>
+            <option value="inicio.html">Inicio</option>
+            <option value="calendario.html">Calendario</option>
+            <option value="curso.html">Curso</option>
+            <option value="retos.html">Retos</option>
+            <option value="biblioteca.html">Biblioteca</option>
+            <option value="perfil.html">Mi perfil</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="av-destino">Destinatario</label>
+          <select class="entrada" id="av-destino" name="destino">
+            <option value="">Todos los socios activos</option>
+          </select>
+        </div>
+        <div class="botones-form">
+          <button type="submit" class="btn">Enviar aviso</button>
+        </div>
+      </form>
+
+      <section class="card avi-bloque" id="sec-historial" aria-labelledby="t-historial">
+        <h2 id="t-historial">Historial</h2>
+        <p class="pista">Retirar un aviso lo quita a todos los socios.</p>
+        <p class="msg" data-estado hidden></p>
+        <div id="historial"></div>
+      </section>
+    </div>
+  </main>
+
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="inicio.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="calendario.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a>
+    <a href="curso.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/></svg>Curso</a>
+    <a href="biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Biblioteca</a>
+    <a href="mas.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
+  </nav>
+</div>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script src="admin.js"></script>
+<script src="admin-avisos.js"></script>
+<script>
+if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+</script>
+</body>
+</html>
