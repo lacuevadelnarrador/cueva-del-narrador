@@ -40,7 +40,8 @@
     carne: '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M5.5 16c.6-1.5 1.7-2.3 3-2.3s2.4.8 3 2.3M14 10h4M14 14h4"/>',
     bajar: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
     compartir: '<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/>',
-    camara: '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'
+    camara: '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+    campana: '<path d="M18 16v-5a6 6 0 10-12 0v5l-2 2h16z"/><path d="M10 21h4"/>'
   };
   const ic = (k, cls) => '<svg class="perfil-ic' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + ICONOS[k] + '</svg>';
   const ESTADOS_CUOTA = {
@@ -227,8 +228,10 @@
       (window.Carne ? tarjeta(2, 'carne', 'carne', 'Mi carné', htmlCarne()) : '') +
       tarjeta(3, 'cuotas', 'cuotas', 'Mis cuotas', '<div id="perfil-cuotas-cuerpo">' + htmlCuotas() + '</div>') +
       tarjeta(4, 'asistencia', 'asistencia', 'Mi asistencia', htmlAsistencia()) +
-      htmlFinal(5);
+      (Cueva.push ? tarjeta(5, 'push', 'campana', 'Notificaciones', htmlPush()) : '') +
+      htmlFinal(6);
     observarCarne();
+    if (Cueva.push) comprobarPush();
   }
 
   function pintarSinFicha() {
@@ -753,9 +756,107 @@
     Cueva.aviso('Tus datos se han guardado.', 'ok');
   }
 
+  // ---------- Notificaciones al móvil (push.js) ----------
+  // Estados: 'ios' (iPhone/iPad sin la app instalada) · 'sin-soporte' · 'bloqueado' (permiso denegado) · 'off' · 'on'
+  // · 'error' (no se ha podido comprobar). Al abrir la página no se pide ningún permiso.
+  const TEXTOS_PUSH = {
+    'sin-soporte': 'Este navegador no admite notificaciones.',
+    bloqueado: 'Has bloqueado las notificaciones para esta app. Puedes volver a permitirlas en los ajustes del móvil.',
+    off: 'Desactivadas en este dispositivo.',
+    on: 'Activadas en este dispositivo.'
+  };
+  let pushTurno = 0, pushOcupado = false, pushPermiso = '';
+
+  function htmlPush() {
+    return '<p class="perfil-push-intro">Recibirás en el móvil los mismos avisos que ves en la campana. Cada dispositivo se activa por separado.</p>' +
+      '<div id="perfil-push-cuerpo"><p class="empty cargando" role="status">Comprobando…</p></div>';
+  }
+
+  // mensaje: error que se anuncia (true en "bloqueado" = se acaba de denegar). foco: el interruptor tenía el foco.
+  function pintarPush(estado, mensaje, foco) {
+    const cuerpo = document.getElementById('perfil-push-cuerpo');
+    if (!cuerpo) return;
+    const teniaFoco = foco || (!!document.activeElement && document.activeElement.id === 'f-push');
+    if (estado === 'cargando') { cuerpo.innerHTML = '<p class="empty cargando" role="status">Comprobando…</p>'; return; }
+    const msg = mensaje ? '<p class="msg err perfil-push-msg" role="alert">' + esc(mensaje) + '</p>' : '';
+    if (estado === 'on' || estado === 'off') {
+      const si = estado === 'on';
+      cuerpo.innerHTML =
+        '<div class="campo perfil-campo-switch"><span class="perfil-switch-et" id="et-push">En este dispositivo</span>' +
+        '<button class="perfil-switch" type="button" id="f-push" role="switch" aria-checked="' + si + '" aria-labelledby="et-push" aria-describedby="push-estado">' +
+        '<span class="perfil-switch-pista" aria-hidden="true"><span></span></span><span class="perfil-switch-texto" aria-hidden="true">' + (si ? 'Sí' : 'No') + '</span></button></div>' +
+        '<p class="pista perfil-push-estado" id="push-estado">' + esc(TEXTOS_PUSH[estado]) + '</p>' + msg;
+      if (teniaFoco) document.getElementById('f-push').focus();
+    } else if (estado === 'ios') {
+      cuerpo.innerHTML = '<p class="msg perfil-push-msg">En iPhone, las notificaciones solo funcionan con la app instalada en la pantalla de inicio. ' +
+        '<a href="instalar.html">Instálala</a> y vuelve a abrir esta pantalla desde allí.</p>';
+    } else if (estado === 'error') {
+      cuerpo.innerHTML = '<p class="msg err perfil-push-msg" role="alert">No se ha podido comprobar si están activadas. ' +
+        'Comprueba la conexión e inténtalo de nuevo.</p><button type="button" class="chip" id="push-reintentar">Reintentar</button>';
+    } else {
+      cuerpo.innerHTML = '<p class="msg perfil-push-msg"' + (mensaje ? ' role="alert"' : '') + '>' + esc(TEXTOS_PUSH[estado]) + '</p>';
+    }
+    if (teniaFoco && !document.getElementById('f-push')) {
+      const destino = cuerpo.querySelector('.perfil-push-msg');
+      if (destino) { destino.tabIndex = -1; destino.focus(); }
+    }
+  }
+
+  // Estado real del dispositivo. Si el permiso ya está concedido y hay suscripción, se vuelve a ligar a esta cuenta.
+  async function comprobarPush() {
+    const P = Cueva.push, turno = ++pushTurno;
+    pushPermiso = P.permiso();
+    let estado;
+    if (P.esIOS() && (!('PushManager' in window) || !P.instalada())) estado = 'ios';
+    else if (!P.soportado()) estado = 'sin-soporte';
+    else if (pushPermiso === 'denied') estado = 'bloqueado';
+    else {
+      try { await P.revincular(); } catch (e) { Cueva.registrar('No se ha podido renovar la suscripción a las notificaciones', e); }
+      try { estado = await P.activo() ? 'on' : 'off'; } catch (e) { Cueva.registrar('No se ha podido comprobar el estado de las notificaciones', e); estado = 'error'; }
+    }
+    if (turno === pushTurno && !pushOcupado) pintarPush(estado);
+  }
+
+  // Se llama directamente desde el clic: P.activar() pide el permiso antes de cualquier espera.
+  function alternarPush(sw) {
+    if (pushOcupado) return;
+    const P = Cueva.push;
+    const activar = sw.getAttribute('aria-checked') !== 'true';
+    const seccion = document.getElementById('perfil-push');
+    const trabajo = activar ? P.activar() : P.desactivar().then(() => 'desactivado');
+    const foco = document.activeElement === sw;
+    pushOcupado = true;
+    ++pushTurno; // una comprobación en curso ya no vale
+    seccion.setAttribute('aria-busy', 'true');
+    sw.disabled = true;
+    document.getElementById('push-estado').textContent = activar ? 'Activando…' : 'Desactivando…';
+    trabajo.then(r => {
+      if (r === 'activado') { pintarPush('on', '', foco); Cueva.aviso('Notificaciones activadas en este dispositivo.', 'ok'); }
+      else if (r === 'desactivado') { pintarPush('off', '', foco); Cueva.aviso('Notificaciones desactivadas en este dispositivo.', 'ok'); }
+      else if (r === 'denegado') pintarPush('bloqueado', true, foco);
+      else pintarPush('off', 'No has dado permiso para las notificaciones. Vuelve a pulsar el interruptor si quieres activarlas.', foco);
+    }, e => {
+      if (!e || !e.paraSocio) Cueva.registrar('Error con las notificaciones', e);
+      pintarPush(activar ? 'off' : 'on', e && e.paraSocio ? e.message : 'Ha ocurrido un error. Inténtalo de nuevo dentro de un momento.', foco);
+    }).then(() => {
+      pushOcupado = false;
+      seccion.removeAttribute('aria-busy');
+      pushPermiso = P.permiso();
+    });
+  }
+
+  // Si al volver a la app el permiso ha cambiado (por ejemplo, desde los ajustes del móvil), se comprueba de nuevo.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible' || !Cueva.push || pushOcupado || !document.getElementById('perfil-push')) return;
+    if (Cueva.push.permiso() !== pushPermiso) comprobarPush();
+  });
+
   // ---------- Eventos ----------
   contenido.addEventListener('click', e => {
     if (e.target.closest('#perfil-editar')) { abrirEdicion(); return; }
+    const sp = e.target.closest('#f-push');
+    if (sp) { if (!sp.disabled) alternarPush(sp); return; }
+    if (e.target.closest('#push-reintentar')) { pintarPush('cargando'); comprobarPush(); return; }
     const bc = e.target.closest('[data-carne]');
     if (bc) { if (!bc.disabled) accionCarne(bc.dataset.carne); return; }
     if (e.target.closest('#perfil-cancelar')) { if (!guardando) cerrarEdicion(); return; }
