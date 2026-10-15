@@ -1098,3 +1098,8 @@ main[aria-busy="true"] .entrega .btn{cursor:progress}
 .avi-dest-leido.si{color:var(--link)}
 .avi-dest-texto{font-size:15px;overflow-wrap:anywhere;margin-top:2px}
 .avi-creados-det>.msg{margin-top:8px}
+
+/* ---------- Pastilla "Leer las entregas de los compañeros" (retos.html) ---------- */
+/* Los estilos de leer.html (listas y lector) van en esa página: así Inicio y Retos no descargan nada más */
+.leer-pastilla{justify-self:center;gap:8px;max-width:100%;margin-top:-12px;padding:8px 18px;line-height:1.25;text-align:center;text-decoration:none}
+.leer-pastilla svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
