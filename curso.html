@@ -40,7 +40,10 @@
     </section>
 
     <section aria-live="polite">
-      <p class="cuenta" id="cuenta"></p>
+      <div class="curso-barra">
+        <p class="cuenta" id="cuenta"></p>
+        <button type="button" class="curso-orden" id="orden" hidden aria-label="Ordenar por fecha: ascendente" title="Ordenar por fecha: ascendente"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 19V5M6 11l6-6 6 6"/></svg>Fecha</button>
+      </div>
       <div id="lista"></div>
     </section>
   </main>
@@ -79,9 +82,18 @@ function pintarTipos(){
   document.getElementById('tipos').innerHTML=chips.map(([k,n])=>'<button class="chip'+(k===filtroTipo?' on':'')+'" data-t="'+esc(k)+'" aria-pressed="'+(k===filtroTipo)+'">'+esc(n)+'</button>').join('');
 }
 
+// Orden por fecha (botón de la flecha): empieza ascendente y no se recuerda entre visitas. Solo reordena lo ya cargado.
+// Las charlas sin fecha (salen porque tienen documentos) van siempre al final; con la misma fecha, se respeta su orden.
+let ascendente=true;
+const porFecha=(a,b)=>!a.fecha||!b.fecha?(a.fecha?0:1)-(b.fecha?0:1):ascendente?a.fecha.localeCompare(b.fecha):b.fecha.localeCompare(a.fecha);
+function pintarOrden(){
+  const b=document.getElementById('orden'), t='Ordenar por fecha: '+(ascendente?'ascendente':'descendente');
+  b.hidden=false; b.classList.toggle('desc',!ascendente); b.setAttribute('aria-label',t); b.title=t;
+}
+
 function pintarLista(){
   const q=norm(texto);
-  const lista=cursoActual().charlas.slice().sort((a,b)=>(a.fecha||'9999').localeCompare(b.fecha||'9999')).filter(c=>
+  const lista=cursoActual().charlas.slice().sort(porFecha).filter(c=>
     (filtroTipo==='todos'||c.tipo===filtroTipo)&&(!q||norm(c.titulo).includes(q)||norm(c.detalle).includes(q)||norm(c.ponente).includes(q)));
   document.getElementById('cuenta').textContent=lista.length+(lista.length===1?' charla':' charlas');
   document.getElementById('lista').innerHTML=lista.length?lista.map(c=>{
@@ -96,8 +108,9 @@ function pintarLista(){
 
 function todo(){
   if(!CURSOS.length){document.getElementById('cuenta').textContent='';document.getElementById('lista').innerHTML='<p class="empty">Todavía no hay cursos publicados.</p>';return;}
-  pintarTabs();pintarTipos();pintarLista();
+  pintarTabs();pintarTipos();pintarOrden();pintarLista();
 }
+document.getElementById('orden').addEventListener('click',()=>{ascendente=!ascendente;pintarOrden();pintarLista();});
 document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;cursoId=b.dataset.id;filtroTipo='todos';todo();});
 document.getElementById('tipos').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;filtroTipo=b.dataset.t;pintarTipos();pintarLista();});
 document.getElementById('q').addEventListener('input',e=>{texto=e.target.value;if(CURSOS.length)pintarLista();});

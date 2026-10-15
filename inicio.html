@@ -40,9 +40,36 @@
         <p id="reto-plazo"></p>
         <div class="reto-pastillas">
           <a class="chip" href="retos.html" id="reto-enlace">Ver los retos</a>
-          <a class="chip" href="https://www.instagram.com/lacuevadelnarrador/" target="_blank" rel="noopener">Instagram<span class="perfil-sr"> (se abre en otra pestaña)</span></a>
+          <a class="chip" href="https://www.instagram.com/lacuevadelnarrador/" target="_blank" rel="noopener" id="reto-instagram">Instagram<span class="perfil-sr"> (se abre en otra pestaña)</span></a>
         </div>
         <p class="reto-etiquetas"><span>#lacuevadelnarrador</span> · <span>@lacuevadelnarrador</span></p>
+        <div class="push-franja" id="push-franja" hidden>
+          <svg class="push-franja-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 16v-5a6 6 0 10-12 0v5l-2 2h16z"/><path d="M10 21h4"/></svg>
+          <p class="push-franja-txt" id="push-franja-txt">Activa las notificaciones</p>
+          <button type="button" class="push-franja-activar" id="push-activar">Activar</button>
+          <button type="button" class="push-franja-cerrar" id="push-cerrar" aria-label="Ahora no"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        </div>
+        <span class="perfil-sr" role="status" id="push-franja-estado"></span>
+        <script>
+        // Franja de notificaciones: se decide AQUÍ, antes de la primera pintura, para que no haya saltos de diseño.
+        // Son las mismas comprobaciones que Cueva.push (push.js, que llega después y solo si hace falta).
+        // Con el permiso ya concedido no sale (lo normal es que ya estén activadas; si no, se gestionan en Perfil).
+        // "Ahora no" guarda solo la fecha (ISO) en localStorage: no es un dato personal.
+        (function(){
+          var f=document.getElementById('push-franja'), n=navigator;
+          try{ var d=Date.parse(localStorage.getItem('cueva-push-ahora-no')||''); if(d&&Date.now()-d<7*864e5) return; }catch(e){}
+          var ios=/iPad|iPhone|iPod/.test(n.userAgent)||(n.platform==='MacIntel'&&n.maxTouchPoints>1);
+          var instalada=n.standalone===true||!!(window.matchMedia&&matchMedia('(display-mode: standalone)').matches);
+          if(ios&&!instalada){
+            f.classList.add('instalar');
+            document.getElementById('push-franja-txt').innerHTML='<a href="instalar.html">Instala la app para recibir notificaciones</a>';
+            f.removeChild(document.getElementById('push-activar'));
+            f.hidden=false; return;
+          }
+          if(!('serviceWorker' in n&&'PushManager' in window&&'Notification' in window)||Notification.permission!=='default') return;
+          f.hidden=false; f.dataset.activar='1';
+        })();
+        </script>
       </div>
     </section>
   </header>
@@ -179,6 +206,59 @@
     });
   }
   iniciar();
+})();
+
+// Franja de notificaciones (ya decidida arriba). push.js se pide después de la primera pintura y solo si la franja
+// tiene el botón "Activar". Si se pulsa antes de que llegue, el permiso se pide igualmente dentro del clic.
+(function(){
+  const f=document.getElementById('push-franja');
+  if(f.hidden) return;
+  const estado=document.getElementById('push-franja-estado');
+  const ahoraNo=()=>{ try{ localStorage.setItem('cueva-push-ahora-no',new Date().toISOString()); }catch(e){} };
+  // Al quitar la franja, el foco (si estaba dentro) pasa a la pastilla de Instagram: es el último elemento enfocable
+  // antes de ella (las etiquetas son texto), así que con Tab se sigue igual que si la franja no hubiera estado.
+  function quitar(){
+    const conFoco=f.contains(document.activeElement);
+    f.remove();
+    if(conFoco) document.getElementById('reto-instagram').focus();
+  }
+  document.getElementById('push-cerrar').addEventListener('click',()=>{ ahoraNo(); estado.textContent='De acuerdo, no te lo volveremos a recordar en unos días.'; quitar(); });
+  const boton=document.getElementById('push-activar');
+  if(!boton) return;
+
+  let cargado=null;
+  const cargar=()=>cargado||(cargado=new Promise((ok,mal)=>{
+    const s=document.createElement('script'); s.src='push.js'; s.onload=ok; s.onerror=mal; document.body.appendChild(s);
+  }));
+  const tras=()=>requestAnimationFrame(()=>setTimeout(cargar,0));
+  if(document.readyState==='complete') tras(); else window.addEventListener('load',tras,{once:true});
+
+  // El mensaje sustituye al contenido (misma altura) y la franja se va al cabo de un momento.
+  function terminar(msg,ok){
+    f.removeAttribute('aria-busy');
+    const conFoco=f.contains(document.activeElement);
+    f.classList.add('hecho'); if(!ok) f.classList.add('err');
+    f.innerHTML='<p class="push-franja-txt" tabindex="-1">'+Cueva.esc(msg)+'</p>';
+    if(conFoco) f.firstChild.focus();
+    estado.textContent=msg;
+    setTimeout(quitar,ok?2500:4500);
+  }
+  let ocupada=false;
+  boton.addEventListener('click',()=>{
+    if(ocupada) return;
+    ocupada=true;
+    f.setAttribute('aria-busy','true'); boton.setAttribute('aria-disabled','true'); boton.textContent='Activando…';
+    // Lo primero, sin esperas: pedir el permiso (en iPhone tiene que ser dentro del gesto).
+    const r=Cueva.push?Cueva.push.activar():(Notification.requestPermission(),cargar().then(()=>Cueva.push.activar()));
+    Promise.resolve(r).then(res=>{
+      if(res==='activado') return terminar('Notificaciones activadas en este dispositivo.',true);
+      if(res==='sin-respuesta') ahoraNo();
+      terminar(res==='denegado'?'Notificaciones bloqueadas. Puedes cambiarlo en los ajustes del navegador.':'No se han activado las notificaciones.',false);
+    },e=>{
+      if(!(e&&e.paraSocio)) Cueva.registrar('No se han podido activar las notificaciones',e);
+      terminar(e&&e.paraSocio?e.message:'No se han podido activar las notificaciones. Inténtalo de nuevo dentro de un momento.',false);
+    });
+  });
 })();
 </script>
 <script>
