@@ -121,9 +121,14 @@ const Entrega=(function(){
   }
 
   // Consulta de los retos: con sesión se piden también id, numero y entregas_abiertas.
+  // Con sesión, la ficha y las entregas del socio salen a la vez (todas las suyas: aún no se saben los ids de los retos).
+  // Se usan una sola vez, en el primer iniciar(); "Reintentar" siempre pide una lectura nueva.
+  let adelantada=null;
   async function consulta(sb,columnas){
     const uid=await EstadoEntrega.sesion(sb);
     sesion=uid?{sb,uid}:null;
+    adelantada=null;
+    if(sesion){adelantada=EstadoEntrega.leer(sb,uid,null);adelantada.catch(()=>{});}
     return sb.from('retos').select(columnas+(sesion?',id,numero,entregas_abiertas':'')).lte('inicio',hoy).order('inicio',{ascending:false});
   }
 
@@ -136,13 +141,14 @@ const Entrega=(function(){
   // Lee mi ficha y mis entregas (entregas.js). Sin ficha (por ejemplo, la cuenta del club) no se muestra nada de entregas.
   async function iniciar(lista){
     listo=false;
+    const previa=adelantada; adelantada=null;
     if(!sesion){quitarHuecos();return;}
     retos=new Map(lista.filter(r=>r.id!=null).map(r=>[String(r.id),r]));
     if(!retos.size) return;
     const {sb,uid}=sesion;
     huecos().forEach(x=>{x.innerHTML='<p class="ent-msg cargando" role="status">Cargando tu entrega…</p>';});
     try{
-      const r=await EstadoEntrega.leer(sb,uid,[...retos.values()].map(x=>x.id));
+      const r=await (previa||EstadoEntrega.leer(sb,uid,[...retos.values()].map(x=>x.id)));
       if(!r.ficha){quitarHuecos();return;}
       mias=r.mias;
       listo=true;

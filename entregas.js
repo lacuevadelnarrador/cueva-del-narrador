@@ -18,11 +18,15 @@ const EstadoEntrega = (function () {
   }
 
   // ¿Tiene ficha? y sus entregas de esos retos: { ficha: true|false, mias: Map(reto_id en texto → fila) }.
+  // idsRetos = null: todas SUS entregas (una por reto como mucho), para pedirlas sin esperar a la consulta de retos.
+  // Siempre filtra por socio_id = uid: cada uno, también el administrador, solo recibe las suyas.
   // Lanza el error si falla alguna de las dos consultas.
   async function leer(sb, uid, idsRetos) {
+    let entregas = sb.from('entregas').select('reto_id,nombre_archivo,subido,entregado').eq('socio_id', uid);
+    if (idsRetos) entregas = entregas.in('reto_id', idsRetos);
     const [ficha, ent] = await Promise.all([
       sb.from('socios').select('id').eq('id', uid).maybeSingle(),
-      sb.from('entregas').select('reto_id,nombre_archivo,subido,entregado').eq('socio_id', uid).in('reto_id', idsRetos)
+      entregas
     ]);
     if (ficha.error || ent.error) throw ficha.error || ent.error;
     return { ficha: !!ficha.data, mias: new Map((ent.data || []).map(e => [String(e.reto_id), e])) };
@@ -44,10 +48,11 @@ const EstadoEntrega = (function () {
   // Pastilla de la tarjeta del reto actual (inicio.html e index.html): "Ver los retos" mientras no se sepa otra cosa;
   // "Sube tu reto" si puede entregar y "Reto entregado" con un check en SVG si ya lo hizo. Siempre lleva a la pestaña Retos.
   // reto: el reto actual con id y entregas_abiertas (o null). Si algo falla, se queda en "Ver los retos".
-  async function enlaceInicio(enlace, sb, reto, uid) {
+  // lectura (opcional): un leer(sb, uid, null) ya lanzado (inicio.html lo pide a la vez que el reto).
+  async function enlaceInicio(enlace, sb, reto, uid, lectura) {
     if (!enlace || !reto || reto.id == null || !uid) return;
     try {
-      const r = await leer(sb, uid, [reto.id]);
+      const r = await (lectura || leer(sb, uid, [reto.id]));
       if (!r.ficha) return;
       const estado = de(reto, r.mias.get(String(reto.id)));
       // Pastilla rellena para subir; en tono suave cuando ya está entregado; con borde (la de partida) en los demás casos.

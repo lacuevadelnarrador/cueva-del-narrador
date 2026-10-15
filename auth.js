@@ -225,13 +225,22 @@ const Cueva = (function () {
 
   // Guardia de las páginas privadas. Devuelve { sb, perfil } o redirige a acceso.html.
   // Si falla la conexión lanza el error, para que la página lo muestre con "Reintentar".
-  async function privada() {
+  // adelantar(sb, uid) (opcional): lanza las consultas de la página a la vez que la de perfiles, para no esperarla.
+  // Se llama solo cuando getSession ya ha devuelto una sesión (y ha renovado el token si había caducado), así que esas
+  // consultas salen con el token bueno. Lo que devuelve llega en { previas }, pero la página no debe pintar nada hasta
+  // que privada() termine bien: si la guardia redirige, nunca termina y esas consultas se descartan sin más.
+  // Si adelantar falla, se ignora: la guardia sigue igual y previas queda vacío (la página consulta como siempre).
+  async function privada(adelantar) {
     pintarAvatar();
     if (!haySesionLocal()) return irAcceso('privado');
     const sb = await cliente();
     const { data, error } = await sb.auth.getSession();
     if (error) throw error;
     if (!data.session) return irAcceso('privado');
+    let previas = null;
+    if (typeof adelantar === 'function') {
+      try { previas = adelantar(sb, data.session.user.id) || null; } catch (e) { previas = null; }
+    }
     let perfil;
     try {
       perfil = await perfilActivo(sb, data.session.user.id);
@@ -243,7 +252,7 @@ const Cueva = (function () {
     guardarInicial(perfil.nombre);
     cargarMiniAvatar(sb, data.session.user.id);
     avisarEntrada(sb);
-    return { sb, perfil };
+    return previas ? { sb, perfil, previas } : { sb, perfil };
   }
 
   // Quien necesite el cliente cuando la guardia de una página privada ha terminado bien (la campana de avisos)
