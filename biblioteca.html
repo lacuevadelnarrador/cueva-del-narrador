@@ -9,6 +9,10 @@
 <link rel="icon" href="img/icon-192.png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://vxzvpucuthpvmdgmwgdk.supabase.co" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -84,9 +88,11 @@ function pintarLista(){
     &&(!q||norm(l.titulo).includes(q)||norm(l.autor).includes(q))
     &&(!(pestana==='biblioteca'&&soloDisp)||l.disponible));
   document.getElementById('cuenta').textContent=lista.length+(lista.length===1?' libro':' libros');
-  document.getElementById('lista').innerHTML=lista.length?lista.map(l=>{
+  // Las 4 primeras portadas (primera pantalla) se piden ya; el resto, al acercarse (lazy). width/height solo
+  // reservan el hueco con la proporción de las portadas (360x540): el tamaño lo fija .portada en el CSS.
+  document.getElementById('lista').innerHTML=lista.length?lista.map((l,i)=>{
     const [c,t]=colorPortada(l.titulo);
-    const portada=l.portada?'<img class="portada" src="'+esc(l.portada)+'" alt="Portada de '+esc(l.titulo)+'">':'<div class="portada" style="background:'+c+';color:'+t+'" aria-hidden="true">'+esc(l.titulo.charAt(0))+'</div>';
+    const portada=l.portada?'<img class="portada" src="'+esc(l.portada)+'" alt="Portada de '+esc(l.titulo)+'" width="360" height="540"'+(i>=4?' loading="lazy"':'')+' decoding="async">':'<div class="portada" style="background:'+c+';color:'+t+'" aria-hidden="true">'+esc(l.titulo.charAt(0))+'</div>';
     const estado=(pestana==='biblioteca')?'<span class="estado '+(l.disponible?'ok':'no')+'">'+(l.disponible?'Disponible':'Prestado')+'</span>':'';
     const por=(pestana==='recomendados'&&l.recomienda)?'<p class="por">Recomienda: '+esc(l.recomienda)+'</p>':'';
     const tags=l.generos.map(g=>'<span class="tag">'+esc(g)+'</span>').join('')+(l.temporada?'<span class="tag temp">'+esc(l.temporada)+'</span>':'');
