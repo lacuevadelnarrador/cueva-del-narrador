@@ -79,6 +79,37 @@ a.avatar:active{transform:scale(.94)}
 .chip .perfil-ic{width:14px;height:14px;margin-left:6px;stroke-width:2.6}
 .deadline .reto-etiquetas{font-size:13px;font-style:normal;margin-top:-2px;overflow-wrap:anywhere}
 .reto-etiquetas span{white-space:nowrap}
+/* Franja "Activa las notificaciones" (inicio.html), al final de la tarjeta del reto, tras las etiquetas. Altura FIJA:
+   si el texto no cabe en una línea pasa a dos dentro de la misma altura, así nunca empuja lo de abajo. Ocupa también
+   parte del relleno de la tarjeta; en pantallas estrechas se quita la campana.
+   Rellena con el color de marca (--teal-700, igual en claro y oscuro): blanco sobre #3E6F77 = 5,61:1, y "Activar"
+   invertido (#3E6F77 sobre blanco) = 5,61:1. */
+.push-franja{display:flex;align-items:center;gap:6px;width:calc(100% + 24px);max-width:404px;margin:6px -12px 0;height:52px;padding:0 3px 0 14px;background:var(--teal-700);border:1.5px solid var(--teal-700);border-radius:999px;color:#fff;text-align:left;box-shadow:var(--sh1)}
+.push-franja[hidden]{display:none}
+.push-franja-ic{flex:none;width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transform-origin:50% 8%}
+/* La campana se balancea UNA vez al aparecer (solo transform: no mueve nada). Nada si se pide reducir el movimiento. */
+@media (prefers-reduced-motion:no-preference){ .push-franja-ic{animation:campana-balanceo .9s var(--ease) .3s 1 both} }
+@keyframes campana-balanceo{0%,100%{transform:rotate(0)}15%{transform:rotate(14deg)}35%{transform:rotate(-12deg)}55%{transform:rotate(8deg)}75%{transform:rotate(-4deg)}}
+.deadline .push-franja-txt{flex:1 1 auto;min-width:0;color:#fff;font-size:14px;font-style:normal;line-height:1.2;overflow:hidden;max-height:34px}
+.push-franja-txt a{color:#fff;font-weight:600;text-decoration:underline;text-underline-offset:2px;display:inline-flex;align-items:center;min-height:44px}
+/* iPhone sin instalar: el enlace (44 px de alto) ocupa la línea de texto; cabe en los 52 px sin recortarse */
+.deadline .push-franja.instalar .push-franja-txt{max-height:none;overflow:visible}
+.push-franja-txt:focus{outline:none}
+.push-franja-activar{flex:none;min-height:44px;padding:0 14px;background:#fff;color:var(--teal-700);border:0;border-radius:999px;font-family:'Oswald',sans-serif;font-weight:500;font-size:13px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;transition:transform .12s var(--ease),background-color .2s var(--ease)}
+.push-franja-activar:active{transform:scale(.95)}
+.push-franja[aria-busy="true"] .push-franja-activar{cursor:progress}
+.push-franja-cerrar{flex:none;display:grid;place-items:center;width:44px;height:44px;padding:0;background:none;border:0;border-radius:50%;color:#fff;cursor:pointer;transition:background-color .2s var(--ease)}
+.push-franja-cerrar svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.push-franja.hecho{padding:0 18px;justify-content:center}
+.deadline .push-franja.hecho .push-franja-txt{text-align:center;flex:1 1 auto;font-size:13px;line-height:1.15;max-height:46px}
+.push-franja.err{border-color:var(--ent-err)}
+@media (hover:hover){ .push-franja-activar:hover{background:#EBEDEF} .push-franja-cerrar:hover{background:rgba(255,255,255,.16)} }
+@media (max-width:374px){
+  .push-franja{padding-left:12px}
+  .push-franja-ic{display:none}
+  .deadline .push-franja-txt{font-size:13px}
+  .push-franja-activar{padding:0 11px}
+}
 
 /* ---------- Botones ---------- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;background:var(--accent);color:#fff;border:0;border-radius:999px;padding:10px 22px;font-family:'Oswald',sans-serif;font-weight:500;font-size:15px;line-height:1.2;text-transform:uppercase;letter-spacing:.04em;text-decoration:none;cursor:pointer;box-shadow:var(--sh1);transition:transform .12s var(--ease),box-shadow .2s var(--ease),filter .2s var(--ease)}
@@ -213,6 +244,15 @@ button.day:active{transform:scale(.9)}
 .solo{display:flex;align-items:center;gap:10px;min-height:44px;margin-top:4px;font-size:15px;cursor:pointer}
 .solo input{width:22px;height:22px;accent-color:var(--teal-700);flex:none}
 .cuenta{color:var(--muted);font-size:14px;margin-bottom:12px}
+/* Curso: la cuenta de charlas y el botón de orden por fecha en la misma fila */
+.curso-barra{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.curso-barra .cuenta{margin:0}
+.curso-orden{display:inline-flex;align-items:center;gap:6px;min-height:44px;min-width:44px;padding:0 12px;background:var(--card);border:1.5px solid var(--chipline);border-radius:999px;color:var(--link);font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;transition:background-color .2s var(--ease),transform .12s var(--ease)}
+.curso-orden[hidden]{display:none}
+.curso-orden:active{transform:scale(.95)}
+.curso-orden svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s var(--ease)}
+.curso-orden.desc svg{transform:rotate(180deg)}
+@media (hover:hover){ .curso-orden:hover{background:var(--bg)} }
 .libro{display:flex;gap:14px;padding:14px;margin-bottom:10px}
 .portada{flex:none;width:64px;height:92px;border-radius:3px 8px 8px 3px;object-fit:cover;display:flex;align-items:flex-end;padding:8px;font-family:'Oswald',sans-serif;font-weight:700;font-size:34px;line-height:1;box-shadow:inset 5px 0 0 rgba(0,0,0,.16),inset 6px 0 0 rgba(255,255,255,.18),0 6px 10px -5px rgba(31,58,64,.45)}
 .libro .info{min-width:0}
