@@ -12,6 +12,10 @@
 <link rel="icon" href="img/icon-192.png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://vxzvpucuthpvmdgmwgdk.supabase.co" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -100,10 +104,12 @@
   }
 
   // Últimos libros añadidos (los más recientes primero). Usa portada_url si existe; si no, el bloque de color.
+  // Las estanterías quedan fuera de la primera pantalla en el móvil: las portadas se piden al acercarse (lazy).
+  // width/height (360x540, la proporción de las portadas) solo reservan el hueco: el tamaño lo fija .cover en el CSS.
   function estante(id,libros,vacio,conRecomienda){
     el(id).innerHTML=libros.length?libros.map(l=>{
       const titulo=l.titulo||'', c=colorPortada(titulo), img=Cueva.urlSegura(l.portada_url);
-      const portada=img?'<img class="cover" src="'+esc(img)+'" alt="Portada de '+esc(titulo)+'" style="width:100%;object-fit:cover;padding:0">':'<div class="cover" style="background:'+c[0]+';color:'+c[1]+'">'+esc(titulo)+'</div>';
+      const portada=img?'<img class="cover" src="'+esc(img)+'" alt="Portada de '+esc(titulo)+'" width="360" height="540" loading="lazy" decoding="async" style="width:100%;object-fit:cover;padding:0">':'<div class="cover" style="background:'+c[0]+';color:'+c[1]+'">'+esc(titulo)+'</div>';
       return '<div class="book">'+portada+'<p>'+esc(l.autor)+'</p>'+(conRecomienda&&l.recomendado_por?'<p class="by">Recomienda: '+esc(l.recomendado_por)+'</p>':'')+'</div>';
     }).join(''):'<p class="empty">'+vacio+'</p>';
   }
@@ -123,17 +129,28 @@
     zonas.forEach(z=>Cueva.cargando(z));
     pintarReto(null,'Cargando…');
     Cueva.privada().then(({sb})=>{
-      Cueva.cargar(zonas[0],()=>Promise.all([
-        sb.from('eventos').select('fecha,hora,titulo,tipo,lugar').gte('fecha',hoy).order('fecha').limit(20),
-        sb.from('retos').select('titulo,inicio').gte('inicio',hoy).order('inicio').limit(3)
-      ]).then(([ev,re])=>({error:ev.error||re.error,data:{eventos:ev.data||[],retos:re.data||[]}})),pintarEventos);
+      // Una sola consulta a retos para la tarjeta del reto y para "Próximos eventos": todos, del más reciente al más
+      // antiguo (hay uno al mes). Reto actual = el primero con inicio <= hoy. Próximos = los de inicio >= hoy, del más
+      // antiguo al más reciente, los 3 primeros. Un reto que empieza hoy sale en los dos sitios, como con dos consultas.
+      // La primera vez la comparten las dos zonas (Promise.resolve la lanza una sola vez). Si esa falla, "Próximos
+      // eventos" pide la suya, como cuando cada zona tenía su consulta; "Reintentar" pide otra.
+      const consultaRetos=()=>Promise.resolve(sb.from('retos').select('id,titulo,entregas_abiertas,inicio,plazo,palabras,incluir').order('inicio',{ascending:false}));
+      const retosPrimeros=consultaRetos();
+      let retosUsados=false;
+      Cueva.cargar(zonas[0],()=>{
+        const retos=retosUsados?consultaRetos():retosPrimeros.then(r=>r.error?consultaRetos():r,()=>consultaRetos()); retosUsados=true;
+        return Promise.all([
+          sb.from('eventos').select('fecha,hora,titulo,tipo,lugar').gte('fecha',hoy).order('fecha').limit(20),
+          retos
+        ]).then(([ev,re])=>({error:ev.error||re.error,data:{eventos:ev.data||[],retos:(re.data||[]).filter(r=>r.inicio>=hoy).reverse().slice(0,3)}}));
+      },pintarEventos);
       Cueva.cargar(zonas[1],()=>sb.from('libros').select('titulo,autor,portada_url').eq('prestado',false).order('alta',recientes).limit(MAX),
         d=>estante('est-biblioteca',d,'Ahora mismo no hay libros disponibles.',false));
       Cueva.cargar(zonas[2],()=>sb.from('recomendaciones').select('titulo,autor,portada_url,recomendado_por').order('alta',recientes).limit(MAX),
         d=>estante('est-recomendados',d,'Todavía no hay recomendaciones. ¡Sé el primero en recomendar un libro!',true));
       // El enlace de la tarjeta cambia según la entrega del socio en este reto (entregas.js).
-      sb.from('retos').select('id,entregas_abiertas,inicio,plazo,palabras,incluir').lte('inicio',hoy).order('inicio',{ascending:false}).limit(1)
-        .then(r=>{ if(r.error) throw r.error; const reto=r.data[0]||null; pintarReto(reto);
+      retosPrimeros
+        .then(r=>{ if(r.error) throw r.error; const reto=(r.data||[]).find(x=>x.inicio<=hoy)||null; pintarReto(reto);
           EstadoEntrega.sesion(sb).then(uid=>EstadoEntrega.enlaceInicio(el('reto-enlace'),sb,reto,uid)); })
         .catch(e=>{ Cueva.registrar('No se ha podido cargar el reto',e); pintarReto(null,Cueva.mensaje(e)); });
     }).catch(e=>{
