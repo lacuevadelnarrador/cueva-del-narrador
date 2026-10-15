@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Entregas de los retos · La Cueva del Narrador</title>
+<meta name="theme-color" content="#528A93">
+<meta name="referrer" content="no-referrer">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://vxzvpucuthpvmdgmwgdk.supabase.co" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Estilos solo de esta página (listas y lector), para no hacer crecer styles.css, que cargan todas.
+   Prefijos .leer- y .lector-; reutiliza .fila, .st, .empty, .fallo, .chip y .volver de styles.css */
+.leer-flecha{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+button.volver{background:none;border:0;padding:0;font:inherit;font-size:15px;cursor:pointer;margin:0 0 6px}
+.leer-h2{font-size:24px;letter-spacing:.02em;color:var(--title);margin-bottom:14px;overflow-wrap:anywhere}
+.leer-h2:focus{outline:none}
+.leer-h2:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.leer-lista{list-style:none;padding:0;margin:0}
+.leer-lista .st b{overflow-wrap:anywhere}
+.leer-etqs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.leer-etq{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border:1px solid var(--line);border-radius:6px;color:var(--muted);font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+.leer-etq.ok{color:var(--ent-ok);background:var(--ent-ok-bg);border-color:var(--ent-ok-bg)}
+.leer-ic{width:13px;height:13px;flex:none;stroke:currentColor;fill:none;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round}
+.leer-cuenta{font-size:14px;color:var(--muted);margin:-6px 0 10px}
+.leer-acciones{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.leer-sin-imprimir{display:none}
+/* Lector a pantalla completa (<dialog>). Sin selección de texto, menú de pulsación larga ni arrastre. */
+.lector{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;background:var(--bg);color:var(--ink);overflow:hidden;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.lector[open]{display:flex;flex-direction:column}
+.lector::backdrop{background:var(--bg)}
+html.leyendo,html.leyendo body{overflow:hidden}
+.lector-barra{flex:none;display:flex;align-items:center;gap:10px;padding:calc(6px + env(safe-area-inset-top,0px)) max(10px,env(safe-area-inset-right)) 6px max(10px,env(safe-area-inset-left));background:var(--teal-700);color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.lector-volver{flex:none;display:inline-flex;align-items:center;gap:2px;min-height:44px;min-width:44px;padding:0 14px 0 6px;background:rgba(15,29,32,.25);color:#fff;border:0;border-radius:999px;font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
+.lector-volver svg{width:22px;height:22px;flex:none;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.lector-volver:focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 5px var(--teal-deep)}
+.lector-barra h2{flex:1;min-width:0;font-size:17px;line-height:1.15;letter-spacing:.03em;color:#fff;overflow:hidden;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2}
+.lector-cuerpo{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:16px max(12px,env(safe-area-inset-right)) calc(28px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left))}
+.lector-cuerpo:focus{outline:none}
+.lector-cuerpo:focus-visible{outline:3px solid var(--amber);outline-offset:-3px}
+.lector-cuerpo>.empty{max-width:480px;margin:24px auto 0}
+.lector-pdf{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:900px;margin:0 auto}
+.lector-pag{width:100%;display:grid;place-items:center;background:#fff;border-radius:4px;box-shadow:var(--sh1);overflow:hidden}
+.lector-pag canvas{display:block;width:100%;height:100%;pointer-events:none}
+.lector-pag-error{padding:16px;color:#52676C;font-style:italic;text-align:center}
+.lector-docx{max-width:65ch;margin:0 auto;padding:22px 20px 28px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh1);color:var(--ink);font-family:'Lora',Georgia,serif;font-size:18px;line-height:1.7;overflow-wrap:anywhere}
+.lector-docx p,.lector-docx ul,.lector-docx ol,.lector-docx blockquote{margin:0 0 1em}
+.lector-docx h1,.lector-docx h2,.lector-docx h3,.lector-docx h4,.lector-docx h5,.lector-docx h6{margin:1.2em 0 .5em;color:var(--title);font-family:'Lora',Georgia,serif;font-weight:600;line-height:1.25;text-transform:none;letter-spacing:0}
+.lector-docx h1{font-size:1.5em}
+.lector-docx h2{font-size:1.3em}
+.lector-docx h3{font-size:1.15em}
+.lector-docx h4,.lector-docx h5,.lector-docx h6{font-size:1em}
+.lector-docx>:first-child{margin-top:0}
+.lector-docx ul,.lector-docx ol{padding-left:1.4em}
+.lector-docx blockquote{padding-left:1em;border-left:3px solid var(--aqua);color:var(--muted);font-style:italic}
+.lector-nota{margin:0 0 1em;color:var(--muted);font-size:14px;font-style:italic;line-height:1.5}
+@media (max-width:400px){
+  .lector-cuerpo{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right))}
+  .lector-docx{padding:18px 14px 24px;font-size:17px}
+}
+/* Imprimir: el lector no sale nunca; con el lector abierto solo se imprime un aviso. */
+@media print{
+  .lector,.lector *{display:none!important}
+  html.leyendo .app{display:none!important}
+  html.leyendo .leer-sin-imprimir{display:block!important;padding:24px;color:#000;font:16px Georgia,serif}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="pagehead">
+    <div class="top">
+      <div class="brand">
+        <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
+        <span>La Cueva<br>del Narrador</span>
+      </div>
+      <div class="avatar" aria-label="Tu perfil"></div>
+    </div>
+    <h1>Entregas</h1>
+    <p class="sub">Lee los textos de tus compañeros en los retos.</p>
+  </header>
+
+  <main>
+    <a class="volver" href="retos.html"><svg class="leer-flecha" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7"/></svg>Volver a Retos</a>
+    <section id="vista" aria-label="Entregas de los retos"></section>
+  </main>
+
+  <!-- Para un socio, Retos está dentro de "Más" (como en retos.html con sesión) -->
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="inicio.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="calendario.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a>
+    <a href="curso.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/></svg>Curso</a>
+    <a href="biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Biblioteca</a>
+    <a href="mas.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
+  </nav>
+</div>
+
+<!-- Lector a pantalla completa. Solo lectura: sin descargar, imprimir ni copiar. -->
+<dialog class="lector" id="lector" aria-labelledby="lector-titulo">
+  <div class="lector-barra">
+    <button type="button" class="lector-volver" id="lector-volver"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7"/></svg>Volver</button>
+    <h2 id="lector-titulo"></h2>
+  </div>
+  <div class="lector-cuerpo" id="lector-cuerpo" tabindex="0" aria-label="Texto de la entrega"></div>
+</dialog>
+<p class="leer-sin-imprimir">La impresión no está disponible en el lector de entregas.</p>
+
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script src="campana.js"></script>
+<script src="leer.js"></script>
+<script>
+if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+</script>
+</body>
+</html>
