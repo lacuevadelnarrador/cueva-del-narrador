@@ -124,34 +124,54 @@
   }
 
   const recientes={ascending:false,nullsFirst:false};
+  // Consultas de cada zona. Cada llamada lanza una consulta NUEVA (Promise.resolve la envía en el acto).
+  const consultaRetos=sb=>Promise.resolve(sb.from('retos').select('id,titulo,entregas_abiertas,inicio,plazo,palabras,incluir').order('inicio',{ascending:false}));
+  const consultaEventos=sb=>Promise.resolve(sb.from('eventos').select('fecha,hora,titulo,tipo,lugar').gte('fecha',hoy).order('fecha').limit(20));
+  const consultaLibros=sb=>Promise.resolve(sb.from('libros').select('titulo,autor,portada_url').eq('prestado',false).order('alta',recientes).limit(MAX));
+  const consultaRecomendados=sb=>Promise.resolve(sb.from('recomendaciones').select('titulo,autor,portada_url,recomendado_por').order('alta',recientes).limit(MAX));
+  // Una consulta adelantada que se descarta (la guardia redirige) no debe dejar nada en la consola.
+  const callada=p=>{p.catch(()=>{});return p;};
+  // La primera vez, la consulta adelantada (si la hay); después ("Reintentar"), siempre una nueva.
+  const primeraVez=(previa,nueva)=>{let usada=!previa;return ()=>{if(usada) return nueva();usada=true;return previa;};};
+
   function iniciar(){
     const zonas=['proximos','est-biblioteca','est-recomendados'].map(el);
     zonas.forEach(z=>Cueva.cargando(z));
     pintarReto(null,'Cargando…');
-    Cueva.privada().then(({sb})=>{
+    // Las consultas de datos salen a la vez que la de perfiles (la guardia), justo después de getSession. Nada se pinta
+    // hasta que la guardia termina bien; si redirige, este .then no llega a ejecutarse y las consultas se descartan.
+    Cueva.privada((sb,uid)=>({
+      uid,
+      retos:callada(consultaRetos(sb)),
+      eventos:callada(consultaEventos(sb)),
+      libros:callada(consultaLibros(sb)),
+      recomendados:callada(consultaRecomendados(sb)),
+      entrega:callada(EstadoEntrega.leer(sb,uid,null))
+    })).then(({sb,previas})=>{
+      const p=previas||{};
       // Una sola consulta a retos para la tarjeta del reto y para "Próximos eventos": todos, del más reciente al más
       // antiguo (hay uno al mes). Reto actual = el primero con inicio <= hoy. Próximos = los de inicio >= hoy, del más
       // antiguo al más reciente, los 3 primeros. Un reto que empieza hoy sale en los dos sitios, como con dos consultas.
-      // La primera vez la comparten las dos zonas (Promise.resolve la lanza una sola vez). Si esa falla, "Próximos
-      // eventos" pide la suya, como cuando cada zona tenía su consulta; "Reintentar" pide otra.
-      const consultaRetos=()=>Promise.resolve(sb.from('retos').select('id,titulo,entregas_abiertas,inicio,plazo,palabras,incluir').order('inicio',{ascending:false}));
-      const retosPrimeros=consultaRetos();
+      // La primera vez la comparten las dos zonas. Si esa falla, "Próximos eventos" pide la suya, como cuando cada zona
+      // tenía su consulta; "Reintentar" pide otra.
+      const retosPrimeros=p.retos||consultaRetos(sb);
       let retosUsados=false;
+      const eventos=primeraVez(p.eventos,()=>consultaEventos(sb));
       Cueva.cargar(zonas[0],()=>{
-        const retos=retosUsados?consultaRetos():retosPrimeros.then(r=>r.error?consultaRetos():r,()=>consultaRetos()); retosUsados=true;
-        return Promise.all([
-          sb.from('eventos').select('fecha,hora,titulo,tipo,lugar').gte('fecha',hoy).order('fecha').limit(20),
-          retos
-        ]).then(([ev,re])=>({error:ev.error||re.error,data:{eventos:ev.data||[],retos:(re.data||[]).filter(r=>r.inicio>=hoy).reverse().slice(0,3)}}));
+        const retos=retosUsados?consultaRetos(sb):retosPrimeros.then(r=>r.error?consultaRetos(sb):r,()=>consultaRetos(sb)); retosUsados=true;
+        return Promise.all([eventos(),retos])
+          .then(([ev,re])=>({error:ev.error||re.error,data:{eventos:ev.data||[],retos:(re.data||[]).filter(r=>r.inicio>=hoy).reverse().slice(0,3)}}));
       },pintarEventos);
-      Cueva.cargar(zonas[1],()=>sb.from('libros').select('titulo,autor,portada_url').eq('prestado',false).order('alta',recientes).limit(MAX),
+      Cueva.cargar(zonas[1],primeraVez(p.libros,()=>consultaLibros(sb)),
         d=>estante('est-biblioteca',d,'Ahora mismo no hay libros disponibles.',false));
-      Cueva.cargar(zonas[2],()=>sb.from('recomendaciones').select('titulo,autor,portada_url,recomendado_por').order('alta',recientes).limit(MAX),
+      Cueva.cargar(zonas[2],primeraVez(p.recomendados,()=>consultaRecomendados(sb)),
         d=>estante('est-recomendados',d,'Todavía no hay recomendaciones. ¡Sé el primero en recomendar un libro!',true));
-      // El enlace de la tarjeta cambia según la entrega del socio en este reto (entregas.js).
+      // El enlace de la tarjeta cambia según la entrega del socio en este reto (entregas.js). Las entregas ya se pidieron
+      // junto con el reto; si no hubo consulta adelantada, se piden como antes, cuando llega el reto.
       retosPrimeros
         .then(r=>{ if(r.error) throw r.error; const reto=(r.data||[]).find(x=>x.inicio<=hoy)||null; pintarReto(reto);
-          EstadoEntrega.sesion(sb).then(uid=>EstadoEntrega.enlaceInicio(el('reto-enlace'),sb,reto,uid)); })
+          if(p.entrega) EstadoEntrega.enlaceInicio(el('reto-enlace'),sb,reto,p.uid,p.entrega);
+          else EstadoEntrega.sesion(sb).then(uid=>EstadoEntrega.enlaceInicio(el('reto-enlace'),sb,reto,uid)); })
         .catch(e=>{ Cueva.registrar('No se ha podido cargar el reto',e); pintarReto(null,Cueva.mensaje(e)); });
     }).catch(e=>{
       zonas.forEach(z=>Cueva.error(z,e,iniciar));
