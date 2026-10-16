@@ -824,6 +824,10 @@ html.instalada,html.instalada body{overscroll-behavior-y:contain}
 .soc-baja{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 14px;padding:12px 0;border-top:1px solid var(--line)}
 .soc-baja>div{flex:1 1 200px}
 .soc-hecho{font-style:italic;color:var(--muted)}
+.soc-baja .soc-motivo{margin:8px 0 0}
+.soc-baja .btn:disabled{cursor:not-allowed}
+/* Botones del listado: "Generar cuotas" y "Crear cuenta" */
+.soc-acciones{display:flex;flex-wrap:wrap;gap:10px}
 /* Diálogos */
 .soc-dialogo .opciones{margin-bottom:8px}
 .soc-dialogo .opcion small{margin-left:4px}
