@@ -1,5 +1,5 @@
-// CAMPANA DE AVISOS (inicio, calendario, curso, biblioteca, perfil, "Más" y las páginas públicas de "Más": retos, club,
-// nuestra-biblioteca, entidades, contacto, instalar y privacidad; no en index.html ni en administración)
+// CAMPANA DE AVISOS (páginas de socios: inicio, calendario, curso, biblioteca, perfil, leer y "Más"; y, con sesión, las
+// públicas: retos, club, nuestra-biblioteca, entidades, contacto, instalar y privacidad; no en index, acceso ni el panel)
 // - Páginas privadas: se crea cuando la guardia (Cueva.privada) ha terminado bien (Cueva.alEntrar).
 // - Páginas públicas (data-acceso="publico"): solo se crea si hay sesión y la cuenta está activa (Cueva.sesionActiva).
 //   Sin sesión no se crea nada ni se consulta nada.
