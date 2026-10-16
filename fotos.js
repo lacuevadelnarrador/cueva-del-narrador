@@ -165,23 +165,6 @@ const Fotos = (function () {
     }
   }
 
-  // ---------- Borrar todas las fotos de un socio (al eliminar su ficha) ----------
-  async function borrarTodas(socioId) {
-    const id = String(socioId || '');
-    if (!id) throw { foto: 'quitar' };
-    const sb = await Cueva.cliente(), cubo = sb.storage.from(CUBO);
-    for (let vuelta = 0; vuelta < 20; vuelta++) {
-      const l = await cubo.list(id, { limit: 100 });
-      if (l.error) throw l.error;
-      const rutas = (l.data || []).filter(o => o && o.name && o.id !== null).map(o => id + '/' + o.name);
-      if (!rutas.length) return true;
-      const r = await cubo.remove(rutas);
-      if (r.error) throw r.error;
-      if (!Array.isArray(r.data) || !r.data.length) throw { sinFilas: true }; // sin permiso: no se ha borrado nada
-    }
-    throw { foto: 'quitar' };
-  }
-
   // ---------- Diálogos ----------
   // Modal (encierra el foco; "dialog[open]" desactiva "arrastrar para refrescar" en auth.js). Al cerrarse se borra y el
   // foco vuelve a donde estaba (o, si ese botón se ha vuelto a pintar, al elemento con id "foco").
@@ -470,5 +453,5 @@ const Fotos = (function () {
       } });
   }
 
-  return { cargar, liberar, leer, procesar, centrado, subir, cambiar, quitar, borrarTodas, mensaje, ocupado: () => ocupado };
+  return { cargar, liberar, leer, procesar, centrado, subir, cambiar, quitar, mensaje, ocupado: () => ocupado };
 })();

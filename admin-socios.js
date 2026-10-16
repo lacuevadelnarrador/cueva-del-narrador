@@ -5,6 +5,8 @@
 // - Cada escritura termina en .select() y se comprueba que ha cambiado alguna fila (RLS puede impedirlo sin dar error).
 // - fecha_pago de las cuotas la pone sola la base de datos: nunca se envía.
 // - Las protecciones de administradores las aplica la base de datos; aquí solo se muestra su mensaje.
+// - Crear y borrar cuentas lo hace la Edge Function "gestionar-cuentas" (supabase/functions), que es la única que tiene la
+//   clave de servicio. Aquí solo se la llama con la sesión del administrador y se muestran sus mensajes.
 (function () {
   const esc = Admin.esc;
   const el = id => document.getElementById(id);
@@ -182,6 +184,7 @@
       GENEROS = (g.data || []).map(x => x.nombre).filter(Boolean);
       cargado = true;
       el('generar').hidden = false;
+      el('crear-cuenta').hidden = false;
       pintarLista();
       pintarPendientes();
     } catch (e) {
@@ -596,13 +599,24 @@
       '<p class="pista">Solo lectura. La asistencia se edita al pasar lista.</p></section>';
   }
 
+  // "Borrar cuenta" no se puede usar con la propia cuenta ni con la de un administrador (la función lo comprueba igual).
+  function motivoNoBorrar() {
+    const p = ficha.perfil;
+    if (!p) return 'No se ha encontrado la cuenta de acceso de esta ficha.';
+    if (p.id === yo) return 'No puedes borrar tu propia cuenta.';
+    if (p.rol === 'admin') return 'Quítale antes el rol de administrador (en el bloque «Cuenta»).';
+    return '';
+  }
   function htmlBajas() {
-    const p = ficha.perfil, activa = !!p && p.activo === true;
+    const p = ficha.perfil, activa = !!p && p.activo === true, motivo = motivoNoBorrar();
     return '<form class="card soc-bajas" id="form-bajas" novalidate aria-labelledby="t-bajas"><h2 id="t-bajas">Zona de bajas</h2>' +
       '<div class="soc-baja"><div><b>Desactivar cuenta</b><p class="pista">No podrá entrar en la app. Sus datos se conservan y se puede volver a activar.</p></div>' +
       (activa ? '<button type="button" class="btn sec" data-activo="false">Desactivar cuenta</button>' : '<p class="soc-hecho">La cuenta ya está desactivada.</p>') + '</div>' +
-      '<div class="soc-baja"><div><b>Eliminar ficha</b><p class="pista">Borra la ficha, sus cuotas y su asistencia. No se puede deshacer.</p></div>' +
-      '<button type="button" class="btn peligro" data-eliminar>Eliminar ficha</button></div>' +
+      '<div class="soc-baja"><div><b>Borrar cuenta</b><p class="pista" id="borrar-pista">Borra para siempre su cuenta de acceso, la ficha, la foto, las cuotas, la asistencia, ' +
+      'los textos entregados en los retos y sus avisos. No se puede deshacer.</p>' +
+      (motivo ? '<p class="msg aviso soc-motivo" id="borrar-motivo">' + esc(motivo) + '</p>' : '') + '</div>' +
+      '<button type="button" class="btn peligro" data-borrar-cuenta aria-describedby="borrar-pista' + (motivo ? ' borrar-motivo' : '') + '"' + (motivo ? ' disabled' : '') + '>' +
+      ic('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>') + 'Borrar cuenta</button></div>' +
       '<p class="msg" data-estado hidden></p></form>';
   }
 
@@ -813,95 +827,150 @@
     });
   }
 
-  // Archivos de las entregas de los retos de un socio (almacén privado "entregas") y sus filas de la tabla entregas.
-  // Si no se puede borrar algún archivo, lanza el error y no se toca nada más.
-  async function borrarEntregas(id) {
-    const r = await sb.from('entregas').select('ruta').eq('socio_id', id);
-    if (r.error) throw r.error;
-    const filas = r.data || [], rutas = filas.map(x => x.ruta).filter(Boolean);
-    if (!filas.length) return;
-    if (rutas.length) {
-      const b = await sb.storage.from('entregas').remove(rutas);
-      if (b.error) throw b.error;
+  // ---------- Cuentas: Edge Function "gestionar-cuentas" ----------
+  // Se llama con la sesión del administrador (supabase-js pone su token). Devuelve la respuesta ({ ok: true, … }) o lanza
+  // { mensaje, code } con el texto que da la función (o uno genérico). Nada de esto se escribe en la consola.
+  async function gestionarCuentas(cuerpo) {
+    let r;
+    try { r = await sb.functions.invoke('gestionar-cuentas', { body: cuerpo }); }
+    catch (e) { throw { mensaje: Admin.mensajeError(e), code: e && e.name }; }
+    if (r.error) {
+      let j = null;
+      try { if (r.error.context && typeof r.error.context.json === 'function') j = await r.error.context.json(); } catch (e) {}
+      if (j && typeof j.mensaje === 'string' && j.mensaje) throw { mensaje: j.mensaje, code: String(j.codigo || 'funcion') };
+      throw { mensaje: Admin.mensajeError(r.error.name === 'FunctionsFetchError' ? { red: true } : r.error), code: r.error.name };
     }
-    const d = await sb.from('entregas').delete().eq('socio_id', id).select('reto_id');
-    if (d.error) throw d.error;
-    if (!Array.isArray(d.data) || d.data.length < filas.length) throw { sinFilas: true };
+    const d = r.data;
+    if (!d || d.ok !== true) throw { mensaje: (d && typeof d.mensaje === 'string' && d.mensaje) || Admin.mensajeError({}), code: (d && d.codigo) || 'respuesta' };
+    return d;
   }
 
-  // Eliminar ficha: doble confirmación; primero se desactiva la cuenta (si la base de datos lo impide, no se borra nada),
-  // después se borran sus entregas de los retos (archivos y filas) y por último la fila de socios (la base de datos
-  // borra en cascada sus cuotas y su asistencia).
-  async function eliminar(form) {
-    if (form.getAttribute('aria-busy') || !ficha) return;
-    const s = ficha.socio, p = ficha.perfil, id = s.id, nombre = nombreDe(), codigo = String(s.codigo || ''); // instantánea
-    const paso1 = await preguntar('Eliminar ficha',
-      '<p>Vas a eliminar la ficha de <b>' + esc(nombre) + '</b> (' + esc(codigo) + '). Se borrará:</p>' +
-      '<ul class="soc-borrar-lista"><li>La ficha con sus datos personales.</li><li>Todas sus cuotas.</li><li>Todo su registro de asistencia.</li><li>Sus textos entregados en los retos.</li></ul>' +
-      '<p><b>No se puede deshacer.</b> La cuenta de acceso se desactiva y, si hay que borrarla, se borra aparte en Supabase. ' +
-      'Los préstamos de libros con su nombre se conservan, como indica la política de privacidad.</p>',
-      [{ v: 'no', t: 'Cancelar', clase: 'sec' }, { v: 'si', t: 'Continuar', clase: 'peligro' }]);
-    if (!paso1) return;
-    const valido = v => { const t = v.trim().toLocaleUpperCase('es'); return t === 'ELIMINAR' || (!!codigo && t === codigo.toLocaleUpperCase('es')); };
-    const paso2 = await preguntar('Confirma la eliminación',
-      '<p>Para confirmar, escribe <b>ELIMINAR</b> o el código <b>' + esc(codigo) + '</b>.</p>' +
-      '<div class="campo"><label for="dlg-confirma">Palabra de confirmación</label><input class="entrada" id="dlg-confirma" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" data-foco></div>',
-      [{ v: 'no', t: 'Cancelar', clase: 'sec' }, { v: 'si', t: 'Eliminar definitivamente', clase: 'peligro', off: true }],
+  // ---------- Borrar cuenta ----------
+  // Confirmación escribiendo el nombre del socio (sin distinguir mayúsculas, tildes ni espacios de más). La función
+  // desactiva la cuenta, borra sus archivos (foto y textos entregados) y borra el usuario: la base de datos borra en
+  // cascada el perfil, la ficha, las cuotas, la asistencia, las entregas, los avisos y las suscripciones.
+  const mismoNombre = (a, b) => norm(a).replace(/\s+/g, ' ') === norm(b).replace(/\s+/g, ' ');
+  async function borrarCuenta(form) {
+    if (form.getAttribute('aria-busy') || !ficha || motivoNoBorrar()) return;
+    const s = ficha.socio, id = s.id, nombre = nombreDe(), codigo = String(s.codigo || ''); // instantánea
+    const si = await preguntar('Borrar cuenta',
+      '<p>Vas a borrar la cuenta de <b>' + esc(nombre) + '</b>' + (codigo ? ' (' + esc(codigo) + ')' : '') + '. Se borrará para siempre:</p>' +
+      '<ul class="soc-borrar-lista"><li>Su cuenta de acceso: ya no podrá entrar en la app.</li><li>La ficha con sus datos personales y su foto.</li>' +
+      '<li>Todas sus cuotas y su registro de asistencia.</li><li>Sus textos entregados en los retos.</li><li>Sus avisos y notificaciones.</li></ul>' +
+      '<p class="msg err"><b>No se puede deshacer.</b></p>' +
+      '<p class="pista">Los préstamos de libros con su nombre se conservan, como indica la política de privacidad.</p>' +
+      '<div class="campo"><label for="dlg-confirma">Para confirmar, escribe su nombre: <b>' + esc(nombre) + '</b></label>' +
+      '<input class="entrada" id="dlg-confirma" type="text" autocomplete="off" spellcheck="false" data-foco></div>',
+      [{ v: 'no', t: 'Cancelar', clase: 'sec' }, { v: 'si', t: 'Borrar definitivamente', clase: 'peligro', off: true }],
       d => {
         const inp = d.querySelector('#dlg-confirma'), b = d.querySelector('button[value="si"]');
-        inp.addEventListener('input', () => { b.disabled = !valido(inp.value); });
+        inp.addEventListener('input', () => { b.disabled = !mismoNombre(inp.value, nombre); });
         inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); if (!b.disabled) b.click(); } });
       });
-    if (!paso2) return;
+    if (!si) return;
     const soltar = Admin.bloquear(form);
-    Admin.estado(form, 'Eliminando…');
-    let desactivada = false, error = null, paso = '';
-    try {
-      if (p && p.activo === true) {
-        paso = 'cuenta';
-        const r = await sb.from('perfiles').update({ activo: false }).eq('id', id).select(COL_PERFIL);
-        if (r.error) throw r.error;
-        if (!Array.isArray(r.data) || !r.data.length) throw { sinFilas: true };
-        desactivada = true;
-        actualizarPerfil(r.data[0]);
-      }
-      // Sus textos entregados en los retos: los archivos no se borran con SQL, así que se borran antes que la ficha.
-      paso = 'entregas';
-      await borrarEntregas(id);
-      paso = 'ficha';
-      const r2 = await sb.from('socios').delete().eq('id', id).select('id');
-      if (r2.error) throw r2.error;
-      if (!Array.isArray(r2.data) || !r2.data.length) throw { sinFilas: true };
-    } catch (e) {
-      error = e;
-    } finally {
-      soltar();
-    }
+    Admin.estado(form, 'Borrando la cuenta…');
+    let r = null, error = null;
+    try { r = await gestionarCuentas({ accion: 'borrar', socio_id: id }); } catch (e) { error = e; } finally { soltar(); }
     if (error) {
-      const m = mensaje(error);
-      const texto = paso === 'cuenta' ? 'No se ha borrado nada. ' + m
-        : desactivada ? 'La cuenta se ha desactivado, pero la ficha NO se ha borrado. ' + m : 'La ficha no se ha borrado. ' + m;
-      if (desactivada && ficha && ficha.socio.id === id) repintarCuenta();
+      Cueva.registrar('No se ha podido borrar una cuenta', error);
+      // Si la función llegó a desactivarla, se refleja aquí (la cuenta sigue, con sus datos).
+      if (['archivos', 'usuario'].includes(error.code)) { actualizarPerfil({ id, activo: false }); if (ficha && ficha.socio.id === id) repintarCuenta(); }
       const f = el('form-bajas');
-      if (f) Admin.estado(f, texto, true);
-      Admin.aviso(texto, 'err');
+      if (f) Admin.estado(f, error.mensaje, true);
+      Admin.aviso(error.mensaje, 'err');
+      pintarLista();
       cargarLista(true);
       return;
     }
+    Admin.estado(form, '');
     SOCIOS = SOCIOS.filter(x => x.id !== id);
-    Admin.aviso('Ficha de ' + nombre + ' eliminada. La cuenta queda desactivada; si hay que borrarla, hazlo aparte en Supabase.', 'ok');
+    PERFILES = PERFILES.filter(x => x.id !== id);
+    delete PEND[id];
+    Admin.aviso(r.ya_no_existe ? 'Esta cuenta ya no existe.' : 'Cuenta de ' + nombre + ' borrada.', 'ok');
     if (ficha && ficha.socio.id === id) { ficha = null; liberarFotoFicha(); Admin.cerrar(); }
-    pintarLista();
+    pintarLista(); pintarPendientes();
     cargarLista(true);
-    // Con la ficha ya borrada en la base de datos, se borran sus fotos del almacén.
-    try {
-      await Fotos.borrarTodas(id);
-    } catch (e) {
-      Cueva.registrar('No se han podido borrar las fotos de una ficha eliminada', e);
-      await preguntar('Fotos sin borrar',
-        '<p>La ficha se ha eliminado, pero no se han podido borrar sus fotos. Habrá que borrarlas desde Supabase &gt; Storage &gt; fotos-socios.</p>',
-        [{ v: 'no', t: 'Entendido' }]);
-    }
+  }
+
+  // ---------- Crear cuenta ----------
+  // Correo y nombre: la función crea la cuenta (rol miembro, activa) y su ficha y, si se marca, las cuotas del curso
+  // más reciente. El resto de la ficha se completa después desde la propia ficha.
+  const MAX_COMPLETO = 120, MAX_PILA = 60;
+  const limpio = t => String(t == null ? '' : t).trim().replace(/\s+/g, ' ');
+  const textoGeneradas = (n, curso) => (n === 1 ? 'Se ha generado 1 cuota' : 'Se han generado ' + n + ' cuotas') + ' (' + nombreCurso(curso) + ').';
+  function abrirCrearCuenta() {
+    if (!cargado || document.querySelector('dialog[open]')) return;
+    const curso = CURSOS[0] || null;
+    const d = crearDialogo('<form id="form-cuenta-nueva" novalidate><h2 id="dlg-titulo">Crear cuenta</h2>' +
+      '<p id="dlg-texto">Se crean su cuenta de acceso y su ficha de socio. Podrá entrar en la app con este correo: recibirá un código para entrar. ' +
+      'El resto de datos de la ficha se completan después.</p>' +
+      '<div class="campo"><label for="n-correo">Correo</label>' +
+      '<input class="entrada" id="n-correo" name="correo" type="email" inputmode="email" maxlength="' + MAX_CORREO + '" autocomplete="off" autocapitalize="none" spellcheck="false" required></div>' +
+      '<div class="campo"><label for="n-completo">Nombre y apellidos</label>' +
+      '<input class="entrada" id="n-completo" name="nombre_completo" type="text" maxlength="' + MAX_COMPLETO + '" autocomplete="off" required></div>' +
+      '<div class="campo"><label for="n-pila">Nombre de pila</label>' +
+      '<input class="entrada" id="n-pila" name="nombre_pila" type="text" maxlength="' + MAX_PILA + '" autocomplete="off" required aria-describedby="n-pila-pista">' +
+      '<p class="pista" id="n-pila-pista">Es como se le llamará en la app. Se rellena con el primer nombre; puedes cambiarlo.</p></div>' +
+      (curso
+        ? '<label class="opcion"><input type="checkbox" id="n-cuotas" checked aria-describedby="n-cuotas-pista"> Generar las cuotas de ' + esc(nombreCurso(curso)) + '</label>' +
+          '<p class="pista" id="n-cuotas-pista">La matrícula y las 10 mensualidades.</p>'
+        : '<p class="pista">No hay cursos: sus cuotas se podrán generar desde la ficha cuando existan.</p>') +
+      '<p class="msg" data-estado hidden></p>' +
+      '<div class="botones-form"><button type="button" class="btn sec" data-cerrar>Cancelar</button><button type="submit" class="btn">Crear cuenta</button></div></form>');
+    d.setAttribute('aria-describedby', 'dlg-texto');
+    const form = d.querySelector('form'), e = form.elements;
+    Admin.obligatorios(form);
+    // El nombre de pila sigue al primer nombre mientras no se toque a mano.
+    let pilaTocada = false;
+    e.nombre_pila.addEventListener('input', () => { pilaTocada = true; });
+    e.nombre_completo.addEventListener('input', () => { if (!pilaTocada) e.nombre_pila.value = limpio(e.nombre_completo.value).split(' ')[0] || ''; });
+    e.correo.focus();
+    form.addEventListener('submit', async ev => {
+      ev.preventDefault();
+      if (form.getAttribute('aria-busy')) return; // ya se está creando
+      const correo = normCorreo(e.correo.value), completo = limpio(e.nombre_completo.value), pila = limpio(e.nombre_pila.value); // instantánea
+      const conCuotas = !!curso && !!el('n-cuotas') && el('n-cuotas').checked;
+      const ok = Admin.validar(form, () => {
+        const er = {};
+        if (correo && correo.length > MAX_CORREO) er.correo = 'Escribe ' + MAX_CORREO + ' caracteres como máximo (ahora hay ' + correo.length + ').';
+        else if (correo && !CORREO.test(correo)) er.correo = 'El correo no tiene un formato válido.';
+        else if (correo && PERFILES.some(p => normCorreo(p.email) === correo)) er.correo = 'Ya existe una cuenta con ese correo.';
+        if (Array.from(completo).length > MAX_COMPLETO) er.nombre_completo = 'Máximo ' + MAX_COMPLETO + ' caracteres.';
+        if (Array.from(pila).length > MAX_PILA) er.nombre_pila = 'Máximo ' + MAX_PILA + ' caracteres.';
+        return er;
+      });
+      if (!ok) return;
+      const cuerpo = { accion: 'crear', correo, nombre_completo: completo, nombre_pila: pila, cuotas: conCuotas };
+      if (conCuotas) cuerpo.curso_id = Number(curso.id);
+      const soltar = Admin.bloquear(form);
+      Admin.estado(form, 'Creando la cuenta…');
+      let r = null;
+      try {
+        r = await gestionarCuentas(cuerpo);
+        Admin.estado(form, '');
+      } catch (err) {
+        Cueva.registrar('No se ha podido crear una cuenta', err);
+        Admin.estado(form, err.mensaje, true); // el diálogo sigue abierto con lo escrito
+        if (err.code === 'a_medias') cargarLista(true); // la cuenta ha quedado sin ficha: sale en "Fichas pendientes"
+      } finally {
+        soltar();
+      }
+      if (!r) return;
+      d.close();
+      const cuotas = r.cuotas_error ? null : !conCuotas ? 'No se han generado cuotas.' : textoGeneradas(Number(r.cuotas) || 0, curso);
+      if (r.cuotas_error) {
+        await preguntar('Cuenta creada a medias',
+          '<p>Esto es lo que ha quedado hecho:</p><ul class="soc-pasos">' +
+          '<li class="ok"><span aria-hidden="true">✓</span> ' + esc('Cuenta creada para ' + pila + ' (' + correo + ').') + '</li>' +
+          '<li class="ok"><span aria-hidden="true">✓</span> ' + esc('Ficha creada con el código ' + r.codigo + '.') + '</li>' +
+          '<li class="err"><span aria-hidden="true">✗</span> No se han podido generar las cuotas. Puedes generarlas desde su ficha.</li></ul>',
+          [{ v: 'ok', t: 'Entendido' }]);
+      } else {
+        Admin.aviso('Cuenta creada para ' + pila + ' con el código ' + r.codigo + '. ' + cuotas + ' Ya puede entrar con su correo.', 'ok');
+      }
+      cargarLista(true);
+    });
   }
 
   // ---------- Crear ficha ----------
@@ -1048,6 +1117,7 @@
   el('aviso-pend').addEventListener('click', e => { if (e.target.closest('[data-pendientes]')) Admin.abrir('vista-pendientes'); });
   el('pendientes').addEventListener('click', e => { const b = e.target.closest('[data-cuenta]'); if (b) abrirCrear(b.dataset.cuenta); });
   el('generar').addEventListener('click', abrirGenerar);
+  el('crear-cuenta').addEventListener('click', abrirCrearCuenta);
 
   // Interruptores (ficha y "Crear ficha")
   document.addEventListener('click', e => {
@@ -1080,7 +1150,7 @@
     if ((b = t.closest('[data-descartar]'))) descartar(b.form);
     else if ((b = t.closest('[data-activo]'))) cambiarActivo(b.form, b.dataset.activo === 'true');
     else if ((b = t.closest('[data-correo]'))) abrirCambioCorreo();
-    else if ((b = t.closest('[data-eliminar]'))) eliminar(b.form);
+    else if ((b = t.closest('[data-borrar-cuenta]'))) borrarCuenta(b.form);
     else if ((b = t.closest('[data-foto-cambiar]'))) {
       if (ficha && !Fotos.ocupado()) Fotos.cambiar({ socioId: ficha.socio.id, rutaAnterior: ficha.socio.foto_url || null, aviso: false, foco: 'foto-cambiar', alGuardar: fotoCambiada });
     } else if ((b = t.closest('[data-foto-quitar]'))) {
