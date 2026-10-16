@@ -7,7 +7,7 @@
 const Cueva = (function () {
   // supabase-js con versión fijada. Si cambias la versión, cambia también el código de integridad, y los dos en el
   // <link rel="preload"> del <head> de las páginas que lo precargan (inicio, calendario, curso, biblioteca, perfil, retos,
-  // index, acceso y nuestra-biblioteca): si no coinciden, el navegador lo descarga dos veces.
+  // leer, index, acceso y nuestra-biblioteca): si no coinciden, el navegador lo descarga dos veces.
   const LIB = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js';
   const LIB_SRI = 'sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=';
   // Lo único que se guarda en el dispositivo: la sesión y la inicial del nombre. Se borran al cerrar sesión.

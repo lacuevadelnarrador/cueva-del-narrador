@@ -4,7 +4,7 @@
 // Los datos de socios vienen de Supabase y NUNCA se guardan en caché: sin sesión o sin conexión no están disponibles.
 // Las fotos de los socios tampoco: vienen del almacén privado de Supabase y se descargan con la sesión.
 // Ni los textos entregados a los retos ni las librerías del lector (pdf.js, mammoth): son de otro dominio y pasan directos.
-const VERSION = 'cueva-v38';
+const VERSION = 'cueva-v39';
 const ARCHIVOS = [
   './',
   'index.html',
