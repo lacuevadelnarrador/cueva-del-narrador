@@ -1107,3 +1107,106 @@ main[aria-busy="true"] .entrega .btn{cursor:progress}
 /* Los estilos de leer.html (listas y lector) van en esa página: así Inicio y Retos no descargan nada más */
 .leer-pastilla{justify-self:center;gap:8px;max-width:100%;margin-top:-12px;padding:8px 18px;line-height:1.25;text-align:center;text-decoration:none}
 .leer-pastilla svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ==========================================================
+   TABLETA Y ESCRITORIO (solo presentación: mismas páginas, mismo HTML)
+   - Menos de 700 px: el diseño móvil de siempre. Nada de lo que sigue le afecta.
+   - 700-1023 px: el diseño móvil ensanchado (barra inferior, tarjetas en 2 columnas).
+   - 1024 px o más: la barra inferior se ve como barra lateral fija a la izquierda; el logo (.top .brand) y el avatar
+     se recolocan en ella. El grupo "Administración" y el texto bajo el avatar los añade auth.js cuando ya conoce el rol.
+   Clases de <main> para el escritorio: .dos-columnas (secciones en dos columnas), .lectura (columna de lectura)
+   y .estrecha (formularios cortos).
+   ========================================================== */
+/* El grupo "Administración" de la barra lateral solo se ve en escritorio */
+.nav-admin{display:none}
+
+@media (min-width:700px){
+  .app{max-width:760px}
+  .nav{max-width:760px}
+  main{padding-left:24px;padding-right:24px}
+  .hero,.pagehead{padding-left:32px;padding-right:32px}
+  .arch{max-width:560px;margin-left:auto;margin-right:auto}
+  .menu{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rejilla{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+
+@media (min-width:1024px){
+  :root{--lateral:248px;--contenido:1120px}
+  html{scroll-padding-bottom:0}
+  body{background:var(--bg)}
+  .app{max-width:none;margin:0 0 0 var(--lateral);padding-bottom:56px;box-shadow:none}
+
+  /* ---- Barra lateral: la misma nav.nav de cada página ---- */
+  /* Un solo fondo fijo para toda la barra; la lista va entre el logo (arriba) y el avatar (abajo) y, si no cabe,
+     solo se desplaza ella */
+  .app::before{content:"";position:fixed;top:0;bottom:0;left:0;z-index:9;width:var(--lateral);background:var(--nav);border-right:1px solid rgba(169,221,226,.12)}
+  .nav{top:104px;bottom:92px;left:0;transform:none;width:var(--lateral);max-width:none;flex-direction:column;justify-content:flex-start;gap:4px;
+    padding:8px 14px 16px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(169,221,226,.3) transparent;background:none;border-top:0;box-shadow:none}
+  .nav a,.nav.visitante a{flex:none;flex-direction:row;justify-content:flex-start;gap:12px;min-height:48px;padding:0 14px;font-size:15px;letter-spacing:.06em;text-align:left}
+  .nav svg{width:22px;height:22px;padding:0;background:none}
+  .nav .on{background:rgba(255,186,85,.14)}
+  .nav .on svg{background:none}
+  .nav a:active{transform:none}
+  /* Visitante: "Acceso" sigue destacado en ámbar, como una fila más */
+  .nav a.acceso{margin:6px 0;padding:0 14px;border-radius:12px;box-shadow:none}
+  .nav a.acceso:focus-visible{box-shadow:0 0 0 2px var(--nav)}
+  /* Grupo "Administración" (auth.js, solo administradores) */
+  .nav-admin{display:flex;flex-direction:column;gap:4px;margin-top:18px;padding-top:14px;border-top:1px solid rgba(169,221,226,.16)}
+  .nav .nav-admin-t{min-height:36px;font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--navdim)}
+  .nav .nav-admin-t svg{width:16px;height:16px;stroke-width:2.2}
+  /* En una sección del panel, la marcada es esa sección y "Más" se ve normal */
+  .nav.admin-actual>a.on{color:var(--navdim);background:none}
+  @media (hover:hover){ .nav.admin-actual>a.on:hover{color:var(--navink)} .nav a:hover:not(.on):not(.acceso){background:rgba(169,221,226,.08)} }
+
+  /* Logo arriba de la barra lateral (el .brand de la cabecera, recolocado) */
+  .top .brand{position:fixed;top:0;left:0;z-index:11;width:var(--lateral);height:104px;padding:28px 22px 0;gap:12px;align-items:center}
+  .top .brand img{height:48px}
+  .top .brand span{font-size:20px;color:#fff}
+  /* "Mi perfil" sube por encima del dibujo de la cabecera: la barra lateral (z-index 10) no lo tapa */
+  .perfil-head .top{z-index:11}
+
+  /* Avatar y rol abajo de la barra lateral */
+  .top .avatar{position:fixed;left:22px;bottom:28px;z-index:11;width:44px;height:44px}
+  .top a.avatar::after{content:"Mi perfil";position:absolute;left:58px;top:50%;transform:translateY(-50%);white-space:nowrap;
+    font-family:'Oswald',sans-serif;font-weight:500;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--navink)}
+  .top a.avatar[data-rol]::after{content:attr(data-rol)}
+  @media (hover:hover){ .top a.avatar:hover::after{color:var(--amber)} }
+  .top a.avatar:active{transform:none}
+
+  /* ---- Cabecera del contenido: ruta, título y campana a la derecha ---- */
+  .pagehead{position:relative;max-width:var(--contenido);margin:0 auto;padding:36px 40px 4px;background:none;color:var(--ink);border-radius:0;box-shadow:none}
+  .pagehead .top{position:absolute;top:28px;right:40px;margin:0}
+  .pagehead h1,.pagehead h1.largo{font-size:40px;color:var(--title);text-align:left;padding-right:120px}
+  .pagehead h1::after{content:"";display:block;width:40px;height:4px;border-radius:2px;background:var(--amber);margin-top:12px}
+  .pagehead .sub{text-align:left;color:var(--muted)}
+  .migas{margin:0 0 6px}
+  .migas ol{justify-content:flex-start;color:var(--muted)}
+  .migas li+li::before{color:var(--muted)}
+  /* Campana sobre fondo claro */
+  .campana{color:var(--link);background:var(--card);box-shadow:var(--sh1)}
+  .campana-insignia{box-shadow:0 0 0 2px var(--bg)}
+  @media (hover:hover){ .campana:hover{background:var(--card);box-shadow:var(--sh2)} }
+
+  /* Portada (index e inicio): la cabecera verde pasa a ser un gran banner redondeado */
+  .hero{width:calc(100% - 48px);max-width:calc(var(--contenido) - 48px);margin:24px auto 0;padding:36px 40px 0;border-radius:28px;position:relative}
+  .hero .top{position:absolute;top:24px;right:28px;margin:0}
+  .hero .tagline{font-size:40px}
+  .arch{max-width:620px}
+
+  /* ---- Contenido ---- */
+  main{max-width:var(--contenido);margin:0 auto;padding:28px 40px 0}
+  main.dos-columnas{display:block;columns:2;column-gap:32px}
+  main.dos-columnas>*{break-inside:avoid;margin-bottom:28px}
+  main.lectura>*{max-width:780px}
+  main.estrecha>*{max-width:560px}
+  /* Tarjetas: 3 columnas desde ~1200 px de ventana; 2 cuando no caben con holgura (1024 px) */
+  .menu{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+  .rejilla{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}
+  #entidades,#actividades{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  #entidades>*,#actividades>*{margin-bottom:0}
+  main.dos-columnas #actividades{display:block}
+  main.dos-columnas #actividades>*{margin-bottom:10px}
+
+  /* Avisos flotantes: abajo, centrados sobre el contenido (ya no hay barra inferior) */
+  .avisos{left:calc(50% + var(--lateral) / 2);bottom:24px}
+}

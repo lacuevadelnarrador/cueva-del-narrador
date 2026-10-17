@@ -167,9 +167,46 @@ const Cueva = (function () {
     if (activa) {
       if (navVisitante === null) navVisitante = nav.innerHTML;
       nav.innerHTML = navSocio();
+      pintarGrupoAdmin();
     } else if (navVisitante !== null) {
       nav.innerHTML = navVisitante;
     }
+  }
+
+  // ---------- Barra lateral de escritorio (solo presentación) ----------
+  // A partir de 1024 px la barra inferior se ve como barra lateral (styles.css). Cuando el rol ya se conoce, porque la
+  // guardia (privada) o sesionActiva() han leído el perfil, sin ninguna consulta más, se pone el texto bajo el avatar y,
+  // si es administrador, se añade a la barra el grupo "Administración". Por debajo de 1024 px nada de esto se ve.
+  // El rol solo vive en memoria; el panel sigue protegido por su guardia (admin) y por la base de datos.
+  // OJO: las secciones del panel están también en el menú de admin.html: hay que mantener las dos listas a la par.
+  const SECCIONES_ADMIN = [
+    ['admin-socios', 'Socios', '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 010 7M18 14.3c2.2.7 3.5 2.8 3.5 5.7"/>'],
+    ['admin-eventos', 'Charlas y Eventos', '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
+    ['admin-retos', 'Retos', '<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>'],
+    ['admin-libros', 'Libros', '<path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/>'],
+    ['admin-publicaciones', 'Publicaciones', '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/>'],
+    ['admin-informes', 'Informes', '<path d="M4 20h16M7 16v-5M12 16V6M17 16v-8"/>'],
+    ['admin-avisos', 'Avisos', '<path d="M18 16v-5a6 6 0 10-12 0v5l-2 2h16z"/><path d="M10 21h4"/>'],
+    ['admin-copia', 'Copia de seguridad', '<path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v3h16v-3"/>']
+  ];
+  let rolConocido = null;
+  function pintarGrupoAdmin() {
+    const nav = document.querySelector('.nav');
+    if (rolConocido !== 'admin' || !nav || nav.querySelector('.nav-admin')) return;
+    const pagina = (location.pathname.split('/').pop() || '').replace(/\.html$/, '');
+    const enlace = (k, n, icono, clase) => '<a href="' + k + '.html"' + (k === pagina ? ' class="on' + (clase ? ' ' + clase : '') + '" aria-current="page"' : (clase ? ' class="' + clase + '"' : '')) +
+      '><svg viewBox="0 0 24 24" aria-hidden="true">' + icono + '</svg>' + n + '</a>';
+    const grupo = document.createElement('div');
+    grupo.className = 'nav-admin';
+    grupo.innerHTML = enlace('admin', 'Administración', '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>', 'nav-admin-t') +
+      SECCIONES_ADMIN.map(([k, n, icono]) => enlace(k, n, icono)).join('');
+    nav.appendChild(grupo);
+    nav.classList.toggle('admin-actual', !!grupo.querySelector('.on'));
+  }
+  function pintarRol(rol) {
+    rolConocido = rol === 'admin' ? 'admin' : 'socio';
+    document.querySelectorAll('.avatar').forEach(a => { a.dataset.rol = rolConocido === 'admin' ? 'Administrador/a' : 'Socio/a'; });
+    pintarGrupoAdmin();
   }
 
   // ---------- Sesión ----------
@@ -250,6 +287,7 @@ const Cueva = (function () {
     }
     if (!perfil) { await salir(); location.replace('acceso.html?motivo=inactiva'); return nunca(); }
     guardarInicial(perfil.nombre);
+    try { pintarRol(perfil.rol); } catch (e) {}
     cargarMiniAvatar(sb, data.session.user.id);
     avisarEntrada(sb);
     return previas ? { sb, perfil, previas } : { sb, perfil };
@@ -292,6 +330,7 @@ const Cueva = (function () {
         const { data } = await sb.auth.getSession();
         if (!data.session) return null;
         const perfil = await perfilActivo(sb, data.session.user.id);
+        if (perfil) try { pintarRol(perfil.rol); } catch (e) {}
         return perfil ? { sb, perfil } : null;
       } catch (e) { return null; }
     })();
