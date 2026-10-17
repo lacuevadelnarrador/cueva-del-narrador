@@ -1300,3 +1300,82 @@ main[aria-busy="true"] .entrega .btn{cursor:progress}
   .perfil-contenido{display:block;max-width:none;columns:2;column-gap:18px}
   .perfil-contenido>*{break-inside:avoid;margin-bottom:18px}
 }
+
+/* ---------- Panel de administración en tableta y escritorio (main.panel; publicaciones añade .publicaciones) ----------
+   Las listas de socios, entregas e informes se ven como tablas solo con CSS: las filas las sigue pintando el JS igual. */
+@media (min-width:700px){
+  /* Calendario de publicaciones: mes compacto, como el de los socios (celdas de 48 px de alto) */
+  main.publicaciones .monthbar,main.publicaciones .cal-pub,main.publicaciones #leyenda{width:100%;max-width:400px;margin-left:auto;margin-right:auto}
+  main.publicaciones .monthbar h2{font-size:22px}
+  main.publicaciones .cal-pub{padding:10px 8px}
+  main.publicaciones .cal-pub .dow span{font-size:11px;padding-bottom:4px}
+  main.publicaciones .cal-pub .day{aspect-ratio:auto;height:48px;min-height:0;font-size:15px}
+}
+
+@media (min-width:1024px){
+  /* Formularios en una columna de lectura (la ficha y los avisos los colocan después en su rejilla) */
+  main.panel .formulario{max-width:720px}
+  main.publicaciones .monthbar,main.publicaciones .cal-pub,main.publicaciones #leyenda{margin-left:0}
+
+  /* Socios (listado y fichas pendientes) como tabla: filas pegadas y columnas alineadas (nombre · código · estado) */
+  main.panel .soc-fila{margin:0 0 -1px;min-height:58px;padding:8px 14px;border-radius:0;box-shadow:none}
+  main.panel .soc-fila:first-child{border-top-left-radius:var(--r-m);border-top-right-radius:var(--r-m)}
+  main.panel .soc-fila:last-child{margin-bottom:0;border-bottom-left-radius:var(--r-m);border-bottom-right-radius:var(--r-m)}
+  main.panel .soc-fila .st{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,2fr);column-gap:20px;align-items:center}
+  main.panel .soc-fila .soc-etqs{margin-top:0}
+  main.panel .soc-fila .soc-inicial{width:38px;height:38px;font-size:17px}
+  main.panel .soc-fila:active{transform:none}
+  @media (hover:hover){ main.panel .soc-fila:hover{transform:none;box-shadow:none;background:var(--bg)} }
+
+  /* Informes: "No han entrado" como tabla (nombre · código · último acceso) */
+  main.panel .inf-faltan li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center}
+  main.panel .inf-faltan .st{display:grid;grid-template-columns:minmax(0,1fr) 6em;column-gap:12px;align-items:baseline}
+
+  /* Ficha del socio: columna de lectura entre 1024 y 1199 px */
+  main.panel .soc-ficha{max-width:780px}
+}
+
+@media (min-width:1200px){
+  /* Ficha del socio: cabecera arriba; los datos a la izquierda y el resto de tarjetas apiladas a la derecha.
+     La última fila elástica absorbe la altura del formulario largo, así las tarjetas de la derecha no se separan. */
+  main.panel .soc-ficha{max-width:none;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);grid-template-rows:repeat(6,auto) 1fr;column-gap:24px;align-items:start}
+  main.panel #ficha-cabecera{grid-column:1/-1}
+  main.panel #form-ficha{grid-column:1;grid-row:2/span 6}
+  main.panel .soc-ficha>:not(#ficha-cabecera):not(#form-ficha){grid-column:2}
+  main.panel .soc-ficha .soc-bajas{margin-top:0}
+
+  /* Entregas de un reto como tabla (con menos ancho se quedan como lista): nombre · estado · archivo, y las acciones
+     en una columna fija a la derecha para que las filas sin botones también queden alineadas */
+  main.panel .ent-fila{display:grid;grid-template-columns:minmax(0,1fr) 15.5rem;align-items:center}
+  main.panel .ent-acciones{justify-content:flex-end}
+  main.panel .ent-datos{display:grid;grid-template-columns:minmax(0,1.4fr) 8em minmax(0,2fr);column-gap:16px;align-items:center}
+
+  /* Informes: los bloques por parejas, alineados por arriba y sin estirarse */
+  main.panel .inf{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px;align-items:start}
+  main.panel .inf>:not(.inf-bloque){grid-column:1/-1}
+
+  /* Avisos: los automáticos a la izquierda; la tarea, el envío y el historial apilados a la derecha */
+  main.panel .avi{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto auto auto 1fr;column-gap:24px;align-items:start}
+  main.panel .avi>#sec-auto{grid-column:1;grid-row:1/span 4}
+  main.panel .avi>:not(#sec-auto){grid-column:2}
+
+  /* Publicaciones: el mes (con su leyenda) a la izquierda y la lista del mes al lado. La cuenta ("9 publicaciones")
+     va en la primera línea de la lista; la lista ocupa hasta la fila elástica, así no empuja la leyenda hacia abajo. */
+  main.publicaciones #vista-lista{display:grid;grid-template-columns:400px minmax(0,1fr);grid-template-rows:auto auto auto auto auto 1fr;column-gap:40px;align-items:start}
+  main.publicaciones #vista-lista>.barra-pub,main.publicaciones #vista-lista>#filtro{grid-column:1/-1}
+  main.publicaciones #vista-lista>.monthbar{grid-column:1;grid-row:3}
+  main.publicaciones #vista-lista>.cal-pub{grid-column:1;grid-row:4;margin-top:12px}
+  main.publicaciones #vista-lista>#leyenda{grid-column:1;grid-row:5}
+  main.publicaciones #vista-lista>.lista-pub{grid-column:2;grid-row:3;margin-top:0;align-self:center}
+  main.publicaciones #vista-lista>#cuenta{grid-column:2;grid-row:4;margin-top:12px}
+  main.publicaciones #vista-lista>#lista{grid-column:2;grid-row:4/span 3;margin-top:48px}
+  /* El mes y su leyenda se quedan a la vista al desplazar la lista, como en calendario.html (top:24px). Son tres
+     piezas sueltas de la rejilla, así que cada una se fija a su distancia de la de arriba; para que esas distancias
+     no cambien, la fila del mes mide siempre 52px y el mes siempre ocupa 6 semanas. */
+  main.publicaciones #vista-lista{grid-template-rows:auto auto 52px auto auto 1fr}
+  main.publicaciones{--alto-mes:342px}
+  main.publicaciones .cal-pub .days{grid-template-rows:repeat(6,48px)}
+  main.publicaciones #vista-lista>.monthbar{position:sticky;top:24px}
+  main.publicaciones #vista-lista>.cal-pub{position:sticky;top:calc(24px + 52px + 12px);height:var(--alto-mes)}
+  main.publicaciones #vista-lista>#leyenda{position:sticky;top:calc(24px + 52px + 12px + var(--alto-mes) + 14px)}
+}
