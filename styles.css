@@ -1114,7 +1114,7 @@ main[aria-busy="true"] .entrega .btn{cursor:progress}
    - 700-1023 px: el diseño móvil ensanchado (barra inferior, tarjetas en 2 columnas).
    - 1024 px o más: la barra inferior se ve como barra lateral fija a la izquierda; el logo (.top .brand) y el avatar
      se recolocan en ella. El grupo "Administración" y el texto bajo el avatar los añade auth.js cuando ya conoce el rol.
-   Clases de <main> para el escritorio: .dos-columnas (secciones en dos columnas), .lectura (columna de lectura)
+   Clases de <main> para el escritorio: .dos-columnas y .filas (dos columnas desde 1200 px), .lectura (columna de lectura)
    y .estrecha (formularios cortos).
    ========================================================== */
 /* El grupo "Administración" de la barra lateral solo se ve en escritorio */
@@ -1195,8 +1195,6 @@ main[aria-busy="true"] .entrega .btn{cursor:progress}
 
   /* ---- Contenido ---- */
   main{max-width:var(--contenido);margin:0 auto;padding:28px 40px 0}
-  main.dos-columnas{display:block;columns:2;column-gap:32px}
-  main.dos-columnas>*{break-inside:avoid;margin-bottom:28px}
   main.lectura>*{max-width:780px}
   main.estrecha>*{max-width:560px}
   /* Tarjetas: 3 columnas desde ~1200 px de ventana; 2 cuando no caben con holgura (1024 px) */
@@ -1204,9 +1202,101 @@ main[aria-busy="true"] .entrega .btn{cursor:progress}
   .rejilla{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}
   #entidades,#actividades{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
   #entidades>*,#actividades>*{margin-bottom:0}
-  main.dos-columnas #actividades{display:block}
-  main.dos-columnas #actividades>*{margin-bottom:10px}
 
   /* Avisos flotantes: abajo, centrados sobre el contenido (ya no hay barra inferior) */
   .avisos{left:calc(50% + var(--lateral) / 2);bottom:24px}
+}
+
+/* Solo con ventana ancha (entre 1024 y 1199 px, una columna):
+   - .dos-columnas (index): las secciones fluyen en dos columnas, como un mosaico.
+   - .filas (club, instalar, privacidad): rejilla de dos columnas; cada fila empieza a la misma altura y sus secciones
+     miden lo mismo (con .sin-estirar, cada una mide lo que su texto). Lo que no es una sección (los avisos de privacidad) ocupa toda la fila. */
+@media (min-width:1200px){
+  main.dos-columnas{display:block;columns:2;column-gap:32px}
+  main.dos-columnas>*{break-inside:avoid;margin-bottom:28px}
+  main.dos-columnas #actividades{display:block}
+  main.dos-columnas #actividades>*{margin-bottom:10px}
+  main.filas{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:32px;align-items:stretch}
+  main.filas>:not(section){grid-column:1/-1}
+  main.filas>section{display:flex;flex-direction:column}
+  main.filas>section>.card{flex:1 1 auto}
+  /* Club: "Qué hacemos" (la sección con las actividades) a todo el ancho, con las actividades en dos columnas */
+  main.filas>section:has(#actividades){grid-column:1/-1}
+  main.filas>section>#actividades{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  main.filas>section>#actividades>*{margin-bottom:0}
+  /* Privacidad: las filas arrancan a la misma altura, pero cada tarjeta mide lo que su texto */
+  main.filas.sin-estirar{align-items:start}
+  main.filas.sin-estirar>section>.card{flex:none}
+  /* Instalar: la introducción y el QR, a todo el ancho; Android e iPhone, uno junto a otro */
+  main.instalar>section:first-child,main.instalar>section:last-child{grid-column:1/-1}
+  main.instalar>section:last-child>*{width:100%;max-width:560px;margin-left:auto;margin-right:auto}
+}
+
+/* ---------- Zona de socios en tableta y escritorio (inicio, calendario, curso, biblioteca, perfil, leer) ----------
+   Clases de <main> que solo usa este bloque: .inicio, .calendario, .curso y .biblioteca (leer usa .lectura). */
+@media (min-width:700px){
+  /* Calendario: mes compacto, de proporciones de escritorio (celdas de 48 px de alto, no cuadradas a todo el ancho) */
+  main.calendario>section:first-child{width:100%;max-width:400px;justify-self:center}
+  main.calendario .monthbar h2{font-size:22px}
+  main.calendario .cal{padding:10px 8px}
+  main.calendario .dow span{font-size:11px;padding-bottom:4px}
+  main.calendario .day{aspect-ratio:auto;height:48px;min-height:0;font-size:15px}
+}
+
+@media (min-width:1024px){
+  /* Inicio: la campana va sobre el banner verde, como en el móvil */
+  .hero .campana{color:#fff;background:rgba(15,29,32,.25);box-shadow:none}
+  .hero .campana-insignia{box-shadow:0 0 0 2px var(--teal-700)}
+  @media (hover:hover){ .hero .campana:hover{background:rgba(15,29,32,.4);box-shadow:none} }
+
+  /* Calendario: el mes a la izquierda (o arriba, entre 1024 y 1199 px) y los eventos del día al lado */
+  main.calendario>section:first-child{justify-self:start}
+
+  /* Curso y biblioteca: pestañas y buscador a todo el ancho del contenido; las chips de filtro pasan a varias líneas
+     en lugar de desplazarse de lado; libros en tarjetas a dos columnas */
+  main.curso .chips,main.biblioteca .chips{flex-wrap:wrap;overflow:visible;margin:0;padding:14px 0 4px}
+  main.biblioteca #lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));column-gap:14px;align-items:start}
+  main.biblioteca #lista>:not(.libro){grid-column:1/-1}
+
+  /* Mi perfil: la cabecera pasa a ser un título (foto a la izquierda, nombre con la raya ámbar), sin el degradado */
+  .perfil-head{max-width:var(--contenido);margin:0 auto;padding:28px 40px 4px;background:none;color:var(--ink);border-radius:0;box-shadow:none;overflow:visible}
+  .perfil-head::after{display:none}
+  .perfil-head .top{min-height:44px;margin-bottom:12px}
+  .perfil-volver{color:var(--link);background:var(--card);box-shadow:var(--sh1)}
+  @media (hover:hover){ .perfil-volver:hover{box-shadow:var(--sh2)} }
+  .perfil-identidad{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:28px;align-items:center;justify-items:start;text-align:left}
+  .perfil-foto{grid-column:1;grid-row:1/span 4;margin:6px 6px}
+  .perfil-eyebrow{grid-column:2;grid-row:1;color:var(--muted)}
+  .perfil-identidad h1{grid-column:2;grid-row:2;font-size:40px;color:var(--title)}
+  .perfil-identidad h1::after{content:"";display:block;width:40px;height:4px;border-radius:2px;background:var(--amber);margin-top:12px}
+  .perfil-pastillas{grid-column:2;grid-row:3;justify-content:flex-start;margin-top:12px}
+  .perfil-pastilla{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:var(--sh1)}
+  .perfil-pastilla.fundador{border-color:#FFBA55}
+  .foto-acciones{grid-column:2;grid-row:4;align-items:flex-start;margin:12px 0 0}
+  .foto-btn{color:var(--link);background:var(--card);border-color:var(--chipline)}
+  @media (hover:hover){ .foto-btn:hover{background:var(--bg)} }
+  .foto-pista,.perfil-pista-foto{color:var(--muted)}
+  .perfil-contenido{max-width:780px}
+  /* El carné, con las dos caras una debajo de otra y de un tamaño discreto */
+  .carne-cargando,.carne-vista{grid-template-columns:minmax(0,1fr)}
+  .carne-cara,.carne-hueco{max-width:440px}
+}
+
+@media (min-width:1200px){
+  /* Inicio: dos columnas con sitio fijo (izquierda: eventos y apuntes; derecha: biblioteca y recomendados),
+     sin cambiar el orden del HTML */
+  main.inicio{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"eventos biblioteca" "apuntes recomendados";column-gap:32px;align-items:start}
+  main.inicio>#eventos{grid-area:eventos}
+  main.inicio>#biblioteca{grid-area:biblioteca}
+  main.inicio>#recomendados{grid-area:recomendados}
+  main.inicio>.note{grid-area:apuntes}
+  /* Calendario: mes y eventos lado a lado; el mes se queda a la vista al desplazar la lista */
+  main.calendario{grid-template-columns:400px minmax(0,1fr);column-gap:40px;align-items:start}
+  main.calendario>section:first-child{position:sticky;top:24px}
+  /* Curso: charlas a dos columnas (al abrir una, solo crece su tarjeta) */
+  main.curso #lista{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px;align-items:start}
+  main.curso #lista>:not(.charla){grid-column:1/-1}
+  /* Mi perfil: tarjetas a dos columnas */
+  .perfil-contenido{display:block;max-width:none;columns:2;column-gap:18px}
+  .perfil-contenido>*{break-inside:avoid;margin-bottom:18px}
 }
