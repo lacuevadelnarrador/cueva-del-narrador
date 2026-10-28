@@ -211,6 +211,7 @@ const Cueva = (function () {
     ['admin-publicaciones', 'Publicaciones', '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/>'],
     ['admin-informes', 'Informes', '<path d="M4 20h16M7 16v-5M12 16V6M17 16v-8"/>'],
     ['admin-avisos', 'Avisos', '<path d="M18 16v-5a6 6 0 10-12 0v5l-2 2h16z"/><path d="M10 21h4"/>'],
+    ['admin-juego', 'Juego (gestión)', '<path d="M8 4h8v5a4 4 0 01-8 0z"/><path d="M8 6H5a3 3 0 003 4M16 6h3a3 3 0 01-3 4M12 13v4M8 20h8"/>'],
     ['admin-copia', 'Copia de seguridad', '<path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v3h16v-3"/>']
   ];
   let rolConocido = null;
