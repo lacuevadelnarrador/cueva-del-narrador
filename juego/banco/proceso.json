@@ -1,0 +1,682 @@
+[
+ {
+  "id": "PRO-001",
+  "categoria": "proceso",
+  "nivel": "facil",
+  "pregunta": "¿Qué consejo da la clase sobre el hábito de escribir?",
+  "opciones": [
+   "Escribir únicamente cuando llega la inspiración",
+   "Escribir solo durante las vacaciones largas",
+   "Escribir todos los días, aunque sean 5 minutos",
+   "Esperar a tener bastante tiempo libre"
+  ],
+  "correcta": 2,
+  "explicacion": "La escritura es un músculo.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-002",
+  "categoria": "proceso",
+  "nivel": "facil",
+  "pregunta": "¿Qué es la escritura libre?",
+  "opciones": [
+   "Copiar a mano fragmentos de otros autores",
+   "Corregir cada línea nada más escribirla y sin avanzar",
+   "Escribir siguiendo un esquema muy detallado",
+   "Escribir sin parar sobre un tema, sin borrar ni juzgar"
+  ],
+  "correcta": 3,
+  "explicacion": "Se dejan fluir las ideas.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-007",
+  "categoria": "proceso",
+  "nivel": "facil",
+  "pregunta": "¿Cuál es un disparador de la Charla 1?",
+  "opciones": [
+   "Escribir una carta a tu yo del futuro",
+   "Hacer un esquema de la novela entera",
+   "Contar las sílabas de un poema",
+   "Corregir un texto ajeno con tildes"
+  ],
+  "correcta": 0,
+  "explicacion": "Ejemplo citado.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-012",
+  "categoria": "proceso",
+  "nivel": "facil",
+  "pregunta": "¿Qué conviene separar según la Charla 9?",
+  "opciones": [
+   "Los momentos de escribir y de editar",
+   "Los momentos de planificar y de publicar",
+   "Los momentos de descansar y de soñar",
+   "Los momentos de leer y de escribir"
+  ],
+  "correcta": 0,
+  "explicacion": "Momentos distintos.",
+  "fuente": "Charla 9",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-022",
+  "categoria": "proceso",
+  "nivel": "facil",
+  "pregunta": "¿Qué es el síndrome del impostor?",
+  "opciones": [
+   "Quedarse sin ideas para escribir durante semanas",
+   "Un bloqueo que afecta a un solo párrafo",
+   "Un narrador que se hace pasar por otro",
+   "Sentir que no mereces tu lugar pese a tus logros"
+  ],
+  "correcta": 3,
+  "explicacion": "Frecuente entre escritores.",
+  "fuente": "Charla 9",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-029",
+  "categoria": "proceso",
+  "nivel": "facil",
+  "pregunta": "¿Qué es una escaleta?",
+  "opciones": [
+   "Una novela completa en borrador",
+   "Un diálogo largo entre personajes",
+   "Un capítulo final de la obra",
+   "Un esquema ordenado de las escenas"
+  ],
+  "correcta": 3,
+  "explicacion": "Sirve para planificar.",
+  "fuente": "Voces narrativas y argumento",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-030",
+  "categoria": "proceso",
+  "nivel": "facil",
+  "pregunta": "¿Qué es la premisa?",
+  "opciones": [
+   "La idea central de la historia",
+   "El final que cierra la historia",
+   "La portada que ilustra el libro",
+   "El título que presenta la novela"
+  ],
+  "correcta": 0,
+  "explicacion": "Primer paso de la escaleta.",
+  "fuente": "Voces narrativas y argumento",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-031",
+  "categoria": "proceso",
+  "nivel": "facil",
+  "pregunta": "¿Qué se define en el primer paso de la escaleta?",
+  "opciones": [
+   "La portada y la contraportada",
+   "El precio y la fecha de salida",
+   "La idea central y la estructura general",
+   "El título y el subtítulo definitivos del libro"
+  ],
+  "correcta": 2,
+  "explicacion": "Premisa y estructura.",
+  "fuente": "Voces narrativas y argumento",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-033",
+  "categoria": "proceso",
+  "nivel": "facil",
+  "pregunta": "¿Cuántas palabras tiene el reto manuscrito de la Charla 6?",
+  "opciones": [
+   "20.000",
+   "200",
+   "200.000",
+   "2.000"
+  ],
+  "correcta": 0,
+  "explicacion": "Reto para finales de agosto.",
+  "fuente": "Charla 6",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-038",
+  "categoria": "proceso",
+  "nivel": "facil",
+  "pregunta": "¿Qué debe lograr el inicio de historia de la Charla 15?",
+  "opciones": [
+   "Que sea lo más largo posible",
+   "Que resuma por completo el final",
+   "Que alguien quiera seguir leyendo",
+   "Que explique todo el mundo de la historia"
+  ],
+  "correcta": 2,
+  "explicacion": "Condición del ejercicio.",
+  "fuente": "Charla 15",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-040",
+  "categoria": "proceso",
+  "nivel": "facil",
+  "pregunta": "¿Qué es el miedo a que lo escrito no sea lo bastante bueno?",
+  "opciones": [
+   "Un error técnico del procesador de textos",
+   "Un obstáculo común durante la escritura",
+   "Un género literario de moda",
+   "Un formato de archivo editorial"
+  ],
+  "correcta": 1,
+  "explicacion": "Charla 7 lo recoge.",
+  "fuente": "Charla 7",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-041",
+  "categoria": "proceso",
+  "nivel": "facil",
+  "pregunta": "¿Qué obstáculo es «me cuesta llegar al final»?",
+  "opciones": [
+   "De finalización del manuscrito",
+   "De revisión de errores del texto",
+   "De ideas para empezar a escribir",
+   "De publicación y difusión"
+  ],
+  "correcta": 0,
+  "explicacion": "Charla 7.",
+  "fuente": "Charla 7",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-051",
+  "categoria": "proceso",
+  "nivel": "facil",
+  "pregunta": "¿Qué es Scrivener?",
+  "opciones": [
+   "Programa para organizar escenas, personajes y capítulos",
+   "Un corrector ortográfico en línea",
+   "Una editorial de autopublicación para libros digitales",
+   "Una red social para que escritores noveles publiquen"
+  ],
+  "correcta": 0,
+  "explicacion": "Cita de la Charla 1.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-058",
+  "categoria": "proceso",
+  "nivel": "media",
+  "pregunta": "¿Qué cambia si divides escribir y editar?",
+  "opciones": [
+   "Se pierde la voz propia",
+   "Se duplica el tiempo de trabajo",
+   "Se bloquea más al escribir",
+   "Se reduce el bloqueo"
+  ],
+  "correcta": 3,
+  "explicacion": "Libera la creatividad.",
+  "fuente": "Charla 9",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-060",
+  "categoria": "proceso",
+  "nivel": "media",
+  "pregunta": "¿Qué papel tiene la imperfección?",
+  "opciones": [
+   "Es un fallo que hay que eliminar",
+   "En ella está la originalidad",
+   "Es un error de la técnica",
+   "Solo aparece en los primeros borradores"
+  ],
+  "correcta": 1,
+  "explicacion": "Idea de la Charla 9.",
+  "fuente": "Charla 9",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-062",
+  "categoria": "proceso",
+  "nivel": "media",
+  "pregunta": "¿Qué es el método «mapa»?",
+  "opciones": [
+   "Copiar una estructura ya publicada",
+   "Planificar con esquema antes de escribir",
+   "Imitar el estilo de otro autor",
+   "Escribir sin ningún plan previo"
+  ],
+  "correcta": 1,
+  "explicacion": "El curso se centrará en él.",
+  "fuente": "Voces narrativas y argumento",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-067",
+  "categoria": "proceso",
+  "nivel": "media",
+  "pregunta": "¿Qué es el viaje del héroe?",
+  "opciones": [
+   "Un modelo narrativo de llamada, pruebas y regreso",
+   "Un género literario de moda",
+   "Un viaje real que hace el autor para documentarse",
+   "Una novela de aventuras concreta de la literatura"
+  ],
+  "correcta": 0,
+  "explicacion": "Mitología y fantasía.",
+  "fuente": "Voces narrativas y argumento",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-070",
+  "categoria": "proceso",
+  "nivel": "media",
+  "pregunta": "¿Qué conviene si revisas constantemente y nunca terminas?",
+  "opciones": [
+   "Terminar el borrador antes de revisar",
+   "Revisar todavía más cada capítulo",
+   "Borrar lo escrito y comenzar",
+   "Empezar otro proyecto distinto"
+  ],
+  "correcta": 0,
+  "explicacion": "Separa escribir de editar.",
+  "fuente": "Charla 7",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-079",
+  "categoria": "proceso",
+  "nivel": "media",
+  "pregunta": "¿Por qué «suena bien» no basta?",
+  "opciones": [
+   "Porque es una técnica demasiado lenta para usarla",
+   "Porque es inútil al escribir",
+   "Porque no existe tal criterio",
+   "Porque el oído no siempre sigue la norma"
+  ],
+  "correcta": 3,
+  "explicacion": "Charla 14.",
+  "fuente": "Charla 14",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-081",
+  "categoria": "proceso",
+  "nivel": "media",
+  "pregunta": "¿Qué hace un club de escritura?",
+  "opciones": [
+   "Reúne escritores para practicar y compartir",
+   "Vende libros en librerías",
+   "Imprime libros bajo demanda para los autores",
+   "Edita libros para su venta en librerías"
+  ],
+  "correcta": 0,
+  "explicacion": "Como La Cueva del Narrador.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-082",
+  "categoria": "proceso",
+  "nivel": "media",
+  "pregunta": "¿Qué es el «plan anual» del club?",
+  "opciones": [
+   "Un horario fijo de todas las sesiones",
+   "Un programa de temas a lo largo del curso",
+   "Un precio de la cuota",
+   "Un contrato anual entre los socios y el club"
+  ],
+  "correcta": 1,
+  "explicacion": "Doce temas en la Charla 1.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-088",
+  "categoria": "proceso",
+  "nivel": "media",
+  "pregunta": "¿Qué es «resurrección» en la Charla 15?",
+  "opciones": [
+   "Maquetar la historia completa para publicarla",
+   "Publicar la historia en el club",
+   "Recuperar tu idea transformada y escribir un inicio",
+   "Corregir el texto de otro compañero del grupo"
+  ],
+  "correcta": 2,
+  "explicacion": "Fase 3.",
+  "fuente": "Charla 15",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-091",
+  "categoria": "proceso",
+  "nivel": "media",
+  "pregunta": "¿Qué conviene hacer con un primer borrador terminado?",
+  "opciones": [
+   "Maquetarlo para ver cómo queda",
+   "Dejarlo reposar antes de revisarlo",
+   "Borrarlo y empezar otra vez",
+   "Publicarlo cuanto antes"
+  ],
+  "correcta": 1,
+  "explicacion": "El reposo da distancia.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-092",
+  "categoria": "proceso",
+  "nivel": "media",
+  "pregunta": "¿Qué es un objetivo de palabras?",
+  "opciones": [
+   "Un título provisional de la obra",
+   "Un resumen de la trama",
+   "Una meta diaria o semanal de escritura",
+   "Un límite máximo de palabras por capítulo"
+  ],
+  "correcta": 2,
+  "explicacion": "Ayuda a la constancia.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-097",
+  "categoria": "proceso",
+  "nivel": "dificil",
+  "pregunta": "¿Por qué leer a tus amigos y familia ayuda?",
+  "opciones": [
+   "Porque evita tener que editar",
+   "Porque da feedback y confianza",
+   "Porque ayuda a vender más",
+   "Porque es obligatorio en el club"
+  ],
+  "correcta": 1,
+  "explicacion": "Estrategia de la Charla 9.",
+  "fuente": "Charla 9",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-100",
+  "categoria": "proceso",
+  "nivel": "dificil",
+  "pregunta": "¿Qué utiliza la Charla 9 como herramienta para generar ideas?",
+  "opciones": [
+   "Conversar con amigos o usar herramientas de IA",
+   "Leer solo libros de la biblioteca del club",
+   "Participar solo en concursos",
+   "Llevar solo un diario personal de ideas"
+  ],
+  "correcta": 0,
+  "explicacion": "Fuentes de ideas listadas.",
+  "fuente": "Charla 9",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-101",
+  "categoria": "proceso",
+  "nivel": "dificil",
+  "pregunta": "¿Cuándo debe llegar la voz crítica?",
+  "opciones": [
+   "Antes de escribir, para evitar errores",
+   "Después de escribir, al editar",
+   "Nunca debe aparecer",
+   "Durante todo el proceso de escritura"
+  ],
+  "correcta": 1,
+  "explicacion": "Para no bloquear.",
+  "fuente": "Charla 9",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-105",
+  "categoria": "proceso",
+  "nivel": "dificil",
+  "pregunta": "¿Por qué se pide a alguien que mejore la idea de otra persona?",
+  "opciones": [
+   "Para corregirle los errores y las erratas",
+   "Para borrarla del todo",
+   "Para criticarla con dureza y sin matices",
+   "Para ver otras posibilidades sin apego"
+  ],
+  "correcta": 3,
+  "explicacion": "Ejercicio de la Charla 15.",
+  "fuente": "Charla 15",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-109",
+  "categoria": "proceso",
+  "nivel": "dificil",
+  "pregunta": "¿Qué se aprende de que «empezar ya es más de lo que suele pasar»?",
+  "opciones": [
+   "Empezar es un logro",
+   "Terminar es siempre fácil",
+   "Corregir no hace falta",
+   "Publicar es obligatorio"
+  ],
+  "correcta": 0,
+  "explicacion": "Cierre de la Charla 15.",
+  "fuente": "Charla 15",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-114",
+  "categoria": "proceso",
+  "nivel": "dificil",
+  "pregunta": "¿Qué conviene a un escritor brújula que se atasca?",
+  "opciones": [
+   "Escribir libre para descubrir el siguiente paso",
+   "Hacer una escaleta muy larga antes de seguir",
+   "Abandonar el proyecto",
+   "Borrar lo escrito hasta ahora y empezar de nuevo"
+  ],
+  "correcta": 0,
+  "explicacion": "Explorar.",
+  "fuente": "Voces narrativas y argumento",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-116",
+  "categoria": "proceso",
+  "nivel": "dificil",
+  "pregunta": "¿Qué se corrige primero al revisar un borrador?",
+  "opciones": [
+   "Solo las comas de todo el texto",
+   "Primero las erratas y después la estructura",
+   "Estructura y contenido antes que erratas",
+   "Solo las tildes de todo el texto"
+  ],
+  "correcta": 2,
+  "explicacion": "Se va de lo grande a lo pequeño.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-123",
+  "categoria": "proceso",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un borrador?",
+  "opciones": [
+   "Un contrato con la editorial",
+   "La versión final del libro",
+   "Una primera versión del texto",
+   "El título de la obra"
+  ],
+  "correcta": 2,
+  "explicacion": "Se escribe antes de revisar.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-124",
+  "categoria": "proceso",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un manuscrito terminado?",
+  "opciones": [
+   "Una idea sin desarrollar todavía",
+   "Un esquema de la trama de la novela",
+   "Un título provisional para la obra",
+   "Un texto completo, listo para revisar"
+  ],
+  "correcta": 3,
+  "explicacion": "Pasa a la fase de revisión.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-126",
+  "categoria": "proceso",
+  "nivel": "facil",
+  "pregunta": "¿Qué es una idea narrativa?",
+  "opciones": [
+   "La portada de una historia",
+   "El título de una historia",
+   "El final de una historia",
+   "El germen de una historia"
+  ],
+  "correcta": 3,
+  "explicacion": "Punto de partida.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-133",
+  "categoria": "proceso",
+  "nivel": "media",
+  "pregunta": "¿Qué ayuda a mejorar como escritor?",
+  "opciones": [
+   "No revisar nunca lo escrito",
+   "Solo leer, sin escribir nunca nada",
+   "Leer mucho y escribir con regularidad",
+   "Escribir una sola vez al año"
+  ],
+  "correcta": 2,
+  "explicacion": "Dos hábitos básicos.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-134",
+  "categoria": "proceso",
+  "nivel": "media",
+  "pregunta": "¿Qué es un taller literario?",
+  "opciones": [
+   "Una imprenta artesanal",
+   "Un concurso de relatos con premio final",
+   "Una editorial pequeña de libros artesanales",
+   "Un espacio para leer y comentar textos"
+  ],
+  "correcta": 3,
+  "explicacion": "Como el club.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-141",
+  "categoria": "proceso",
+  "nivel": "media",
+  "pregunta": "¿Qué hacer antes de enviar un manuscrito a una editorial?",
+  "opciones": [
+   "Revisarlo varias veces y pasarlo por lectores",
+   "Maquetarlo como si fuera un libro",
+   "Enviarlo cuanto antes sin releerlo ni mostrarlo",
+   "Imprimirlo para que lo vea un amigo"
+  ],
+  "correcta": 0,
+  "explicacion": "Proceso previo.",
+  "fuente": "Charla 6",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-142",
+  "categoria": "proceso",
+  "nivel": "dificil",
+  "pregunta": "¿Qué significa «matar a tus favoritos»?",
+  "opciones": [
+   "Quitar el título de la obra ya terminada",
+   "Eliminar pasajes queridos que no sirven a la historia",
+   "Cambiar de género literario a mitad del libro",
+   "Matar a los personajes principales de la novela"
+  ],
+  "correcta": 1,
+  "explicacion": "Máxima de revisión.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-147",
+  "categoria": "proceso",
+  "nivel": "dificil",
+  "pregunta": "¿Qué hacer ante una crítica con la que no coincides?",
+  "opciones": [
+   "Ignorarla siempre porque no coincide con tu visión",
+   "Responder con dureza para defender el texto",
+   "Valorar si señala un problema real aunque la solución no sirva",
+   "Aplicarla siempre para no discutir con el lector"
+  ],
+  "correcta": 2,
+  "explicacion": "Distingue problema de solución.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PRO-148",
+  "categoria": "proceso",
+  "nivel": "dificil",
+  "pregunta": "¿Para qué sirve escribir «mal» a propósito en un borrador?",
+  "opciones": [
+   "Para fracasar a propósito",
+   "Para corregirlo en ese momento",
+   "Para publicarlo así tal cual, sin más cambios",
+   "Para avanzar sin juicio y mejorar luego"
+  ],
+  "correcta": 3,
+  "explicacion": "Se edita después.",
+  "fuente": "Charla 9",
+  "banco": "publico",
+  "revisada": false
+ }
+]

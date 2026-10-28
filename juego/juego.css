@@ -5,10 +5,9 @@
    ========================================================== */
 :root{
   --j-ok:#2E7D4F; --j-ok-bg:#E3F3E8; --j-mal:#B3412B; --j-mal-bg:#FBE7E2;
-  --j-hueco:#D9DEE0; --j-tabla:#8C6B47;
 }
 @media (prefers-color-scheme:dark){
-  :root{--j-ok:#A8DDB0; --j-ok-bg:#1E3A2A; --j-mal:#F2A08E; --j-mal-bg:#45271F; --j-hueco:#2A464C; --j-tabla:#6B5236}
+  :root{--j-ok:#A8DDB0; --j-ok-bg:#1E3A2A; --j-mal:#F2A08E; --j-mal-bg:#45271F}
 }
 
 .j-pantalla{display:grid;grid-template-columns:minmax(0,1fr);gap:28px}
@@ -26,21 +25,7 @@
   .j-jugando main{padding-top:16px}
 }
 
-/* ---------- Estantería: lomos dibujados con CSS ---------- */
-.j-estante{padding:18px 14px 0;overflow:hidden}
-.j-libros{list-style:none;padding:0;display:flex;align-items:flex-end;gap:4px;min-height:150px;border-bottom:10px solid var(--j-tabla);margin:0 -14px;padding:0 14px}
-.j-lomo{flex:1 1 0;min-width:0;height:136px;border-radius:4px 4px 1px 1px;background:var(--lomo,#3E6F77);color:#fff;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0;overflow:hidden;
-  writing-mode:vertical-rl;transform:rotate(180deg);box-shadow:inset 3px 0 0 rgba(255,255,255,.14),inset -3px 0 0 rgba(0,0,0,.18)}
-.j-lomo:nth-child(3n+2){height:148px}
-.j-lomo:nth-child(4n+3){height:126px}
-.j-lomo:nth-child(5n){height:142px}
-.j-lomo-titulo{max-height:100%;font-family:'Oswald',sans-serif;font-weight:500;font-size:11px;letter-spacing:.02em;text-transform:uppercase;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.j-lomo-autor{max-height:100%;font-size:10px;font-style:italic;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.9}
-.j-hueco{background:var(--j-hueco);box-shadow:none;border:1.5px dashed var(--line)}
-.j-lomo-grande{width:72px;height:230px;margin:6px auto 20px;transform:rotate(180deg);flex:none;padding:16px 0}
-.j-lomo-grande .j-lomo-titulo{font-size:19px}
-.j-lomo-grande .j-lomo-autor{font-size:14px}
+/* ---------- Estantería: los lomos están en juego/estante.css (los comparte el perfil) ---------- */
 
 /* ---------- Categorías ---------- */
 .j-cat-btn small{font-style:italic}
@@ -119,6 +104,43 @@
 .j-botones{display:flex;flex-direction:column;gap:10px;align-items:center}
 .j-botones .btn{width:100%;max-width:320px}
 
+/* ---------- Socios: pestañas, ranking, modo libre y reportar ---------- */
+.j-vista{display:grid;grid-template-columns:minmax(0,1fr);gap:28px}
+.j-pestanas{padding-top:0;margin-bottom:-12px}
+.j-libre{padding:12px 16px;border-radius:var(--r-m);background:var(--card);border-left:4px solid var(--amber);box-shadow:var(--sh1);font-size:15px}
+.j-nota-ranking{margin:-6px 0 14px}
+.j-ranking-lista{list-style:none;padding:0;display:grid;gap:8px}
+.j-ranking-fila{display:flex;align-items:center;gap:12px;padding:10px 14px;min-height:64px}
+.j-ranking-fila.yo{border:2px solid var(--amber)}
+.j-pos{flex:none;width:28px;text-align:center;font-family:'Oswald',sans-serif;font-weight:700;font-size:18px;color:var(--title)}
+.j-rk-avatar{flex:none;width:40px;height:40px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:var(--aqua);color:var(--teal-deep);font-family:'Oswald',sans-serif;font-weight:700}
+.j-rk-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.j-rk-tx{display:flex;flex-direction:column;min-width:0}
+.j-rk-tx b{font-size:17px;line-height:1.25;overflow-wrap:anywhere}
+.j-rk-tx small{font-size:13px;color:var(--muted)}
+/* Discreto, debajo del botón principal de la explicación; sigue teniendo 44 px de alto */
+.j-reportar{display:flex;align-items:center;justify-content:center;min-height:44px;width:100%;margin-top:8px;padding:0 12px;border:0;background:none;
+  font:inherit;font-size:14px;color:var(--link);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.j-reportar:disabled{color:var(--muted);text-decoration:none;cursor:default}
+.j-dialogo .opciones{margin-bottom:8px}
+.j-dialogo .opcion{line-height:1.3}
+.j-rep-msg{min-height:0;margin:0 0 4px;color:var(--j-mal);font-weight:600}
+.j-rep-msg:empty{display:none}
+
+/* ---------- Logros: insignias en categorías, hito, resultado y ranking ---------- */
+.j-cat-btn .j-ins-fila{margin-left:auto;padding-left:8px}
+.j-hito-ins{display:flex;justify-content:center;margin-bottom:14px}
+.j-res-libro{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:12px 18px;margin-bottom:6px}
+.j-res-libro .j-lomo-grande{margin:6px 0 20px;width:72px;height:230px} /* gana a .j-lomo:nth-child() de estante.css */
+.j-res-libro .j-ins-grande{margin-bottom:20px}
+.j-res-nuevo{display:inline-block;margin:-8px 0 16px;padding:4px 12px;border-radius:999px;background:var(--amber);color:#14262A;
+  font-family:'Oswald',sans-serif;font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.j-error-seguir{margin:0 0 12px;color:var(--j-mal);font-weight:600}
+.j-rk-logros{flex:none;margin-left:auto;display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:baseline;max-width:72px;text-align:right}
+.j-rk-logros b{font-family:'Oswald',sans-serif;font-size:24px;line-height:1;color:var(--title)}
+.j-rk-max{font-family:'Oswald',sans-serif;font-size:14px;color:var(--muted)}
+.j-rk-logros small{flex:1 0 100%;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
 /* Solo con ratón; en pantallas táctiles no hay efectos que dependan de pasar por encima */
 @media (hover:hover){
   .j-opcion:not(:disabled):hover{border-color:var(--chipline);box-shadow:var(--sh2)}
@@ -138,15 +160,6 @@
 
 /* ---------- Escritorio ---------- */
 @media (min-width:1024px){
-  .j-libros{min-height:230px;gap:8px}
-  .j-lomo{flex:0 1 64px;height:200px;padding:14px 0}
-  .j-lomo:nth-child(3n+2){height:218px}
-  .j-lomo:nth-child(4n+3){height:186px}
-  .j-lomo:nth-child(5n){height:208px}
-  .j-lomo-titulo{font-size:15px}
-  .j-lomo-autor{font-size:12px}
-  .j-libros{justify-content:center}
-
   /* Partida: escalera vertical a la izquierda (la 15 arriba) y la pregunta a la derecha */
   .j-partida{grid-template-columns:200px minmax(0,760px);grid-template-areas:"escalera cabeza" "escalera juego";column-gap:40px;row-gap:20px;align-items:start}
   .j-cabeza{grid-area:cabeza}
@@ -161,5 +174,7 @@
   .j-opcion{min-height:72px}
   .j-comodines{max-width:420px}
   .j-tras .btn{width:auto}
-  .j-resultado{max-width:640px}
+  .j-reportar{display:inline-flex;width:auto;margin:0 0 0 12px;vertical-align:middle}
+  .j-resultado,.j-hito{max-width:640px}
+  #j-vista-ranking{max-width:640px}
 }

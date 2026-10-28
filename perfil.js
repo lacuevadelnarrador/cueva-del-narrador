@@ -41,7 +41,8 @@
     bajar: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
     compartir: '<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/>',
     camara: '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
-    campana: '<path d="M18 16v-5a6 6 0 10-12 0v5l-2 2h16z"/><path d="M10 21h4"/>'
+    campana: '<path d="M18 16v-5a6 6 0 10-12 0v5l-2 2h16z"/><path d="M10 21h4"/>',
+    juego: '<path d="M8 4h8v5a4 4 0 01-8 0z"/><path d="M8 6H5a3 3 0 003 4M16 6h3a3 3 0 01-3 4M12 13v4M8 20h8"/>'
   };
   const ic = (k, cls) => '<svg class="perfil-ic' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + ICONOS[k] + '</svg>';
   const ESTADOS_CUOTA = {
@@ -226,12 +227,85 @@
         '<form class="formulario perfil-form" id="perfil-form" novalidate hidden></form>') +
       tarjeta(1, 'inscripcion', 'ficha', 'Tu inscripción', htmlInscripcion()) +
       (window.Carne ? tarjeta(2, 'carne', 'carne', 'Mi carné', htmlCarne()) : '') +
+      (juegoVisible() ? tarjeta(3, 'juego', 'juego', 'Mis libros del juego', htmlJuego()) : '') +
       tarjeta(3, 'cuotas', 'cuotas', 'Mis cuotas', '<div id="perfil-cuotas-cuerpo">' + htmlCuotas() + '</div>') +
       tarjeta(4, 'asistencia', 'asistencia', 'Mi asistencia', htmlAsistencia()) +
       (Cueva.push ? tarjeta(5, 'push', 'campana', 'Notificaciones', htmlPush()) : '') +
       htmlFinal(6);
     observarCarne();
+    observarJuego();
     if (Cueva.push) comprobarPush();
+  }
+
+  // b3) Mis libros del juego (solo con JUEGO_VISIBLE, en auth.js): estantería y mejores tiempos, de juego_mis_logros.
+  //     El código y los estilos de los lomos (juego/estante.js y .css) se piden solo cuando la tarjeta se acerca a la
+  //     pantalla; con el interruptor apagado no existe la tarjeta y el perfil no carga nada del juego.
+  const juegoVisible = () => typeof JUEGO_VISIBLE !== 'undefined' && JUEGO_VISIBLE === true;
+  let juegoObs = null, juegoModulo = null;
+  function htmlJuego() {
+    return '<p class="carne-intro">Tus insignias del juego (bronce en la pregunta 5, plata en la 10 y oro con su libro en la 15) y tu mejor tiempo en cada categoría.</p>' +
+      '<div id="juego-perfil"></div>' +
+      '<p class="juego-perfil-jugar"><a class="btn sec" href="quiz.html">' + ic('juego') + 'Jugar</a></p>';
+  }
+  function moduloJuego() {
+    if (!juegoModulo) juegoModulo = new Promise((ok, mal) => {
+      if (!document.querySelector('link[href="juego/estante.css"]')) {
+        const l = document.createElement('link');
+        l.rel = 'stylesheet'; l.href = 'juego/estante.css';
+        document.head.appendChild(l);
+      }
+      if (typeof Estante !== 'undefined') return ok();
+      const s = document.createElement('script');
+      s.src = 'juego/estante.js';
+      s.onload = ok;
+      s.onerror = () => { s.remove(); juegoModulo = null; mal({ red: true, message: 'No se pudo cargar juego/estante.js' }); };
+      document.body.appendChild(s);
+    });
+    return juegoModulo;
+  }
+  function cargarJuego() {
+    const caja = $c('juego-perfil');
+    if (!caja) return;
+    Cueva.cargando(caja, 'Cargando tus insignias…');
+    moduloJuego().then(() => Promise.all([sb.rpc('juego_mis_logros'), Estante.cargarPremios()])).then(([r]) => {
+      if (r.error) throw r.error;
+      if (!$c('juego-perfil')) return;
+      // Una fila por categoría y nivel → { categoría: nivel más alto } y el mejor tiempo de cada nivel.
+      const nivel = {}, tiempos = {};
+      (Array.isArray(r.data) ? r.data : []).forEach(f => {
+        if (!f || !Estante.categoria(f.categoria) || !Number.isInteger(f.nivel) || f.nivel < 1 || f.nivel > 3) return;
+        nivel[f.categoria] = Math.max(nivel[f.categoria] | 0, f.nivel);
+        (tiempos[f.categoria] || (tiempos[f.categoria] = {}))[f.nivel] = f.mejor_tiempo_ms;
+      });
+      caja.innerHTML = '<div class="card j-estante"><ul class="j-libros"></ul></div><ul class="juego-logros"></ul>' +
+        '<p class="juego-total"></p>';
+      Estante.pintar(caja.querySelector('.j-libros'), nivel);
+      const lista = caja.querySelector('.juego-logros');
+      Estante.CATEGORIAS.forEach(c => {
+        const n = nivel[c.id] | 0, t = n && tiempos[c.id] ? tiempos[c.id][n] : null;
+        const li = Estante.crear('li');
+        li.appendChild(Estante.crear('span', 'juego-cat', c.nombre));
+        li.appendChild(Estante.insignias(n));
+        li.appendChild(Estante.crear('small', null, !n ? 'Sin insignias todavía'
+          : 'Hasta ' + Estante.INSIGNIAS[n] + (Number.isFinite(t) ? ' · mejor tiempo: ' + Estante.tiempo(t) : '')));
+        lista.appendChild(li);
+      });
+      const total = Estante.contar(nivel), libros = Estante.libros(nivel);
+      caja.querySelector('.juego-total').textContent = 'Logros: ' + total + ' de ' + Estante.MAX_LOGROS + ' · ' + libros + (libros === 1 ? ' libro' : ' libros') + '.';
+    }).catch(e => { if ($c('juego-perfil')) Cueva.error(caja, e, cargarJuego); });
+  }
+  function observarJuego() {
+    const caja = $c('perfil-juego');
+    if (!caja || !sb) return;
+    if (juegoObs) juegoObs.disconnect();
+    if (!('IntersectionObserver' in window)) { cargarJuego(); return; }
+    juegoObs = new IntersectionObserver(ents => {
+      if (!ents.some(x => x.isIntersecting)) return;
+      juegoObs.disconnect();
+      juegoObs = null;
+      cargarJuego();
+    }, { rootMargin: '300px 0px' });
+    juegoObs.observe(caja);
   }
 
   function pintarSinFicha() {

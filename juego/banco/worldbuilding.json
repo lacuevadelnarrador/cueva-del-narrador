@@ -1,0 +1,682 @@
+[
+ {
+  "id": "WOR-001",
+  "categoria": "worldbuilding",
+  "nivel": "facil",
+  "pregunta": "¿Qué es el worldbuilding?",
+  "opciones": [
+   "La revisión ortográfica de un manuscrito terminado",
+   "La construcción de un mundo ficticio coherente",
+   "El diseño de la portada y del interior del libro",
+   "La redacción de diálogos naturales entre personajes"
+  ],
+  "correcta": 1,
+  "explicacion": "Crear el escenario de la historia.",
+  "fuente": "Charla 3",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-004",
+  "categoria": "worldbuilding",
+  "nivel": "facil",
+  "pregunta": "¿Qué pregunta se hace sobre las reglas del mundo?",
+  "opciones": [
+   "¿Cuánto tarda el autor en escribir cada capítulo?",
+   "¿Quién publicará el libro y en qué fecha saldrá?",
+   "¿Qué está prohibido y qué pasa si alguien las rompe?",
+   "¿Cuántas páginas deberá tener la versión final?"
+  ],
+  "correcta": 2,
+  "explicacion": "Charla 3.",
+  "fuente": "Charla 3",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-008",
+  "categoria": "worldbuilding",
+  "nivel": "facil",
+  "pregunta": "¿Qué se pregunta sobre cómo se educan los niños?",
+  "opciones": [
+   "Si el narrador es un niño o un adulto",
+   "Si el título incluye alguna palabra inventada",
+   "Si hay prólogo, epílogo o agradecimientos",
+   "Si hay escolarización, mentoría o castas"
+  ],
+  "correcta": 3,
+  "explicacion": "Charla 3.",
+  "fuente": "Charla 3",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-010",
+  "categoria": "worldbuilding",
+  "nivel": "facil",
+  "pregunta": "¿Qué elemento extraño sugiere la Charla 3?",
+  "opciones": [
+   "Prólogos que anticipan el final",
+   "Animales que hablan o gravedad cambiante",
+   "Epílogos que cierran la historia",
+   "Títulos que revelan el desenlace"
+  ],
+  "correcta": 1,
+  "explicacion": "Ejemplos de rarezas.",
+  "fuente": "Charla 3",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-021",
+  "categoria": "worldbuilding",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un idioma inventado?",
+  "opciones": [
+   "Un registro culto de una lengua real",
+   "Un dialecto real hablado en una región remota",
+   "Una lengua creada para un mundo de ficción",
+   "Un código secreto usado por espías reales"
+  ],
+  "correcta": 2,
+  "explicacion": "Ej.: élfico de Tolkien.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-029",
+  "categoria": "worldbuilding",
+  "nivel": "facil",
+  "pregunta": "¿Qué recurso es clave en el mundo de Dune?",
+  "opciones": [
+   "El mineral mithril",
+   "El metal unobtanio",
+   "El cristal kyber",
+   "La especia melange"
+  ],
+  "correcta": 3,
+  "explicacion": "Moneda y poder.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-036",
+  "categoria": "worldbuilding",
+  "nivel": "facil",
+  "pregunta": "¿Qué es la economía de un mundo?",
+  "opciones": [
+   "Cómo se transmiten sus mitos y leyendas",
+   "Cómo producen, intercambian y valoran sus recursos",
+   "Cómo se gobiernan y toman decisiones colectivas",
+   "Cómo se representan sus tierras y rutas"
+  ],
+  "correcta": 1,
+  "explicacion": "Mueve a la sociedad.",
+  "fuente": "Charla 3",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-039",
+  "categoria": "worldbuilding",
+  "nivel": "facil",
+  "pregunta": "¿Qué es la mitología de un mundo?",
+  "opciones": [
+   "Los idiomas y dialectos que lo expresan",
+   "Los mapas y rutas que lo representan",
+   "Los climas y estaciones que lo definen",
+   "Los mitos y leyendas que lo explican"
+  ],
+  "correcta": 3,
+  "explicacion": "Da identidad.",
+  "fuente": "Charla 3",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-041",
+  "categoria": "worldbuilding",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un mito?",
+  "opciones": [
+   "Un manual que enseña a usar un objeto",
+   "Un relato que explica el origen de algo",
+   "Una noticia que informa de un hecho reciente",
+   "Un diccionario que define los términos"
+  ],
+  "correcta": 1,
+  "explicacion": "Ej.: mitos de creación.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-043",
+  "categoria": "worldbuilding",
+  "nivel": "facil",
+  "pregunta": "¿Qué es una tecnología ficticia?",
+  "opciones": [
+   "Un invento real que usa el autor",
+   "Una herramienta de escritura para el autor",
+   "Un invento imaginario de ese mundo",
+   "Un aparato descrito en un manual técnico"
+  ],
+  "correcta": 2,
+  "explicacion": "Ej.: naves espaciales.",
+  "fuente": "Charla 3",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-046",
+  "categoria": "worldbuilding",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un mundo secundario?",
+  "opciones": [
+   "Un mundo real descrito por un narrador secundario",
+   "Un lugar poco importante dentro de la historia",
+   "Una versión reducida del mundo real",
+   "Un mundo ficticio distinto del real"
+  ],
+  "correcta": 3,
+  "explicacion": "Término de Tolkien.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-047",
+  "categoria": "worldbuilding",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un mundo primario?",
+  "opciones": [
+   "El primer mundo que visita el protagonista",
+   "El lugar más importante de la trama",
+   "El mundo real en el que vivimos",
+   "El mundo inventado donde sucede la acción principal"
+  ],
+  "correcta": 2,
+  "explicacion": "Opuesto al secundario.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-048",
+  "categoria": "worldbuilding",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un universo compartido?",
+  "opciones": [
+   "Una obra que se publica en varios países a la vez",
+   "Varias obras ambientadas en el mismo mundo",
+   "Un libro que reúne cuentos sin relación",
+   "Una sola obra con varios narradores distintos"
+  ],
+  "correcta": 1,
+  "explicacion": "Ej.: Marvel.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-050",
+  "categoria": "worldbuilding",
+  "nivel": "facil",
+  "pregunta": "¿Qué es una saga?",
+  "opciones": [
+   "Una serie de obras conectadas entre sí",
+   "Una colección de relatos independientes",
+   "Una obra única muy extensa",
+   "Un libro dividido en varias partes"
+  ],
+  "correcta": 0,
+  "explicacion": "Ej.: Harry Potter.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-051",
+  "categoria": "worldbuilding",
+  "nivel": "facil",
+  "pregunta": "¿Qué es el «lore»?",
+  "opciones": [
+   "El conjunto de ventas y críticas de una obra",
+   "El conjunto de historia y trasfondo de un mundo",
+   "El conjunto de personajes secundarios de una trama",
+   "El conjunto de reglas de ortografía de un idioma"
+  ],
+  "correcta": 1,
+  "explicacion": "Término común en fantasía.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-056",
+  "categoria": "worldbuilding",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un artefacto mágico?",
+  "opciones": [
+   "Un objeto cotidiano sin ningún valor especial",
+   "Un objeto dotado de poderes sobrenaturales",
+   "Una criatura que concede deseos",
+   "Una fórmula que debe recitarse en voz alta"
+  ],
+  "correcta": 1,
+  "explicacion": "Ej.: un anillo.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-061",
+  "categoria": "worldbuilding",
+  "nivel": "media",
+  "pregunta": "¿Qué es el «iceberg» en el worldbuilding?",
+  "opciones": [
+   "Mostrar todo lo que el autor sabe del mundo",
+   "Esconder el mundo para sorprender en el final",
+   "Saber mucho más del mundo de lo que se muestra",
+   "Contar el mundo desde el punto de vista del villano"
+  ],
+  "correcta": 2,
+  "explicacion": "Se muestra solo la parte necesaria.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-065",
+  "categoria": "worldbuilding",
+  "nivel": "media",
+  "pregunta": "¿Quién formuló las «leyes de la magia» más citadas en fantasía moderna?",
+  "opciones": [
+   "Patrick Rothfuss",
+   "Brandon Sanderson",
+   "Terry Pratchett",
+   "Neil Gaiman"
+  ],
+  "correcta": 1,
+  "explicacion": "Primera ley: lo que resuelve es proporcional a lo que se entiende.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-066",
+  "categoria": "worldbuilding",
+  "nivel": "media",
+  "pregunta": "¿Qué dice la primera ley de Sanderson?",
+  "opciones": [
+   "La capacidad de sorprender al lector depende de cuánto oculta el autor la magia",
+   "La capacidad de un personaje de sobrevivir depende de cuánto poder mágico tenga",
+   "La capacidad de resolver conflictos con magia depende de cuánto la comprende el lector",
+   "La capacidad de un mago de lanzar hechizos depende de su coste en energía"
+  ],
+  "correcta": 2,
+  "explicacion": "Evita el deus ex machina.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-070",
+  "categoria": "worldbuilding",
+  "nivel": "media",
+  "pregunta": "¿Qué efecto tiene la tecnología en una sociedad?",
+  "opciones": [
+   "Solo afecta al vocabulario que usa la gente",
+   "Cambia su economía, su cultura y su reparto de poder",
+   "No cambia nada porque la sociedad es la misma",
+   "Solo cambia el aspecto exterior de las ciudades"
+  ],
+  "correcta": 1,
+  "explicacion": "Charla 3.",
+  "fuente": "Charla 3",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-071",
+  "categoria": "worldbuilding",
+  "nivel": "media",
+  "pregunta": "¿Qué ocurre si las reglas del mundo se rompen sin consecuencias?",
+  "opciones": [
+   "Gana misterio y sorpresa",
+   "Gana ritmo y tensión",
+   "Pierde coherencia y credibilidad",
+   "Gana coherencia y fuerza dramática"
+  ],
+  "correcta": 2,
+  "explicacion": "Las reglas dan solidez.",
+  "fuente": "Charla 3",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-074",
+  "categoria": "worldbuilding",
+  "nivel": "media",
+  "pregunta": "¿Qué aporta el sistema de castas?",
+  "opciones": [
+   "Igualdad de oportunidades para todos",
+   "Rigidez social y conflicto potencial",
+   "Armonía entre los distintos grupos",
+   "Libertad para cambiar de posición"
+  ],
+  "correcta": 1,
+  "explicacion": "Charla 3.",
+  "fuente": "Charla 3",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-084",
+  "categoria": "worldbuilding",
+  "nivel": "media",
+  "pregunta": "¿Qué puede reflejar un idioma inventado?",
+  "opciones": [
+   "Nada, porque es un código sin significado cultural",
+   "Solo la geografía del territorio donde se habla",
+   "Solo el clima y las estaciones del año",
+   "La cultura y la historia de quienes lo hablan"
+  ],
+  "correcta": 3,
+  "explicacion": "Tolkien lo ilustra.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-085",
+  "categoria": "worldbuilding",
+  "nivel": "media",
+  "pregunta": "¿Qué puede indicar un nombre propio en un mundo ficticio?",
+  "opciones": [
+   "Solo el gusto personal del autor",
+   "Solo el género o la edad del personaje",
+   "Origen cultural, linaje o función",
+   "Nada, porque los nombres son arbitrarios"
+  ],
+  "correcta": 2,
+  "explicacion": "Coherencia onomástica.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-086",
+  "categoria": "worldbuilding",
+  "nivel": "media",
+  "pregunta": "¿Qué es la coherencia onomástica?",
+  "opciones": [
+   "Que todos los personajes se llamen de forma parecida",
+   "Que ningún personaje lleve un nombre propio",
+   "Que todos los nombres procedan del mundo real",
+   "Que los nombres de un mundo sigan patrones culturales"
+  ],
+  "correcta": 3,
+  "explicacion": "Evita mezclar al azar.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-087",
+  "categoria": "worldbuilding",
+  "nivel": "media",
+  "pregunta": "¿Qué es el calendario de un mundo?",
+  "opciones": [
+   "Su forma de escribir las leyes",
+   "Su forma de medir el tiempo",
+   "Su forma de repartir el territorio",
+   "Su forma de nombrar a los dioses"
+  ],
+  "correcta": 1,
+  "explicacion": "Puede ser distinto del nuestro.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-089",
+  "categoria": "worldbuilding",
+  "nivel": "media",
+  "pregunta": "¿Qué es el comercio en un mundo?",
+  "opciones": [
+   "El conjunto de rutas y mapas de un reino",
+   "El sistema de creencias de un pueblo",
+   "El enfrentamiento armado entre pueblos",
+   "El intercambio de bienes y servicios entre pueblos"
+  ],
+  "correcta": 3,
+  "explicacion": "Conecta culturas.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-096",
+  "categoria": "worldbuilding",
+  "nivel": "dificil",
+  "pregunta": "¿Quién escribió «Un mundo feliz»?",
+  "opciones": [
+   "George Orwell",
+   "Aldous Huxley",
+   "Margaret Atwood",
+   "Ray Bradbury"
+  ],
+  "correcta": 1,
+  "explicacion": "Distopía de 1932.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-108",
+  "categoria": "worldbuilding",
+  "nivel": "dificil",
+  "pregunta": "¿Qué significa que un mundo sea «verosímil»?",
+  "opciones": [
+   "Que resulte creíble dentro de sus propias reglas",
+   "Que sea breve y fácil de resumir",
+   "Que sea tan extraño que sorprenda siempre",
+   "Que reproduzca fielmente el mundo real"
+  ],
+  "correcta": 0,
+  "explicacion": "Coherencia interna.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-109",
+  "categoria": "worldbuilding",
+  "nivel": "dificil",
+  "pregunta": "¿Qué sucede si se explica todo el sistema de magia al principio?",
+  "opciones": [
+   "Se gana tensión y misterio",
+   "Se pierde el misterio y el ritmo",
+   "Se gana credibilidad y emoción",
+   "Se gana ritmo y claridad"
+  ],
+  "correcta": 1,
+  "explicacion": "Mejor dosificar.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-112",
+  "categoria": "worldbuilding",
+  "nivel": "dificil",
+  "pregunta": "¿Qué se entiende por «mundo vivo»?",
+  "opciones": [
+   "Uno con vida más allá de los personajes principales",
+   "Uno breve que cabe en un solo capítulo",
+   "Uno sin personajes humanos, solo naturaleza",
+   "Uno con muchos animales y plantas descritos"
+  ],
+  "correcta": 0,
+  "explicacion": "Se percibe una sociedad real.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-117",
+  "categoria": "worldbuilding",
+  "nivel": "dificil",
+  "pregunta": "¿Qué se gana con un «entorno distintivo»?",
+  "opciones": [
+   "Un ritmo más rápido en todos los capítulos",
+   "Un final más sorprendente para el lector",
+   "Un narrador de voz más reconocible",
+   "Una atmósfera memorable y propia"
+  ],
+  "correcta": 3,
+  "explicacion": "Identidad.",
+  "fuente": "Charla 3",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-118",
+  "categoria": "worldbuilding",
+  "nivel": "dificil",
+  "pregunta": "¿Qué es la «verosimilitud interna»?",
+  "opciones": [
+   "Que el mundo siga sus propias leyes sin contradicciones",
+   "Que el mundo sea breve y fácil de explicar",
+   "Que el mundo copie al detalle las leyes de la realidad",
+   "Que el mundo sea tan raro que no se entienda"
+  ],
+  "correcta": 0,
+  "explicacion": "Concepto clave.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-120",
+  "categoria": "worldbuilding",
+  "nivel": "dificil",
+  "pregunta": "¿Qué se logra con un «hecho histórico inventado» que se menciona de pasada?",
+  "opciones": [
+   "Sensación de un final anticipado",
+   "Sensación de repetición con capítulos previos",
+   "Sensación de profundidad y de mundo con pasado",
+   "Sensación de ritmo acelerado en la escena"
+  ],
+  "correcta": 2,
+  "explicacion": "Efecto iceberg.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-125",
+  "categoria": "worldbuilding",
+  "nivel": "media",
+  "pregunta": "¿Qué papel juega la fe como recurso de poder?",
+  "opciones": [
+   "Resta autoridad a quienes dirigen la creencia",
+   "Solo decora las ceremonias sin consecuencias",
+   "Carece de influencia sobre las decisiones políticas",
+   "Da autoridad a quien controla la creencia"
+  ],
+  "correcta": 3,
+  "explicacion": "Ejemplo citado en la Charla 3.",
+  "fuente": "Charla 3",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-131",
+  "categoria": "worldbuilding",
+  "nivel": "media",
+  "pregunta": "¿Qué es una «cosmogonía»?",
+  "opciones": [
+   "Relato del origen del universo en una mitología",
+   "Relato de la caída de un imperio antiguo",
+   "Relato de las hazañas de un héroe legendario",
+   "Relato del fin del mundo y de los dioses"
+  ],
+  "correcta": 0,
+  "explicacion": "Mito de creación.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-140",
+  "categoria": "worldbuilding",
+  "nivel": "media",
+  "pregunta": "¿Qué refleja la arquitectura de un lugar?",
+  "opciones": [
+   "Clima, recursos disponibles y cultura",
+   "Solo el gusto estético de los constructores",
+   "Solo las decisiones políticas de los gobernantes",
+   "Nada, porque es un simple fondo"
+  ],
+  "correcta": 0,
+  "explicacion": "Detalle de ambientación.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-143",
+  "categoria": "worldbuilding",
+  "nivel": "dificil",
+  "pregunta": "¿Qué aporta una tradición con origen olvidado?",
+  "opciones": [
+   "Sensación de historia profunda y de pasado",
+   "Sensación de prisa en la narración",
+   "Sensación de repetición del mundo",
+   "Sensación de error del autor"
+  ],
+  "correcta": 0,
+  "explicacion": "Efecto de profundidad.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-144",
+  "categoria": "worldbuilding",
+  "nivel": "dificil",
+  "pregunta": "¿Qué sucede cuando la tecnología permite algo que la cultura prohíbe?",
+  "opciones": [
+   "No ocurre nada porque conviven sin fricción",
+   "Se elimina de inmediato la tecnología",
+   "Se genera tensión entre el avance y la norma",
+   "Se resuelve el asunto porque la ley cede siempre"
+  ],
+  "correcta": 2,
+  "explicacion": "Fuente de tensión.",
+  "fuente": "Charla 3",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "WOR-150",
+  "categoria": "worldbuilding",
+  "nivel": "dificil",
+  "pregunta": "¿Qué aporta que la gravedad cambie en un mundo?",
+  "opciones": [
+   "Ningún cambio, porque la gente se adapta",
+   "Cambios solo en el sistema de magia",
+   "Cambios solo en el aspecto del paisaje",
+   "Cambios en arquitectura, transporte y modos de vida"
+  ],
+  "correcta": 3,
+  "explicacion": "Ejemplo citado en la Charla 3.",
+  "fuente": "Charla 3",
+  "banco": "publico",
+  "revisada": false
+ }
+]

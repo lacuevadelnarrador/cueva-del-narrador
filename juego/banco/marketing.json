@@ -1,0 +1,682 @@
+[
+ {
+  "id": "MKT-006",
+  "categoria": "marketing",
+  "nivel": "facil",
+  "pregunta": "BookTok es la comunidad literaria de…",
+  "opciones": [
+   "Instagram",
+   "X",
+   "LinkedIn",
+   "TikTok"
+  ],
+  "correcta": 3,
+  "explicacion": "Tiene capacidad real de impulsar ventas.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-010",
+  "categoria": "marketing",
+  "nivel": "facil",
+  "pregunta": "¿Qué tipo de libros encajan mejor en LinkedIn?",
+  "opciones": [
+   "Poesía lírica y romance",
+   "Fantasía épica y juvenil",
+   "No ficción, divulgación y negocios",
+   "Literatura infantil ilustrada"
+  ],
+  "correcta": 2,
+  "explicacion": "Es una red profesional; poco indicada para ficción pura.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-020",
+  "categoria": "marketing",
+  "nivel": "media",
+  "pregunta": "¿Cuál NO es uno de los cinco pilares de contenido del plan?",
+  "opciones": [
+   "Detrás de la obra y su proceso",
+   "El mundo de tu historia y sus personajes",
+   "Tu voz como autor y tus opiniones",
+   "Ofertas y descuentos permanentes"
+  ],
+  "correcta": 3,
+  "explicacion": "Son: detrás de la obra, el mundo de tu historia, lectura y comunidad, tu voz como autor, y novedades o prueba social.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-022",
+  "categoria": "marketing",
+  "nivel": "dificil",
+  "pregunta": "¿Cuándo se puede añadir una tercera plataforma?",
+  "opciones": [
+   "Siempre que se quiera crecer más rápido",
+   "Cuando las dos primeras funcionan y hay tiempo y motivo estratégico",
+   "Nunca, bajo ninguna circunstancia posible",
+   "En cuanto se publica el primer libro del autor"
+  ],
+  "correcta": 1,
+  "explicacion": "Se necesitan las tres condiciones a la vez.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-027",
+  "categoria": "marketing",
+  "nivel": "dificil",
+  "pregunta": "¿Cuál es un dato psicográfico del lector ideal?",
+  "opciones": [
+   "Su edad y su género",
+   "Su ciudad de residencia",
+   "Sus valores y aspiraciones",
+   "Sus ingresos anuales"
+  ],
+  "correcta": 2,
+  "explicacion": "Los demográficos son edad, género, ubicación, educación e ingresos.",
+  "fuente": "MKT 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-031",
+  "categoria": "marketing",
+  "nivel": "facil",
+  "pregunta": "¿Qué es la marca personal de un autor?",
+  "opciones": [
+   "Su nombre de pila y sus apellidos",
+   "La firma que pone en sus ejemplares",
+   "El logotipo de la editorial que lo publica y sus colores",
+   "Cómo lo percibe el público más allá de sus libros"
+  ],
+  "correcta": 3,
+  "explicacion": "Incluye estilo, valores, personalidad e historia.",
+  "fuente": "MKT 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-038",
+  "categoria": "marketing",
+  "nivel": "facil",
+  "pregunta": "¿Cuál es una red de vídeo corto?",
+  "opciones": [
+   "Goodreads",
+   "Medium",
+   "TikTok",
+   "LinkedIn"
+  ],
+  "correcta": 2,
+  "explicacion": "BookTok nace ahí.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-040",
+  "categoria": "marketing",
+  "nivel": "facil",
+  "pregunta": "¿Qué es una métrica de vanidad?",
+  "opciones": [
+   "Un gasto fijo en publicidad de pago que se repite cada mes del año",
+   "Una cifra que impresiona pero no prueba que la estrategia funcione",
+   "Un clic accidental en el enlace del perfil",
+   "Un error de estrategia al elegir la red social"
+  ],
+  "correcta": 1,
+  "explicacion": "Ej.: seguidores o «me gusta» aislados.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-044",
+  "categoria": "marketing",
+  "nivel": "facil",
+  "pregunta": "¿Qué es una sinopsis?",
+  "opciones": [
+   "Un índice con todos los capítulos de la obra",
+   "Una biografía del autor y de su trayectoria literaria completa",
+   "Un resumen que presenta la historia sin revelar el final",
+   "Un contrato con la editorial que elijas"
+  ],
+  "correcta": 2,
+  "explicacion": "Debe despertar interés.",
+  "fuente": "Charla 17",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-049",
+  "categoria": "marketing",
+  "nivel": "facil",
+  "pregunta": "¿Qué es BookTok?",
+  "opciones": [
+   "Un tipo de contrato editorial",
+   "Una comunidad literaria de TikTok",
+   "Un club de lectura de carácter físico",
+   "Una editorial de libros juveniles"
+  ],
+  "correcta": 1,
+  "explicacion": "Puede impulsar ventas.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-053",
+  "categoria": "marketing",
+  "nivel": "facil",
+  "pregunta": "¿Qué red es más adecuada para ciencia ficción y divulgación?",
+  "opciones": [
+   "Pinterest",
+   "Instagram",
+   "LinkedIn",
+   "X"
+  ],
+  "correcta": 3,
+  "explicacion": "Conversación textual y debate.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-060",
+  "categoria": "marketing",
+  "nivel": "facil",
+  "pregunta": "¿Qué es una reseña?",
+  "opciones": [
+   "Un contrato sobre un libro",
+   "Una opinión sobre un libro",
+   "Un anuncio de pago sobre un libro",
+   "Una sinopsis sobre un libro"
+  ],
+  "correcta": 1,
+  "explicacion": "Pueden darla lectores o reseñadores.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-062",
+  "categoria": "marketing",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un sorteo de libros?",
+  "opciones": [
+   "Una reseña de un lector fiel de la autora",
+   "Un contrato de cesión de derechos con la editorial",
+   "Una venta con descuento especial por tiempo limitado",
+   "Una dinámica para dar visibilidad regalando ejemplares"
+  ],
+  "correcta": 3,
+  "explicacion": "Funciona como acción de comunidad.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-063",
+  "categoria": "marketing",
+  "nivel": "facil",
+  "pregunta": "¿Qué es una colaboración entre autores?",
+  "opciones": [
+   "Una reseña cruzada entre dos autores",
+   "Acciones conjuntas como directos, sorteos o antologías",
+   "Un contrato de exclusividad entre autores",
+   "Una competición entre autores del mismo género literario"
+  ],
+  "correcta": 1,
+  "explicacion": "Multiplican alcance.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-067",
+  "categoria": "marketing",
+  "nivel": "facil",
+  "pregunta": "¿Qué pilar es «detrás de la obra»?",
+  "opciones": [
+   "Proceso creativo y bambalinas",
+   "Ventas y cifras del libro",
+   "Descuentos y ofertas",
+   "Reseñas de lectores"
+  ],
+  "correcta": 0,
+  "explicacion": "Es uno de los cinco pilares.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-070",
+  "categoria": "marketing",
+  "nivel": "facil",
+  "pregunta": "¿Qué pilar es «novedades o prueba social»?",
+  "opciones": [
+   "Procesos de escritura del autor",
+   "Descuentos y ofertas especiales de lanzamiento",
+   "Lanzamientos y opiniones de lectores",
+   "Fichas técnicas del libro"
+  ],
+  "correcta": 2,
+  "explicacion": "Los demás ven que otros te leen.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-071",
+  "categoria": "marketing",
+  "nivel": "facil",
+  "pregunta": "¿Qué pilar incluye retos de lectura?",
+  "opciones": [
+   "Tu voz como autor",
+   "Novedades o prueba social",
+   "Lectura y comunidad",
+   "Detrás de la obra"
+  ],
+  "correcta": 2,
+  "explicacion": "Dinamiza a la audiencia.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-078",
+  "categoria": "marketing",
+  "nivel": "facil",
+  "pregunta": "¿Cuál es el objetivo de las métricas?",
+  "opciones": [
+   "Ocultar los malos resultados",
+   "Compararte con otros autores",
+   "Saber qué funciona y qué ajustar",
+   "Presumir de números ante otros"
+  ],
+  "correcta": 2,
+  "explicacion": "Se revisan una vez al mes.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-080",
+  "categoria": "marketing",
+  "nivel": "media",
+  "pregunta": "¿Qué datos psicográficos incluye?",
+  "opciones": [
+   "Ocupación y estudios cursados",
+   "Intereses, valores, aspiraciones y miedos",
+   "Edad e ingresos anuales de la persona",
+   "Ubicación y país de residencia"
+  ],
+  "correcta": 1,
+  "explicacion": "Hablan de la personalidad.",
+  "fuente": "MKT 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-081",
+  "categoria": "marketing",
+  "nivel": "media",
+  "pregunta": "¿Qué hábitos de lectura se estudian?",
+  "opciones": [
+   "Su ciudad de residencia y su código postal",
+   "Su edad, su fecha de nacimiento exacta y su signo del zodiaco",
+   "Su salario y sus ingresos mensuales",
+   "Géneros, formato, dónde compran y cómo descubren libros"
+  ],
+  "correcta": 3,
+  "explicacion": "Orientan el marketing.",
+  "fuente": "MKT 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-083",
+  "categoria": "marketing",
+  "nivel": "media",
+  "pregunta": "¿Qué elementos tiene un buen pitch?",
+  "opciones": [
+   "Gancho, conflicto, protagonista o tema, propuesta única",
+   "Solo el género de la obra y su público",
+   "Solo el precio del libro y los formatos",
+   "Solo el título de la obra y el nombre completo del autor"
+  ],
+  "correcta": 0,
+  "explicacion": "Cuatro elementos clave.",
+  "fuente": "MKT 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-085",
+  "categoria": "marketing",
+  "nivel": "media",
+  "pregunta": "¿Qué es el análisis de competencia?",
+  "opciones": [
+   "Copiar sus libros y estrategias de promoción",
+   "Ignorarlos por completo",
+   "Insultarlos en las redes sociales",
+   "Estudiar sus obras, marketing y portadas"
+  ],
+  "correcta": 3,
+  "explicacion": "Para encontrar brechas.",
+  "fuente": "MKT 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-088",
+  "categoria": "marketing",
+  "nivel": "media",
+  "pregunta": "¿Qué formatos funcionan en Instagram?",
+  "opciones": [
+   "Carruseles, reels, stories y fotos cuidadas",
+   "Solo hilos de mensajes encadenados",
+   "Solo documentos PDF descargables",
+   "Solo texto largo sin imágenes de apoyo en cada publicación"
+  ],
+  "correcta": 0,
+  "explicacion": "Fragmentos, citas, procesos.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-089",
+  "categoria": "marketing",
+  "nivel": "media",
+  "pregunta": "¿Qué formatos funcionan en TikTok?",
+  "opciones": [
+   "Artículos largos de opinión y análisis",
+   "Solo hilos de mensajes encadenados",
+   "Vídeos de reacción, tropos, listas y proceso",
+   "Solo fotos fijas con texto superpuesto y sin movimiento"
+  ],
+  "correcta": 2,
+  "explicacion": "Contenido corto y emocional.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-090",
+  "categoria": "marketing",
+  "nivel": "media",
+  "pregunta": "¿Qué formatos funcionan en X?",
+  "opciones": [
+   "Reels de vídeo vertical con música",
+   "Hilos, microrrelatos y frases destacadas",
+   "Carruseles de imágenes con texto",
+   "Podcasts de larga duración semanales"
+  ],
+  "correcta": 1,
+  "explicacion": "Texto breve y conversación.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-093",
+  "categoria": "marketing",
+  "nivel": "media",
+  "pregunta": "¿Qué pareja propone la clase para autora de romance?",
+  "opciones": [
+   "LinkedIn principal y X secundaria",
+   "Pinterest principal y X secundaria",
+   "YouTube principal y LinkedIn secundaria",
+   "BookTok principal e Instagram secundaria"
+  ],
+  "correcta": 3,
+  "explicacion": "Descubrimiento más estética.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-096",
+  "categoria": "marketing",
+  "nivel": "media",
+  "pregunta": "¿Qué es el «enlace estratégico»?",
+  "opciones": [
+   "Un enlace roto que nadie visita desde hace meses y meses",
+   "El único enlace que debe llevar al destino más valioso",
+   "Un hashtag de moda en la red social del momento",
+   "Un anuncio de pago que lleva a la tienda"
+  ],
+  "correcta": 1,
+  "explicacion": "Web, suscripción o enlaces.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-098",
+  "categoria": "marketing",
+  "nivel": "media",
+  "pregunta": "¿Cuál es una buena práctica de comunidad?",
+  "opciones": [
+   "Preguntar a la audiencia y pedir su opinión",
+   "Responder a las críticas con insultos",
+   "Ignorar los mensajes de los lectores",
+   "Llenar el perfil de spam promocional a todas horas"
+  ],
+  "correcta": 0,
+  "explicacion": "Interacción real.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-099",
+  "categoria": "marketing",
+  "nivel": "media",
+  "pregunta": "¿Qué conviene con el contenido de los lectores?",
+  "opciones": [
+   "Compartirlo con su permiso",
+   "Cobrar por compartirlo",
+   "Compartirlo sin pedir permiso",
+   "Borrarlo para evitar problemas"
+  ],
+  "correcta": 0,
+  "explicacion": "Respeta normas y permiso.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-114",
+  "categoria": "marketing",
+  "nivel": "media",
+  "pregunta": "¿Qué es la prueba social?",
+  "opciones": [
+   "Un contrato firmado entre el autor y la editorial",
+   "Una factura de la imprenta por la tirada",
+   "Un anuncio pagado por la editorial del libro",
+   "Que otros lectores muestran interés o aprueban"
+  ],
+  "correcta": 3,
+  "explicacion": "Genera confianza.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-118",
+  "categoria": "marketing",
+  "nivel": "dificil",
+  "pregunta": "¿Qué distingue un canal de descubrimiento de uno de autoridad?",
+  "opciones": [
+   "El primero es siempre de pago y el segundo gratuito",
+   "Son iguales y se usan del mismo modo siempre en la práctica",
+   "El primero atrae audiencia nueva y el segundo consolida",
+   "El segundo funciona solo fuera de internet"
+  ],
+  "correcta": 2,
+  "explicacion": "La pareja ideal une ambos.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-121",
+  "categoria": "marketing",
+  "nivel": "dificil",
+  "pregunta": "¿Cuál es una dinámica con la comunidad?",
+  "opciones": [
+   "Cerrar los comentarios para evitar problemas",
+   "Spam masivo de enlaces en los comentarios",
+   "Votaciones sobre portadas, nombres o desenlaces",
+   "Insultos a los seguidores que critican"
+  ],
+  "correcta": 2,
+  "explicacion": "Implica a los lectores.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-122",
+  "categoria": "marketing",
+  "nivel": "dificil",
+  "pregunta": "¿Qué es el buyer persona «Ana la Aventurera»?",
+  "opciones": [
+   "Un lector ideal ficticio con nombre",
+   "Una autora real que forma parte del club",
+   "Una editora de un sello independiente",
+   "Una reseñadora de prensa literaria"
+  ],
+  "correcta": 0,
+  "explicacion": "El ejercicio pide ponerle nombre.",
+  "fuente": "MKT 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-123",
+  "categoria": "marketing",
+  "nivel": "dificil",
+  "pregunta": "¿Qué pregunta clave plantea el ejercicio del lector ideal?",
+  "opciones": [
+   "Quién lo publica y en qué fecha sale a la venta",
+   "Cuánto cuesta el libro en las tiendas de la zona y en línea",
+   "Cuántas páginas tiene la obra en su edición",
+   "Cómo resuelve tu libro un problema o deseo del lector"
+  ],
+  "correcta": 3,
+  "explicacion": "Conecta con su necesidad.",
+  "fuente": "MKT 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-129",
+  "categoria": "marketing",
+  "nivel": "dificil",
+  "pregunta": "¿Qué se aconseja si un vídeo se hace viral?",
+  "opciones": [
+   "Ignorarlo y no hacer absolutamente nada",
+   "Borrar el vídeo cuanto antes para evitar problemas",
+   "Esperar a que pase el efecto sin intervenir",
+   "Tener un camino claro hacia compra o suscripción"
+  ],
+  "correcta": 3,
+  "explicacion": "No garantiza ventas por sí solo.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-136",
+  "categoria": "marketing",
+  "nivel": "dificil",
+  "pregunta": "¿Qué aportan Threads y Bluesky?",
+  "opciones": [
+   "Webs de reseñas de libros con puntuaciones",
+   "Alternativas textuales donde se instalan comunidades",
+   "Solo redes de vídeo corto con retos musicales virales",
+   "Plataformas de venta directa de libros"
+  ],
+  "correcta": 1,
+  "explicacion": "Otros espacios de conversación.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-142",
+  "categoria": "marketing",
+  "nivel": "dificil",
+  "pregunta": "¿Cuándo conviene ampliar a una tercera red?",
+  "opciones": [
+   "Nunca, bajo ninguna circunstancia imaginable ni con tiempo disponible",
+   "Cuando las dos primeras funcionan, hay tiempo y motivo",
+   "Al empezar, junto con las dos primeras redes",
+   "Siempre que se quiera, sin más condiciones"
+  ],
+  "correcta": 1,
+  "explicacion": "Tres condiciones.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-143",
+  "categoria": "marketing",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un hashtag?",
+  "opciones": [
+   "Una etiqueta para agrupar contenido por tema",
+   "Una reseña escrita por un lector",
+   "Un enlace roto que no lleva a ninguna parte",
+   "Un contrato con la plataforma social"
+  ],
+  "correcta": 0,
+  "explicacion": "Ayuda a descubrir contenido.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-147",
+  "categoria": "marketing",
+  "nivel": "media",
+  "pregunta": "¿Qué es un ARC o lectura anticipada?",
+  "opciones": [
+   "Una portada provisional",
+   "Ejemplar enviado antes de la publicación a lectores o reseñadores",
+   "Una factura que emite la imprenta por la tirada de ejemplares del libro",
+   "Un contrato de cesión de derechos firmado por el autor"
+  ],
+  "correcta": 1,
+  "explicacion": "Genera reseñas tempranas.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "MKT-149",
+  "categoria": "marketing",
+  "nivel": "dificil",
+  "pregunta": "¿Qué es el embudo de marketing?",
+  "opciones": [
+   "Una herramienta de edición de vídeo para redes sociales",
+   "Un error común al elegir las redes sociales",
+   "Un contrato con la editorial para el lanzamiento",
+   "El recorrido del lector: descubre, se interesa y compra"
+  ],
+  "correcta": 3,
+  "explicacion": "Describe el camino hacia la compra.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ }
+]

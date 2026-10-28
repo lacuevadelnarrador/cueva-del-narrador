@@ -1,2 +1,6 @@
 # Archivos locales de Claude (servidor de pruebas): no se suben ni se publican
 .claude/
+
+# Preguntas del juego reservadas a socios (llevan la respuesta correcta): solo en este equipo, nunca en git ni en la web.
+# Se importan a la base de datos; el repositorio es público.
+juego/_club/

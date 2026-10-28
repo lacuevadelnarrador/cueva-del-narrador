@@ -32,6 +32,8 @@ const ARCHIVOS = [
   'quiz.html',
   'juego/juego.css',
   'juego/juego.js',
+  'juego/estante.css',
+  'juego/estante.js',
   'juego/premios.json',
   'admin.html',
   'admin-eventos.html',

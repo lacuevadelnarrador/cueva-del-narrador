@@ -14,6 +14,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="juego/estante.css">
 <link rel="stylesheet" href="juego/juego.css">
 </head>
 <body data-acceso="publico">
@@ -33,13 +34,21 @@
   <main class="juego" id="juego">
     <!-- Anuncios para lectores de pantalla: resultado de cada respuesta, avisos del contador y final de la partida -->
     <p class="perfil-sr" aria-live="polite" id="j-anuncio"></p>
+    <!-- Socios sin servidor: se juega en modo público -->
+    <p class="j-libre" id="j-libre" hidden>Modo libre: esta partida no cuenta para el ranking.</p>
 
-    <!-- Pantalla 1: estantería y categorías -->
+    <!-- Pantalla 1: estantería y categorías (y, para los socios, el ranking) -->
     <div class="j-pantalla j-inicio" id="j-inicio">
+      <div class="chips j-pestanas" id="j-pestanas" hidden>
+        <button type="button" class="chip on" data-vista="jugar" aria-pressed="true">Jugar</button>
+        <button type="button" class="chip" data-vista="ranking" aria-pressed="false">Ranking</button>
+      </div>
+
+      <div class="j-vista" id="j-vista-jugar">
       <section aria-labelledby="j-estanteria-t">
         <div class="sec-head"><h2 id="j-estanteria-t" tabindex="-1">Tu estantería</h2><p class="j-cuenta" id="j-cuenta"></p></div>
         <div class="card j-estante"><ul class="j-libros" id="j-libros"></ul></div>
-        <p class="j-nota">Cada categoría que superes te da un libro. La estantería dura mientras no cierres el navegador.</p>
+        <p class="j-nota" id="j-nota-estante">Cada categoría que superes te da un libro. La estantería dura mientras no cierres el navegador.</p>
       </section>
 
       <section aria-labelledby="j-categorias-t">
@@ -54,11 +63,18 @@
           <ul class="j-reglas">
             <li>Quince preguntas seguidas: cinco fáciles, cinco medias y cinco difíciles.</li>
             <li>Tienes 45 segundos para cada una. Si se acaba el tiempo, cuenta como fallo.</li>
-            <li>Un fallo termina la partida. Las preguntas 5 y 10 son puntos seguros: marcan hasta dónde has llegado.</li>
+            <li>Un fallo termina la partida. Al superar la pregunta 5 ganas la insignia de bronce; en la 10, la de plata, y en la 15, la de oro y el libro de la categoría. Las insignias conseguidas no se pierden.</li>
             <li>Dos comodines de un solo uso: 50/50 quita dos respuestas incorrectas y Saltar cambia la pregunta por otra del mismo nivel.</li>
             <li>Si cierras o recargas la página, la partida se pierde.</li>
           </ul>
         </div>
+      </section>
+      </div>
+
+      <section id="j-vista-ranking" aria-labelledby="j-ranking-t" hidden>
+        <div class="sec-head"><h2 id="j-ranking-t">Ranking</h2></div>
+        <p class="j-nota j-nota-ranking">Solo lo ven los socios. Cuenta los logros (hasta 30: bronce, plata y oro en cada categoría); a igualdad, gana el menor tiempo total.</p>
+        <div id="j-ranking"></div>
       </section>
     </div>
 
@@ -86,7 +102,23 @@
         <div class="card j-tras" id="j-tras" hidden>
           <p class="j-veredicto" id="j-veredicto"></p>
           <p class="j-explicacion" id="j-explicacion"></p>
+          <p class="j-error-seguir" id="j-tras-error" role="alert" hidden></p>
           <button type="button" class="btn" id="j-siguiente"></button>
+          <button type="button" class="j-reportar" id="j-reportar" hidden>Reportar pregunta</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pantalla 2b: insignia de la pregunta 5 (bronce) o 10 (plata) -->
+    <section class="j-pantalla j-hito" id="j-hito" aria-labelledby="j-hito-t" aria-describedby="j-hito-texto" hidden>
+      <div class="card j-res j-hito-card">
+        <div class="j-hito-ins" id="j-hito-ins"></div>
+        <h2 id="j-hito-t" tabindex="-1"></h2>
+        <p class="j-res-texto" id="j-hito-texto"></p>
+        <p class="j-error-seguir" id="j-hito-error" role="alert" hidden></p>
+        <div class="j-botones">
+          <button type="button" class="btn" id="j-seguir">Seguir</button>
+          <!-- Hueco para un segundo botón («Plantarme aquí») si algún día existe esa opción en el servidor -->
         </div>
       </div>
     </section>
@@ -96,6 +128,7 @@
       <div class="card j-res" id="j-res">
         <h2 id="j-res-t" tabindex="-1"></h2>
         <p class="j-res-texto" id="j-res-texto"></p>
+        <p class="j-res-nuevo" id="j-res-nuevo" hidden>Libro nuevo</p>
         <div class="j-res-libro" id="j-res-libro"></div>
         <div class="j-botones">
           <button type="button" class="btn" id="j-otra">Volver a jugar</button>
@@ -103,6 +136,29 @@
         </div>
       </div>
     </section>
+
+    <!-- Reportar pregunta (socios, después de responder) -->
+    <dialog class="dialogo j-dialogo" id="j-dialogo-reporte" aria-labelledby="j-rep-t">
+      <form id="j-form-reporte" novalidate>
+        <h2 id="j-rep-t">Reportar pregunta</h2>
+        <fieldset class="opciones">
+          <legend>¿Qué le pasa?</legend>
+          <label class="opcion"><input type="radio" name="motivo" value="respuesta_incorrecta">La respuesta marcada como correcta no lo es</label>
+          <label class="opcion"><input type="radio" name="motivo" value="enunciado_confuso">El enunciado es confuso</label>
+          <label class="opcion"><input type="radio" name="motivo" value="errata">Tiene una errata</label>
+          <label class="opcion"><input type="radio" name="motivo" value="otra">Otra cosa</label>
+        </fieldset>
+        <div class="campo">
+          <label for="j-rep-texto">Detalles (opcional)</label>
+          <textarea class="entrada" id="j-rep-texto" maxlength="300" rows="3"></textarea>
+        </div>
+        <p class="j-rep-msg" id="j-rep-msg" role="alert"></p>
+        <div class="botones-form">
+          <button type="button" class="btn sec" id="j-rep-cancelar">Cancelar</button>
+          <button type="submit" class="btn">Enviar</button>
+        </div>
+      </form>
+    </dialog>
   </main>
 
   <nav class="nav visitante" aria-label="Navegación principal">
@@ -116,6 +172,7 @@
 <script src="supabase-config.js"></script>
 <script src="auth.js"></script>
 <script src="campana.js"></script>
+<script src="juego/estante.js"></script>
 <script src="juego/juego.js"></script>
 <script>
 if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js"));

@@ -1,22 +1,5 @@
 [
  {
-  "id": "GRA-001",
-  "categoria": "gramatica",
-  "nivel": "facil",
-  "pregunta": "¿Qué frase está bien escrita?",
-  "opciones": [
-   "No sé como decírselo.",
-   "No sé cómo decírselo.",
-   "No se cómo decírselo.",
-   "No sé cómo, decírselo."
-  ],
-  "correcta": 1,
-  "explicacion": "«Cómo» introduce una pregunta indirecta y lleva tilde.",
-  "fuente": "Charla 14",
-  "banco": "club",
-  "revisada": false
- },
- {
   "id": "GRA-002",
   "categoria": "gramatica",
   "nivel": "facil",
@@ -30,41 +13,7 @@
   "correcta": 2,
   "explicacion": "La raya es más larga que el guion y es la propia del diálogo.",
   "fuente": "Rayas de diálogo",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-003",
-  "categoria": "gramatica",
-  "nivel": "facil",
-  "pregunta": "«___, aceptó.»",
-  "opciones": [
-   "Por su puesto",
-   "Porsupuesto",
-   "Por supuesto",
-   "Por súpuesto"
-  ],
-  "correcta": 2,
-  "explicacion": "Se escribe en dos palabras y sin «puesto».",
-  "fuente": "Charla 14",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-004",
-  "categoria": "gramatica",
-  "nivel": "facil",
-  "pregunta": "«___ me miró.»",
-  "opciones": [
-   "Ni si quiera",
-   "Ni siquiera",
-   "Ni sí quiera",
-   "Nisiquiera"
-  ],
-  "correcta": 1,
-  "explicacion": "«Siquiera» va en una sola palabra.",
-  "fuente": "Charla 14",
-  "banco": "club",
+  "banco": "publico",
   "revisada": false
  },
  {
@@ -81,7 +30,7 @@
   "correcta": 1,
   "explicacion": "Sin acotación no se cierra con raya; la de apertura va pegada y no es un guion.",
   "fuente": "Rayas de diálogo",
-  "banco": "club",
+  "banco": "publico",
   "revisada": false
  },
  {
@@ -98,126 +47,7 @@
   "correcta": 1,
   "explicacion": "Aquí es pronombre sujeto y lleva tilde.",
   "fuente": "Charla 14",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-007",
-  "categoria": "gramatica",
-  "nivel": "facil",
-  "pregunta": "«No fue rabia, ___ miedo.»",
-  "opciones": [
-   "si no",
-   "sino",
-   "sí no",
-   "sinó"
-  ],
-  "correcta": 1,
-  "explicacion": "«Sino» corrige o sustituye lo negado.",
-  "fuente": "Charla 14",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-008",
-  "categoria": "gramatica",
-  "nivel": "facil",
-  "pregunta": "«No entiendo ___ se ha ido.»",
-  "opciones": [
-   "porque",
-   "porqué",
-   "por qué",
-   "por que"
-  ],
-  "correcta": 2,
-  "explicacion": "Es una pregunta indirecta: «por qué», separado y con tilde.",
-  "fuente": "Charla 14",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-009",
-  "categoria": "gramatica",
-  "nivel": "facil",
-  "pregunta": "¿Qué son los verbos dicendi?",
-  "opciones": [
-   "Los que nombran una forma de hablar (decir, susurrar…)",
-   "Los de movimiento",
-   "Los que describen gestos, como sonreír",
-   "Los pasivos"
-  ],
-  "correcta": 0,
-  "explicacion": "Por eso pueden unirse directamente al diálogo con la raya.",
-  "fuente": "Rayas de diálogo",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-010",
-  "categoria": "gramatica",
-  "nivel": "facil",
-  "pregunta": "¿Es un error escribir «Solo quería dormir» sin tilde?",
-  "opciones": [
-   "Sí, siempre lleva tilde",
-   "No: la norma actual permite «solo» sin tilde salvo ambigüedad real",
-   "Sí, porque aquí es adverbio",
-   "Depende de la tipografía"
-  ],
-  "correcta": 1,
-  "explicacion": "Lo importante es mantener un criterio uniforme.",
-  "fuente": "Charla 14",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-011",
-  "categoria": "gramatica",
-  "nivel": "media",
-  "pregunta": "«Me preguntó de ___ era el mensaje.»",
-  "opciones": [
-   "quien",
-   "quién",
-   "quíen",
-   "qien"
-  ],
-  "correcta": 1,
-  "explicacion": "Interrogativo indirecto: lleva tilde.",
-  "fuente": "Charla 14",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-012",
-  "categoria": "gramatica",
-  "nivel": "media",
-  "pregunta": "¿Cuál es correcta?",
-  "opciones": [
-   "—No pienso irme, dijo ella, y no hay nada que puedas hacer.",
-   "—No pienso irme —dijo ella— y no hay nada que puedas hacer.",
-   "—No pienso irme dijo ella y no hay nada que puedas hacer.",
-   "—No pienso irme— dijo ella —y no hay nada que puedas hacer."
-  ],
-  "correcta": 1,
-  "explicacion": "Hacen falta dos rayas: una para cerrar y otra para reabrir el diálogo.",
-  "fuente": "Rayas de diálogo",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-013",
-  "categoria": "gramatica",
-  "nivel": "media",
-  "pregunta": "¿Cuál NO es un verbo dicendi?",
-  "opciones": [
-   "Susurrar",
-   "Responder",
-   "Sonreír",
-   "Preguntar"
-  ],
-  "correcta": 2,
-  "explicacion": "No se puede sonreír una frase: «—No pienso irme. Sonrió.»",
-  "fuente": "Rayas de diálogo",
-  "banco": "club",
+  "banco": "publico",
   "revisada": false
  },
  {
@@ -234,7 +64,7 @@
   "correcta": 1,
   "explicacion": "Si equivale a «en caso contrario», va separado y entre pausas.",
   "fuente": "Conectores",
-  "banco": "club",
+  "banco": "publico",
   "revisada": false
  },
  {
@@ -251,92 +81,7 @@
   "correcta": 1,
   "explicacion": "Tras una negación, lo que corrige lo negado lleva «sino».",
   "fuente": "Conectores",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-016",
-  "categoria": "gramatica",
-  "nivel": "media",
-  "pregunta": "¿Qué falla en «Aunque estaba agotado, pero siguió caminando»?",
-  "opciones": [
-   "Doble conector de oposición",
-   "Falta una tilde",
-   "Sobra una raya",
-   "Voz pasiva"
-  ],
-  "correcta": 0,
-  "explicacion": "«Aunque» ya introduce la oposición y «pero» la repite.",
-  "fuente": "Conectores",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-017",
-  "categoria": "gramatica",
-  "nivel": "media",
-  "pregunta": "¿Qué frase está mejor puntuada?",
-  "opciones": [
-   "Cierro los ojos, y apoyo la cabeza en el cristal.",
-   "Cierro los ojos y apoyo la cabeza en el cristal.",
-   "Cierro, los ojos y apoyo la cabeza en el cristal.",
-   "Cierro los ojos y, apoyo la cabeza en el cristal."
-  ],
-  "correcta": 1,
-  "explicacion": "Entre dos verbos coordinados, la coma antes de «y» suele sobrar.",
-  "fuente": "Charla 14",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-018",
-  "categoria": "gramatica",
-  "nivel": "media",
-  "pregunta": "«Ya no recordaba ___ había empezado todo.»",
-  "opciones": [
-   "cuando",
-   "cuándo",
-   "cuanto",
-   "quando"
-  ],
-  "correcta": 1,
-  "explicacion": "Interrogativo indirecto.",
-  "fuente": "Charla 14",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-019",
-  "categoria": "gramatica",
-  "nivel": "media",
-  "pregunta": "«No creo que me ___ tiempo.»",
-  "opciones": [
-   "de",
-   "dé",
-   "del",
-   "dè"
-  ],
-  "correcta": 1,
-  "explicacion": "«Dé» con tilde es del verbo dar.",
-  "fuente": "Charla 14",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-020",
-  "categoria": "gramatica",
-  "nivel": "media",
-  "pregunta": "«Miró alrededor para ver ___ esconderse.»",
-  "opciones": [
-   "donde",
-   "dónde",
-   "adonde",
-   "don de"
-  ],
-  "correcta": 1,
-  "explicacion": "Interrogativo indirecto: lleva tilde.",
-  "fuente": "Charla 14",
-  "banco": "club",
+  "banco": "publico",
   "revisada": false
  },
  {
@@ -353,58 +98,7 @@
   "correcta": 0,
   "explicacion": "Mejor: «Miro el móvil: son las 23:15.»",
   "fuente": "Charla 14",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-022",
-  "categoria": "gramatica",
-  "nivel": "dificil",
-  "pregunta": "«Había estudiado toda la noche, ___ suspendió el examen.»",
-  "opciones": [
-   "por eso",
-   "por lo tanto",
-   "aun así",
-   "en consecuencia"
-  ],
-  "correcta": 2,
-  "explicacion": "La relación es de oposición; «por eso» anuncia una consecuencia lógica.",
-  "fuente": "Conectores",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-023",
-  "categoria": "gramatica",
-  "nivel": "dificil",
-  "pregunta": "¿Qué frase está bien puntuada?",
-  "opciones": [
-   "Era tarde; sin embargo, seguía trabajando.",
-   "Era tarde sin embargo seguía trabajando.",
-   "Era tarde, sin embargo seguía trabajando.",
-   "Era tarde sin embargo, seguía trabajando."
-  ],
-  "correcta": 0,
-  "explicacion": "«Sin embargo» va entre pausas.",
-  "fuente": "Conectores",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-024",
-  "categoria": "gramatica",
-  "nivel": "dificil",
-  "pregunta": "¿Cuál es la mejor corrección de «—Vete de aquí —caminó hacia la puerta»?",
-  "opciones": [
-   "—Vete de aquí —dijo, y caminó hacia la puerta.",
-   "—Vete de aquí, caminó hacia la puerta.",
-   "—Vete de aquí —caminó— hacia la puerta.",
-   "Es correcta."
-  ],
-  "correcta": 0,
-  "explicacion": "«Caminar» es un gesto, no una forma de hablar.",
-  "fuente": "Rayas de diálogo",
-  "banco": "club",
+  "banco": "publico",
   "revisada": false
  },
  {
@@ -421,92 +115,568 @@
   "correcta": 0,
   "explicacion": "Tras el signo de cierre de interrogación no se pone punto.",
   "fuente": "Charla 14",
-  "banco": "club",
+  "banco": "publico",
   "revisada": false
  },
  {
-  "id": "GRA-026",
+  "id": "GRA-035",
   "categoria": "gramatica",
-  "nivel": "dificil",
-  "pregunta": "«Nadie sabía el ___ de aquella llamada.»",
+  "nivel": "facil",
+  "pregunta": "«Debe ___ llegado ya.»",
   "opciones": [
-   "por qué",
-   "porque",
-   "porqué",
-   "por que"
+   "haber",
+   "haver",
+   "aver",
+   "a ver"
+  ],
+  "correcta": 0,
+  "explicacion": "Tras un verbo modal va el infinitivo del verbo auxiliar «haber».",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-037",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "¿Cuál está bien escrita?",
+  "opciones": [
+   "cancíon",
+   "cáncion",
+   "canción",
+   "cancion"
   ],
   "correcta": 2,
-  "explicacion": "«El porqué» es un sustantivo (= el motivo).",
-  "fuente": "Charla 14",
-  "banco": "club",
+  "explicacion": "Las agudas terminadas en -n, -s o vocal llevan tilde.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
   "revisada": false
  },
  {
-  "id": "GRA-027",
+  "id": "GRA-045",
   "categoria": "gramatica",
-  "nivel": "dificil",
-  "pregunta": "En «Dani vio a Pablo y salió corriendo», ¿qué problema tiene omitir el sujeto?",
+  "nivel": "facil",
+  "pregunta": "¿Cuál lleva bien los signos?",
   "opciones": [
-   "Ambigüedad: no se sabe quién salió corriendo",
-   "Concordancia incorrecta",
-   "Falta una coma",
-   "Es voz pasiva"
-  ],
-  "correcta": 0,
-  "explicacion": "Omitir el sujeto vale solo si lo omitido sigue siendo evidente.",
-  "fuente": "Elipsis",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-028",
-  "categoria": "gramatica",
-  "nivel": "dificil",
-  "pregunta": "En «—No, no es chinito. —Camino hacia la ventanilla…—», ¿por qué el gesto va en frase aparte?",
-  "opciones": [
-   "Porque «caminar» no es un verbo de habla y no puede atribuirse el diálogo",
-   "Porque está en presente",
-   "Porque lleva coma",
-   "Por estética"
-  ],
-  "correcta": 0,
-  "explicacion": "El gesto es un beat de acción, no una acotación.",
-  "fuente": "Rayas de diálogo",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-029",
-  "categoria": "gramatica",
-  "nivel": "dificil",
-  "pregunta": "¿Qué se corrige en «Se sacudió las manos, los brazos, y las rodillas»?",
-  "opciones": [
-   "Quitar la coma antes de «y»",
-   "Añadir coma tras «rodillas»",
-   "Cambiar la coma por punto y coma",
-   "Nada"
-  ],
-  "correcta": 0,
-  "explicacion": "En una enumeración no se pone coma antes de «y».",
-  "fuente": "Charla 14",
-  "banco": "club",
-  "revisada": false
- },
- {
-  "id": "GRA-030",
-  "categoria": "gramatica",
-  "nivel": "dificil",
-  "pregunta": "«No sé ___ me ha visto.»",
-  "opciones": [
-   "sino",
-   "si no",
-   "sí no",
-   "si-no"
+   "Qué hora es?",
+   "¿Qué hora es?",
+   "?Qué hora es?",
+   "¿Qué hora es¿"
   ],
   "correcta": 1,
-  "explicacion": "Es «si» interrogativo seguido de «no», no la conjunción adversativa.",
+  "explicacion": "En español la interrogación se abre y se cierra con signos propios.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-049",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "«Dámelo a ___.»",
+  "opciones": [
+   "mí",
+   "mi",
+   "mî",
+   "mì"
+  ],
+  "correcta": 0,
+  "explicacion": "Es pronombre personal: lleva tilde.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-050",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "«Quiero ___ café.»",
+  "opciones": [
+   "màs",
+   "más",
+   "mâs",
+   "mas"
+  ],
+  "correcta": 1,
+  "explicacion": "Con valor de cantidad lleva tilde.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-053",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "«___, quiero ir contigo.»",
+  "opciones": [
+   "Sî",
+   "Sì",
+   "Si",
+   "Sí"
+  ],
+  "correcta": 3,
+  "explicacion": "Con valor afirmativo lleva tilde.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-055",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "¿Cuál está bien escrita?",
+  "opciones": [
+   "extrangero",
+   "estranjero",
+   "extranjero",
+   "extranjéro"
+  ],
+  "correcta": 2,
+  "explicacion": "Se escribe con x y con j.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-058",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "¿Cuál está bien escrita?",
+  "opciones": [
+   "vienvenido",
+   "bienvenido",
+   "bienbenido",
+   "bien venido"
+  ],
+  "correcta": 1,
+  "explicacion": "«Bienvenido» va en una palabra.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-061",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "¿Cuál está bien escrita?",
+  "opciones": [
+   "rápido",
+   "rapído",
+   "ràpido",
+   "rapido"
+  ],
+  "correcta": 0,
+  "explicacion": "Esdrújula: siempre lleva tilde.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-068",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "«___ frío en la calle.»",
+  "opciones": [
+   "Hacía",
+   "Hasía",
+   "Hacia",
+   "Acía"
+  ],
+  "correcta": 0,
+  "explicacion": "Es el imperfecto del verbo hacer.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-075",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "¿Qué comillas son las preferidas en español?",
+  "opciones": [
+   "Simples ‘’",
+   "Angulares «»",
+   "Rectas \"\"",
+   "Inglesas “”"
+  ],
+  "correcta": 1,
+  "explicacion": "Las angulares son las recomendadas en la norma.",
+  "fuente": "Charla 10",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-079",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "¿Qué se escribe sin tilde?",
+  "opciones": [
+   "dío",
+   "dió",
+   "diò",
+   "dio"
+  ],
+  "correcta": 3,
+  "explicacion": "Es monosílabo según la norma.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-080",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "¿Cuál está bien escrita?",
+  "opciones": [
+   "Mama",
+   "Mamá",
+   "Mamà",
+   "Mámá"
+  ],
+  "correcta": 1,
+  "explicacion": "Aguda terminada en vocal: lleva tilde.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-082",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "«___ así, siguió adelante.» (= incluso)",
+  "opciones": [
+   "Aun",
+   "Aum",
+   "Aúm",
+   "Aún"
+  ],
+  "correcta": 0,
+  "explicacion": "Con sentido de «incluso» va sin tilde.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-083",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "«¿___ lo has hecho?» (¿con qué herramienta?)",
+  "opciones": [
+   "Conque",
+   "Con que",
+   "Conqué",
+   "Con qué"
+  ],
+  "correcta": 3,
+  "explicacion": "Aquí es interrogativo.",
   "fuente": "Charla 14",
-  "banco": "club",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-084",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "«Los ___ ya se fueron.»",
+  "opciones": [
+   "de mas",
+   "demás",
+   "demas",
+   "de más"
+  ],
+  "correcta": 1,
+  "explicacion": "«Demás» significa «los otros».",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-092",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "«Un ___ de plástico.»",
+  "opciones": [
+   "tubo",
+   "tuvo",
+   "tuvó",
+   "túbo"
+  ],
+  "correcta": 0,
+  "explicacion": "Es un conducto cilíndrico.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-093",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "«Ella ___ suerte.»",
+  "opciones": [
+   "tubo",
+   "tuvó",
+   "tuvo",
+   "tubó"
+  ],
+  "correcta": 2,
+  "explicacion": "Pretérito de tener.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-099",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "«Eso es un tema ___.»",
+  "opciones": [
+   "aparte",
+   "a parte",
+   "a-parte",
+   "aparté"
+  ],
+  "correcta": 0,
+  "explicacion": "Aquí es adjetivo.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-102",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "«Un paisaje ___.»",
+  "opciones": [
+   "vello",
+   "bellò",
+   "belo",
+   "bello"
+  ],
+  "correcta": 3,
+  "explicacion": "Es hermoso.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-104",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "«No te olvides de ___ en las elecciones.»",
+  "opciones": [
+   "vottar",
+   "votar",
+   "botar",
+   "bhotar"
+  ],
+  "correcta": 1,
+  "explicacion": "Emitir voto.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-111",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "¿Cómo se escribe «las 8» en un texto narrativo?",
+  "opciones": [
+   "Las ocho",
+   "Las 8",
+   "Las VIII",
+   "Las 8h"
+  ],
+  "correcta": 0,
+  "explicacion": "En narrativa suelen escribirse con letras.",
+  "fuente": "Charla 10",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-112",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "¿Qué llevan las mayúsculas?",
+  "opciones": [
+   "Nunca tilde",
+   "Solo la Ñ",
+   "Tilde cuando les corresponde",
+   "Siempre tilde"
+  ],
+  "correcta": 2,
+  "explicacion": "Las mayúsculas se tildan igual que las minúsculas.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-116",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "¿Cuál está bien escrito?",
+  "opciones": [
+   "—¿De dónde eres? —Preguntó.",
+   "—¿De dónde eres?— preguntó.",
+   "—¿De dónde eres?, preguntó.",
+   "—¿De dónde eres? —preguntó."
+  ],
+  "correcta": 3,
+  "explicacion": "Tras interrogación de cierre la acotación va en minúscula.",
+  "fuente": "Rayas de diálogo",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-122",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "«Si pudiera, ___ la ventana.»",
+  "opciones": [
+   "habría",
+   "abriria",
+   "abriría",
+   "abría"
+  ],
+  "correcta": 2,
+  "explicacion": "Condicional de abrir.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-125",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "¿Cuál es correcta?",
+  "opciones": [
+   "La dije la verdad.",
+   "Lo dije la verdad.",
+   "Le dije la verdad.",
+   "Les dijo la verdad a ella."
+  ],
+  "correcta": 2,
+  "explicacion": "Con complemento indirecto se usa «le».",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-128",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "¿Cuál es correcta?",
+  "opciones": [
+   "Contra más estudio, más aprendo.",
+   "Contra más estudio, mas aprendo.",
+   "Cuanto más estudio, más aprendo.",
+   "Cuánto más estudio, más aprendo."
+  ],
+  "correcta": 2,
+  "explicacion": "La forma recomendada es «cuanto más».",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-130",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "¿Cuál es correcta?",
+  "opciones": [
+   "fácilmenté",
+   "facil mente",
+   "facilmente",
+   "fácilmente"
+  ],
+  "correcta": 3,
+  "explicacion": "Los adverbios en -mente conservan la tilde del adjetivo.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-131",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "¿Cuál es correcta?",
+  "opciones": [
+   "rápidamentè",
+   "rápidamente",
+   "rápida mente",
+   "rapidamente"
+  ],
+  "correcta": 1,
+  "explicacion": "Conserva la tilde del adjetivo.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-139",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "¿Qué se escribe en «¿___ fuiste?» (hacia qué lugar)?",
+  "opciones": [
+   "Adónde",
+   "Adondè",
+   "Adonde",
+   "A donde"
+  ],
+  "correcta": 0,
+  "explicacion": "Con valor interrogativo lleva tilde.",
+  "fuente": "Charla 14",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-142",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "«No te lo diré, ___ me lo pidas.»",
+  "opciones": [
+   "aun que",
+   "aun",
+   "aunque",
+   "aúnque"
+  ],
+  "correcta": 2,
+  "explicacion": "Es conjunción concesiva.",
+  "fuente": "Conectores",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-145",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "¿Cuál es correcta?",
+  "opciones": [
+   "desahogo",
+   "desaogo",
+   "desahogó",
+   "desahógo"
+  ],
+  "correcta": 0,
+  "explicacion": "Lleva h intercalada.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "GRA-147",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "¿Cuál es correcta?",
+  "opciones": [
+   "rebelión",
+   "rebellión",
+   "rebelíon",
+   "revelión"
+  ],
+  "correcta": 0,
+  "explicacion": "Se escribe con b y una l.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
   "revisada": false
  }
 ]

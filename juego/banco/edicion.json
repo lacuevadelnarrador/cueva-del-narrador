@@ -1,0 +1,682 @@
+[
+ {
+  "id": "EDI-005",
+  "categoria": "edicion",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un manuscrito?",
+  "opciones": [
+   "El contrato firmado entre autor y editorial",
+   "Un libro impreso listo para la venta",
+   "El texto original del autor antes de editarse",
+   "La portada con su título y su ilustración"
+  ],
+  "correcta": 2,
+  "explicacion": "Es el punto de partida.",
+  "fuente": "Charla 6",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-019",
+  "categoria": "edicion",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un ISBN?",
+  "opciones": [
+   "Un código numérico que identifica un libro",
+   "El título que figura en la cubierta",
+   "Una tipografía recomendada para el texto del manuscrito",
+   "Un contrato entre autor y editorial"
+  ],
+  "correcta": 0,
+  "explicacion": "Identificación internacional del libro.",
+  "fuente": "Charla 17",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-022",
+  "categoria": "edicion",
+  "nivel": "facil",
+  "pregunta": "¿Qué es la página de créditos?",
+  "opciones": [
+   "El prólogo que presenta la obra",
+   "La página con datos legales del libro",
+   "El índice con capítulos y páginas",
+   "La portada con título y autor"
+  ],
+  "correcta": 1,
+  "explicacion": "Incluye editor, ISBN, derechos…",
+  "fuente": "Charla 17",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-027",
+  "categoria": "edicion",
+  "nivel": "facil",
+  "pregunta": "¿Quién diseña la portada en una editorial?",
+  "opciones": [
+   "Un corrector de estilo",
+   "Un impresor de tiradas",
+   "Un ilustrador o diseñador",
+   "Un librero de la zona"
+  ],
+  "correcta": 2,
+  "explicacion": "Es una tarea especializada.",
+  "fuente": "Charla 6",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-029",
+  "categoria": "edicion",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un contrato editorial?",
+  "opciones": [
+   "El acuerdo por escrito entre autor y editorial",
+   "La factura que emite la imprenta al editor",
+   "El código que identifica la edición",
+   "La ficha del libro en la tienda online"
+  ],
+  "correcta": 0,
+  "explicacion": "Se firma tras aceptar la obra.",
+  "fuente": "Charla 6",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-033",
+  "categoria": "edicion",
+  "nivel": "facil",
+  "pregunta": "¿Qué es una tirada?",
+  "opciones": [
+   "Un capítulo extra incluido en la edición",
+   "El número de ejemplares impresos de una edición",
+   "El contrato que fija las condiciones de venta",
+   "La reseña publicada tras el lanzamiento"
+  ],
+  "correcta": 1,
+  "explicacion": "Cantidad de copias.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-034",
+  "categoria": "edicion",
+  "nivel": "facil",
+  "pregunta": "¿Qué es una errata?",
+  "opciones": [
+   "Un error tipográfico en el texto",
+   "El título provisional de una obra",
+   "Un texto previo que presenta la obra",
+   "Un capítulo añadido tras la edición"
+  ],
+  "correcta": 0,
+  "explicacion": "Falta de corrección.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-036",
+  "categoria": "edicion",
+  "nivel": "facil",
+  "pregunta": "¿Qué es una cuarta de cubierta?",
+  "opciones": [
+   "El lomo del libro",
+   "La solapa del libro",
+   "La contraportada del libro",
+   "La portada del libro"
+  ],
+  "correcta": 2,
+  "explicacion": "Suele llevar sinopsis.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-040",
+  "categoria": "edicion",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un agente literario?",
+  "opciones": [
+   "Un corrector de textos que revisa el estilo de la novela",
+   "Un intermediario entre autor y editoriales",
+   "Un diseñador de portadas que trabaja con ilustradores",
+   "Un impresor de ejemplares"
+  ],
+  "correcta": 1,
+  "explicacion": "Negocia contratos.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-043",
+  "categoria": "edicion",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un ebook?",
+  "opciones": [
+   "Un libro narrado en audio",
+   "Un libro en formato digital",
+   "Un libro de viñetas ilustradas",
+   "Un libro impreso en papel"
+  ],
+  "correcta": 1,
+  "explicacion": "Se lee en pantallas.",
+  "fuente": "Charla 17",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-044",
+  "categoria": "edicion",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un audiolibro?",
+  "opciones": [
+   "Un libro narrado en audio",
+   "Un libro en formato digital",
+   "Una revista mensual impresa",
+   "Un libro de viñetas ilustradas"
+  ],
+  "correcta": 0,
+  "explicacion": "Se escucha.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-045",
+  "categoria": "edicion",
+  "nivel": "facil",
+  "pregunta": "¿Qué es el KDP?",
+  "opciones": [
+   "Una editorial tradicional española",
+   "La plataforma de autopublicación de Amazon",
+   "Un servicio de corrección profesional",
+   "Una imprenta de tiradas cortas"
+  ],
+  "correcta": 1,
+  "explicacion": "Kindle Direct Publishing.",
+  "fuente": "MKT 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-053",
+  "categoria": "edicion",
+  "nivel": "facil",
+  "pregunta": "¿Qué recomienda Word para los márgenes?",
+  "opciones": [
+   "1 cm en todos los lados",
+   "5 cm en todos los lados",
+   "2,5 cm en todos los lados",
+   "0,5 cm en todos los lados"
+  ],
+  "correcta": 2,
+  "explicacion": "Recomendación de la Charla 1.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-054",
+  "categoria": "edicion",
+  "nivel": "facil",
+  "pregunta": "¿Qué sangría recomienda la Charla 1?",
+  "opciones": [
+   "5 cm o dos tabulaciones",
+   "1,25 cm o una tabulación",
+   "10 cm hacia la derecha",
+   "0 cm, sin sangría alguna"
+  ],
+  "correcta": 1,
+  "explicacion": "Para párrafos.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-063",
+  "categoria": "edicion",
+  "nivel": "media",
+  "pregunta": "¿Qué hace que una propuesta destaque?",
+  "opciones": [
+   "Claridad, profesionalidad y encaje con la editorial",
+   "Chistes y comentarios personales al editor",
+   "Adornos y colores llamativos en el envío",
+   "Un texto larguísimo y sin ninguna estructura clara en el envío"
+  ],
+  "correcta": 0,
+  "explicacion": "Se presenta de forma profesional.",
+  "fuente": "Charla 6",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-072",
+  "categoria": "edicion",
+  "nivel": "media",
+  "pregunta": "¿Qué ocurre si no compras corrección?",
+  "opciones": [
+   "No puedes cambiar los errores gramaticales",
+   "El texto se publica mejor que antes",
+   "Los errores se corrigen solos al maquetar",
+   "Solo puedes reescribir frases del texto"
+  ],
+  "correcta": 0,
+  "explicacion": "Cada servicio limita lo que puedes modificar.",
+  "fuente": "Charla 13",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-073",
+  "categoria": "edicion",
+  "nivel": "media",
+  "pregunta": "¿Qué ocurre si no compras estilo?",
+  "opciones": [
+   "El texto mejora sin intervención",
+   "No puedes reescribir frases, solo ordenar",
+   "No puedes corregir tildes, solo reescribir",
+   "Las frases se mejoran solas al corregir"
+  ],
+  "correcta": 1,
+  "explicacion": "Limitación de la actividad.",
+  "fuente": "Charla 13",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-074",
+  "categoria": "edicion",
+  "nivel": "media",
+  "pregunta": "¿Qué es la edición de desarrollo?",
+  "opciones": [
+   "Maquetar el texto en la página",
+   "Diseñar la portada del libro",
+   "Trabajo sobre estructura, trama y ritmo",
+   "Colocar las tildes que faltan y corregir la puntuación"
+  ],
+  "correcta": 2,
+  "explicacion": "Se ocupa de reescrituras y estructura.",
+  "fuente": "Charla 11",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-075",
+  "categoria": "edicion",
+  "nivel": "media",
+  "pregunta": "¿Qué es la corrección de pruebas?",
+  "opciones": [
+   "Revisión final sobre el archivo ya maquetado",
+   "El diseño de la portada",
+   "La edición de estilo de las frases",
+   "La corrección inicial del manuscrito, antes de maquetar"
+  ],
+  "correcta": 0,
+  "explicacion": "Es el último filtro.",
+  "fuente": "Charla 11",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-076",
+  "categoria": "edicion",
+  "nivel": "media",
+  "pregunta": "¿Qué es el informe editorial?",
+  "opciones": [
+   "Un contrato con la editorial",
+   "Una portada provisional",
+   "Una reseña publicada",
+   "Un diagnóstico del manuscrito"
+  ],
+  "correcta": 3,
+  "explicacion": "Indica qué trabajos necesita.",
+  "fuente": "Charla 11",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-085",
+  "categoria": "edicion",
+  "nivel": "media",
+  "pregunta": "¿Qué diferencia un e-book de un libro impreso en maquetación?",
+  "opciones": [
+   "Ambos se maquetan exactamente igual",
+   "El ebook se adapta al tamaño de la pantalla",
+   "El impreso se adapta al tamaño de la pantalla",
+   "El ebook se maqueta con medidas fijas"
+  ],
+  "correcta": 1,
+  "explicacion": "Uno es reflowable.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-089",
+  "categoria": "edicion",
+  "nivel": "media",
+  "pregunta": "¿Qué es FocusWriter?",
+  "opciones": [
+   "Un corrector ortográfico en línea",
+   "Una red social para escritores",
+   "Una editorial de autopublicación",
+   "Un editor minimalista sin distracciones"
+  ],
+  "correcta": 3,
+  "explicacion": "Ayuda a concentrarse.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-090",
+  "categoria": "edicion",
+  "nivel": "media",
+  "pregunta": "¿Qué hace Grammarly?",
+  "opciones": [
+   "Maqueta el interior del libro con plantillas automáticas",
+   "Diseña portadas con plantillas",
+   "Corrige gramática y estilo, sobre todo en inglés",
+   "Imprime ejemplares bajo demanda"
+  ],
+  "correcta": 2,
+  "explicacion": "Según la clase.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-097",
+  "categoria": "edicion",
+  "nivel": "media",
+  "pregunta": "¿Qué es el «copy-editing»?",
+  "opciones": [
+   "Maquetación del interior y de la cubierta",
+   "Corrección de estilo y gramática",
+   "Diseño de la portada",
+   "Distribución a librerías"
+  ],
+  "correcta": 1,
+  "explicacion": "Término inglés.",
+  "fuente": "Charla 11",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-102",
+  "categoria": "edicion",
+  "nivel": "dificil",
+  "pregunta": "¿Qué puede ocurrir si se corrige demasiado el estilo?",
+  "opciones": [
+   "Pérdida de la voz del autor",
+   "Mayor libertad para el autor",
+   "Aumento de las erratas del texto",
+   "Un precio de venta más bajo"
+  ],
+  "correcta": 0,
+  "explicacion": "Depende del grado.",
+  "fuente": "Charla 10",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-106",
+  "categoria": "edicion",
+  "nivel": "dificil",
+  "pregunta": "¿Por qué el ebook cuesta menos de maquetar que el impreso?",
+  "opciones": [
+   "Porque exige más ilustraciones y notas",
+   "Porque no necesita corrección de estilo",
+   "Tiene una maquetación menos compleja",
+   "Porque no necesita portada alguna"
+  ],
+  "correcta": 2,
+  "explicacion": "Es más simple.",
+  "fuente": "Charla 11",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-107",
+  "categoria": "edicion",
+  "nivel": "dificil",
+  "pregunta": "¿Qué incluye la «maquetación avanzada» de la tabla?",
+  "opciones": [
+   "Ilustraciones, notas, tablas e índices",
+   "Solo texto corrido sin más elementos",
+   "Solo la portada y la contraportada",
+   "Solo el código ISBN y el depósito"
+  ],
+  "correcta": 0,
+  "explicacion": "Más compleja.",
+  "fuente": "Charla 11",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-111",
+  "categoria": "edicion",
+  "nivel": "dificil",
+  "pregunta": "¿Qué suele ir antes de publicar?",
+  "opciones": [
+   "Enviar una nota de prensa a los medios",
+   "Subir el archivo final a la plataforma",
+   "Contactar librerías, preparar redes sociales y notas de prensa",
+   "Registrar la obra, pedir ISBN, corregir, cubierta y maquetar"
+  ],
+  "correcta": 3,
+  "explicacion": "Pasos previos.",
+  "fuente": "Charla 17",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-114",
+  "categoria": "edicion",
+  "nivel": "dificil",
+  "pregunta": "¿Qué se hace en la actividad principal de la Charla 17?",
+  "opciones": [
+   "Decidir género, público, portada, sinopsis y estrategia",
+   "Imprimir una tirada de ejemplares",
+   "Maquetar un capítulo completo",
+   "Corregir un manuscrito lleno de errores ortográficos y de estilo"
+  ],
+  "correcta": 0,
+  "explicacion": "Como editores y libreros.",
+  "fuente": "Charla 17",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-115",
+  "categoria": "edicion",
+  "nivel": "dificil",
+  "pregunta": "¿Qué distingue editar de corregir?",
+  "opciones": [
+   "Editar es solo colocar tildes y comas",
+   "Corregir incluye estructura; editar, solo tildes",
+   "Son lo mismo y se hacen siempre a la vez y con el mismo criterio",
+   "Editar incluye estructura y contenido; corregir, forma"
+  ],
+  "correcta": 3,
+  "explicacion": "Diferentes niveles de intervención.",
+  "fuente": "Charla 11",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-119",
+  "categoria": "edicion",
+  "nivel": "facil",
+  "pregunta": "¿Qué hace una imprenta?",
+  "opciones": [
+   "Corrige el texto original",
+   "Escribe la novela por encargo",
+   "Vende los libros al lector",
+   "Imprime los ejemplares del libro"
+  ],
+  "correcta": 3,
+  "explicacion": "Produce el libro físico.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-121",
+  "categoria": "edicion",
+  "nivel": "facil",
+  "pregunta": "¿Qué hace un corrector?",
+  "opciones": [
+   "Revisa ortografía, puntuación y estilo del texto",
+   "Imprime los ejemplares de la tirada",
+   "Escribe la novela por encargo de la editorial",
+   "Diseña la portada del libro"
+  ],
+  "correcta": 0,
+  "explicacion": "Mejora el texto.",
+  "fuente": "Charla 13",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-124",
+  "categoria": "edicion",
+  "nivel": "media",
+  "pregunta": "¿Necesita cada formato de un libro su propio ISBN?",
+  "opciones": [
+   "No, todos los formatos comparten el mismo ISBN siempre",
+   "Solo el impreso necesita ISBN",
+   "Solo el digital necesita ISBN",
+   "Sí, ebook y tapa blanda suelen tener ISBN distintos"
+  ],
+  "correcta": 3,
+  "explicacion": "Cada edición o formato se identifica.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-125",
+  "categoria": "edicion",
+  "nivel": "media",
+  "pregunta": "¿Qué son los royalties?",
+  "opciones": [
+   "El coste de impresión de cada ejemplar",
+   "El porcentaje de las ventas que cobra el autor",
+   "Un descuento que recibe el lector",
+   "Un impuesto que paga el librero por cada ejemplar vendido"
+  ],
+  "correcta": 1,
+  "explicacion": "Se pactan en contrato.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-128",
+  "categoria": "edicion",
+  "nivel": "media",
+  "pregunta": "¿Qué diferencia hay entre editorial y distribuidora?",
+  "opciones": [
+   "La editorial vende en tiendas y la distribuidora escribe los textos",
+   "Son lo mismo y hacen las mismas funciones",
+   "La distribuidora imprime y la editorial reparte a las librerías",
+   "La editorial produce; la distribuidora lleva el libro a los puntos de venta"
+  ],
+  "correcta": 3,
+  "explicacion": "Funciones distintas.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-129",
+  "categoria": "edicion",
+  "nivel": "media",
+  "pregunta": "¿Qué diferencia hay entre reimpresión y nueva edición?",
+  "opciones": [
+   "La reimpresión repite la misma edición; la nueva edición introduce cambios",
+   "La reimpresión siempre es más cara que una nueva edición del texto",
+   "La reimpresión cambia el texto; la nueva edición lo mantiene",
+   "Son lo mismo y se distinguen solo por el precio"
+  ],
+  "correcta": 0,
+  "explicacion": "Distinta naturaleza.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-134",
+  "categoria": "edicion",
+  "nivel": "dificil",
+  "pregunta": "¿Qué es el plagio?",
+  "opciones": [
+   "Parafrasear una idea con su cita",
+   "Homenajear a un autor reconocido",
+   "Citar una fuente con su autor",
+   "Presentar como propia una obra ajena"
+  ],
+  "correcta": 3,
+  "explicacion": "Es un acto ilícito.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-139",
+  "categoria": "edicion",
+  "nivel": "dificil",
+  "pregunta": "En «Elige tu camino», ¿qué va antes del envío a la editorial?",
+  "opciones": [
+   "Maquetación del interior y de la cubierta",
+   "Promoción en redes",
+   "Revisión de amigos o lectores",
+   "Impresión de ejemplares"
+  ],
+  "correcta": 2,
+  "explicacion": "Se revisa antes de enviar.",
+  "fuente": "Charla 6",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-143",
+  "categoria": "edicion",
+  "nivel": "dificil",
+  "pregunta": "En «Elige tu camino», ¿qué es lo primero?",
+  "opciones": [
+   "Enviar la propuesta a editoriales",
+   "Firmar el contrato editorial",
+   "Lanzar el libro al público",
+   "Terminar de escribir una obra"
+  ],
+  "correcta": 3,
+  "explicacion": "Todo empieza por la obra.",
+  "fuente": "Charla 6",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EDI-145",
+  "categoria": "edicion",
+  "nivel": "dificil",
+  "pregunta": "¿Qué desventaja tiene la autoedición?",
+  "opciones": [
+   "El autor pierde todos sus derechos sobre la obra publicada",
+   "El autor asume costes, decisiones y promoción",
+   "No se puede asignar un ISBN",
+   "No se puede vender en tiendas"
+  ],
+  "correcta": 1,
+  "explicacion": "Todo recae en el autor.",
+  "fuente": "Charla 17",
+  "banco": "publico",
+  "revisada": false
+ }
+]
