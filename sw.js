@@ -27,6 +27,12 @@ const ARCHIVOS = [
   'entregas.js',
   'leer.html',
   'leer.js',
+  // Juego: la página, su código y la lista de premios. Los bancos de preguntas (juego/banco/*.json) NO se precargan:
+  // se descargan solo al elegir la categoría y quedan guardados entonces, como cualquier otro archivo de la web.
+  'quiz.html',
+  'juego/juego.css',
+  'juego/juego.js',
+  'juego/premios.json',
   'admin.html',
   'admin-eventos.html',
   'admin-retos.html',

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>¿Estás preparado para ser escritor? · La Cueva del Narrador</title>
+<!-- Mientras el juego esté oculto (JUEGO_VISIBLE en auth.js), que no lo indexen los buscadores -->
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#528A93">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="juego/juego.css">
+</head>
+<body data-acceso="publico">
+<div class="app">
+  <header class="pagehead">
+    <div class="top">
+      <div class="brand">
+        <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
+        <span>La Cueva<br>del Narrador</span>
+      </div>
+      <div class="avatar" aria-label="Tu perfil" data-solo="socio" hidden></div>
+    </div>
+    <h1 class="largo">¿Estás preparado para ser escritor?</h1>
+    <p class="sub">Quince preguntas, tres niveles y dos comodines.</p>
+  </header>
+
+  <main class="juego" id="juego">
+    <!-- Anuncios para lectores de pantalla: resultado de cada respuesta, avisos del contador y final de la partida -->
+    <p class="perfil-sr" aria-live="polite" id="j-anuncio"></p>
+
+    <!-- Pantalla 1: estantería y categorías -->
+    <div class="j-pantalla j-inicio" id="j-inicio">
+      <section aria-labelledby="j-estanteria-t">
+        <div class="sec-head"><h2 id="j-estanteria-t" tabindex="-1">Tu estantería</h2><p class="j-cuenta" id="j-cuenta"></p></div>
+        <div class="card j-estante"><ul class="j-libros" id="j-libros"></ul></div>
+        <p class="j-nota">Cada categoría que superes te da un libro. La estantería dura mientras no cierres el navegador.</p>
+      </section>
+
+      <section aria-labelledby="j-categorias-t">
+        <div class="sec-head"><h2 id="j-categorias-t" tabindex="-1">Elige categoría</h2></div>
+        <p class="j-aviso" id="j-aviso" role="alert" hidden></p>
+        <div class="menu j-categorias" id="j-categorias"></div>
+      </section>
+
+      <section aria-labelledby="j-reglas-t">
+        <div class="sec-head"><h2 id="j-reglas-t">Cómo se juega</h2></div>
+        <div class="card texto">
+          <ul class="j-reglas">
+            <li>Quince preguntas seguidas: cinco fáciles, cinco medias y cinco difíciles.</li>
+            <li>Tienes 45 segundos para cada una. Si se acaba el tiempo, cuenta como fallo.</li>
+            <li>Un fallo termina la partida. Las preguntas 5 y 10 son puntos seguros: marcan hasta dónde has llegado.</li>
+            <li>Dos comodines de un solo uso: 50/50 quita dos respuestas incorrectas y Saltar cambia la pregunta por otra del mismo nivel.</li>
+            <li>Si cierras o recargas la página, la partida se pierde.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <!-- Pantalla 2: partida -->
+    <section class="j-pantalla j-partida" id="j-partida" aria-labelledby="j-numero" hidden>
+      <div class="j-cabeza">
+        <div class="j-donde">
+          <p class="j-cat" id="j-cat"></p>
+          <h2 id="j-numero" tabindex="-1"></h2>
+          <p class="j-nivel" id="j-nivel"></p>
+        </div>
+        <div class="j-reloj" id="j-reloj" role="timer" aria-label="Tiempo restante">
+          <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle class="j-reloj-fondo" cx="24" cy="24" r="20"/><circle class="j-reloj-arco" id="j-arco" cx="24" cy="24" r="20" pathLength="1"/></svg>
+          <span class="j-reloj-num"><span id="j-segundos">45</span><span class="perfil-sr"> segundos</span></span>
+        </div>
+      </div>
+      <ol class="j-escalera" id="j-escalera" aria-hidden="true"></ol>
+      <div class="j-juego">
+        <div class="card j-pregunta"><p class="j-enunciado" id="j-enunciado"></p></div>
+        <div class="j-opciones" id="j-opciones" role="group" aria-label="Respuestas"></div>
+        <div class="j-comodines" id="j-comodines" role="group" aria-label="Comodines">
+          <button type="button" class="j-comodin" id="j-cincuenta"><span class="j-comodin-nombre">50/50</span><small id="j-cincuenta-txt">Quita dos incorrectas</small></button>
+          <button type="button" class="j-comodin" id="j-saltar"><span class="j-comodin-nombre">Saltar</span><small id="j-saltar-txt">Otra del mismo nivel</small></button>
+        </div>
+        <div class="card j-tras" id="j-tras" hidden>
+          <p class="j-veredicto" id="j-veredicto"></p>
+          <p class="j-explicacion" id="j-explicacion"></p>
+          <button type="button" class="btn" id="j-siguiente"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pantalla 3: resultado -->
+    <section class="j-pantalla j-resultado" id="j-resultado" aria-labelledby="j-res-t" aria-describedby="j-res-texto" hidden>
+      <div class="card j-res" id="j-res">
+        <h2 id="j-res-t" tabindex="-1"></h2>
+        <p class="j-res-texto" id="j-res-texto"></p>
+        <div class="j-res-libro" id="j-res-libro"></div>
+        <div class="j-botones">
+          <button type="button" class="btn" id="j-otra">Volver a jugar</button>
+          <button type="button" class="btn sec" id="j-cambiar">Cambiar de categoría</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="nav visitante" aria-label="Navegación principal">
+    <a href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="retos.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>Retos</a>
+    <a href="acceso.html" class="acceso"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>Acceso</a>
+    <a href="nuestra-biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Nuestra biblioteca</a>
+    <a href="mas.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
+  </nav>
+</div>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script src="campana.js"></script>
+<script src="juego/juego.js"></script>
+<script>
+if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js"));
+</script>
+</body>
+</html>

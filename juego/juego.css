@@ -1,0 +1,165 @@
+/* ==========================================================
+   Juego «¿Estás preparado para ser escritor?» (solo quiz.html)
+   Todo con prefijo .j-; reutiliza .card, .menu/.item, .sec-head, .btn y los colores de styles.css.
+   Mismo código para móvil y escritorio: desde 1024 px solo cambia la colocación.
+   ========================================================== */
+:root{
+  --j-ok:#2E7D4F; --j-ok-bg:#E3F3E8; --j-mal:#B3412B; --j-mal-bg:#FBE7E2;
+  --j-hueco:#D9DEE0; --j-tabla:#8C6B47;
+}
+@media (prefers-color-scheme:dark){
+  :root{--j-ok:#A8DDB0; --j-ok-bg:#1E3A2A; --j-mal:#F2A08E; --j-mal-bg:#45271F; --j-hueco:#2A464C; --j-tabla:#6B5236}
+}
+
+.j-pantalla{display:grid;grid-template-columns:minmax(0,1fr);gap:28px}
+.j-nota{margin-top:10px;font-size:14px;font-style:italic;color:var(--muted)}
+.j-cuenta{font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:.04em;color:var(--muted);white-space:nowrap}
+.j-aviso{margin-bottom:14px;padding:14px 16px;border-radius:var(--r-m);background:var(--card);border-left:4px solid var(--amber);box-shadow:var(--sh1);font-weight:600}
+.j-categorias .j-aviso{margin:0}
+.j-reglas{padding-left:20px;display:grid;gap:8px}
+
+/* Mientras se juega, en el móvil la cabecera se queda en la barra del logo: el título sigue ahí para los lectores de pantalla */
+@media (max-width:1023px){
+  .j-jugando .pagehead{padding-bottom:6px}
+  .j-jugando .pagehead .top{margin-bottom:10px}
+  .j-jugando .pagehead h1,.j-jugando .pagehead .sub{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .j-jugando main{padding-top:16px}
+}
+
+/* ---------- Estantería: lomos dibujados con CSS ---------- */
+.j-estante{padding:18px 14px 0;overflow:hidden}
+.j-libros{list-style:none;padding:0;display:flex;align-items:flex-end;gap:4px;min-height:150px;border-bottom:10px solid var(--j-tabla);margin:0 -14px;padding:0 14px}
+.j-lomo{flex:1 1 0;min-width:0;height:136px;border-radius:4px 4px 1px 1px;background:var(--lomo,#3E6F77);color:#fff;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0;overflow:hidden;
+  writing-mode:vertical-rl;transform:rotate(180deg);box-shadow:inset 3px 0 0 rgba(255,255,255,.14),inset -3px 0 0 rgba(0,0,0,.18)}
+.j-lomo:nth-child(3n+2){height:148px}
+.j-lomo:nth-child(4n+3){height:126px}
+.j-lomo:nth-child(5n){height:142px}
+.j-lomo-titulo{max-height:100%;font-family:'Oswald',sans-serif;font-weight:500;font-size:11px;letter-spacing:.02em;text-transform:uppercase;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.j-lomo-autor{max-height:100%;font-size:10px;font-style:italic;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.9}
+.j-hueco{background:var(--j-hueco);box-shadow:none;border:1.5px dashed var(--line)}
+.j-lomo-grande{width:72px;height:230px;margin:6px auto 20px;transform:rotate(180deg);flex:none;padding:16px 0}
+.j-lomo-grande .j-lomo-titulo{font-size:19px}
+.j-lomo-grande .j-lomo-autor{font-size:14px}
+
+/* ---------- Categorías ---------- */
+.j-cat-btn small{font-style:italic}
+.j-cat-btn.j-ganada .ic{background:var(--amber);color:#14262A}
+.j-cat-btn[aria-busy="true"]{cursor:progress}
+.j-cat-btn.off{cursor:default}
+
+/* ---------- Partida ---------- */
+.j-partida{gap:16px}
+.j-cabeza{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.j-cat{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.j-cabeza h2{font-size:26px;color:var(--title);margin:2px 0 6px}
+.j-cabeza h2:focus{outline:none}
+.j-cabeza h2:focus-visible{outline:3px solid var(--amber)}
+.j-nivel{display:inline-block;font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.04em;text-transform:uppercase;padding:3px 10px;border-radius:999px;background:var(--card);border:1.5px solid var(--chipline);color:var(--link)}
+.j-nivel[data-nivel="media"]{border-color:var(--amber)}
+.j-nivel[data-nivel="dificil"]{border-color:var(--j-mal);color:var(--j-mal)}
+
+/* Contador: el número se lee; el anillo es solo un dibujo */
+.j-reloj{position:relative;flex:none;width:68px;height:68px;display:grid;place-items:center}
+.j-reloj svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.j-reloj circle{fill:none;stroke-width:4}
+.j-reloj-fondo{stroke:var(--line)}
+.j-reloj-arco{stroke:var(--teal);stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:0}
+.j-reloj-num{position:relative;font-family:'Oswald',sans-serif;font-weight:700;font-size:24px;color:var(--ink);font-variant-numeric:tabular-nums}
+.j-reloj.poco .j-reloj-arco{stroke:var(--j-mal)}
+.j-reloj.poco .j-reloj-num{color:var(--j-mal)}
+
+/* Escalera: en el móvil, una fila de 15 casillas; los puntos seguros (5 y 10), con borde ámbar */
+.j-escalera{list-style:none;padding:0;display:grid;grid-template-columns:repeat(15,minmax(0,1fr));gap:3px}
+.j-escalera li{display:flex;align-items:center;justify-content:center;height:24px;border-radius:5px;background:var(--card);border:1px solid var(--line);
+  font-family:'Oswald',sans-serif;font-size:11px;color:var(--muted)}
+.j-escalera .j-esc-nivel{display:none}
+.j-escalera li.segura{border:2px solid var(--amber)}
+.j-escalera li.hecha{background:var(--teal-700);color:#fff}
+.j-escalera li.actual{background:var(--amber);color:#14262A;font-weight:700}
+.j-escalera li.fallada{background:var(--j-mal);color:#fff}
+
+.j-juego{display:grid;gap:14px}
+.j-pregunta{padding:18px 18px}
+.j-enunciado{font-size:19px;font-weight:600;line-height:1.4}
+.j-opciones{display:grid;gap:10px}
+.j-opcion{display:flex;align-items:center;gap:12px;min-height:56px;padding:10px 14px;width:100%;text-align:left;font:inherit;font-size:16px;line-height:1.35;
+  color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh1);cursor:pointer}
+.j-letra{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--bg);color:var(--title);font-family:'Oswald',sans-serif;font-weight:700;font-size:15px}
+.j-op-texto{min-width:0;overflow-wrap:anywhere}
+.j-opcion:disabled{cursor:default}
+.j-opcion.quitada{opacity:.45;box-shadow:none}
+.j-opcion.quitada .j-op-texto{text-decoration:line-through}
+.j-opcion.ok{border-color:var(--j-ok);background:var(--j-ok-bg)}
+.j-opcion.ok .j-letra{background:var(--j-ok);color:var(--card)}
+.j-opcion.mal{border-color:var(--j-mal);background:var(--j-mal-bg)}
+.j-opcion.mal .j-letra{background:var(--j-mal);color:var(--card)}
+
+.j-comodines{display:flex;gap:10px}
+.j-comodin{flex:1 1 0;min-width:0;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:6px 10px;
+  font:inherit;color:var(--link);background:var(--card);border:1.5px solid var(--chipline);border-radius:var(--r-m);cursor:pointer}
+.j-comodin-nombre{font-family:'Oswald',sans-serif;font-weight:700;font-size:17px;letter-spacing:.04em;text-transform:uppercase}
+.j-comodin small{font-size:12px;color:var(--muted);text-align:center}
+.j-comodin:disabled{opacity:.55;cursor:default;border-style:dashed}
+
+.j-tras{border-left:5px solid var(--j-mal)}
+.j-tras.bien{border-left-color:var(--j-ok)}
+.j-veredicto{font-family:'Oswald',sans-serif;font-weight:700;font-size:22px;text-transform:uppercase;letter-spacing:.02em;color:var(--j-mal);margin-bottom:6px}
+.j-tras.bien .j-veredicto{color:var(--j-ok)}
+.j-explicacion{margin-bottom:16px}
+.j-tras .btn{width:100%}
+
+/* ---------- Resultado ---------- */
+.j-res{text-align:center;padding:28px 20px}
+.j-res.gano{border:2px solid var(--amber);box-shadow:var(--sh2)}
+.j-res h2{font-size:30px;color:var(--title);margin-bottom:12px}
+.j-res h2:focus{outline:none}
+.j-res h2:focus-visible{outline:3px solid var(--amber)}
+.j-res-texto{font-size:17px;margin-bottom:20px;text-wrap:pretty}
+.j-botones{display:flex;flex-direction:column;gap:10px;align-items:center}
+.j-botones .btn{width:100%;max-width:320px}
+
+/* Solo con ratón; en pantallas táctiles no hay efectos que dependan de pasar por encima */
+@media (hover:hover){
+  .j-opcion:not(:disabled):hover{border-color:var(--chipline);box-shadow:var(--sh2)}
+  .j-comodin:not(:disabled):hover{background:var(--bg)}
+}
+/* Movimiento corto y solo si el sistema no pide reducirlo */
+@media (prefers-reduced-motion:no-preference){
+  .j-opcion,.j-comodin{transition:border-color .15s var(--ease),background-color .15s var(--ease),transform .1s var(--ease)}
+  .j-opcion:not(:disabled):active,.j-comodin:not(:disabled):active{transform:scale(.98)}
+  .j-reloj-arco{transition:stroke-dashoffset .3s linear}
+}
+
+@media (min-width:600px){
+  .j-botones{flex-direction:row;justify-content:center}
+  .j-botones .btn{width:auto}
+}
+
+/* ---------- Escritorio ---------- */
+@media (min-width:1024px){
+  .j-libros{min-height:230px;gap:8px}
+  .j-lomo{flex:0 1 64px;height:200px;padding:14px 0}
+  .j-lomo:nth-child(3n+2){height:218px}
+  .j-lomo:nth-child(4n+3){height:186px}
+  .j-lomo:nth-child(5n){height:208px}
+  .j-lomo-titulo{font-size:15px}
+  .j-lomo-autor{font-size:12px}
+  .j-libros{justify-content:center}
+
+  /* Partida: escalera vertical a la izquierda (la 15 arriba) y la pregunta a la derecha */
+  .j-partida{grid-template-columns:200px minmax(0,760px);grid-template-areas:"escalera cabeza" "escalera juego";column-gap:40px;row-gap:20px;align-items:start}
+  .j-cabeza{grid-area:cabeza}
+  .j-juego{grid-area:juego}
+  .j-escalera{grid-area:escalera;display:flex;flex-direction:column-reverse;gap:4px}
+  .j-escalera li{height:30px;justify-content:space-between;padding:0 12px;font-size:14px}
+  .j-escalera .j-esc-nivel{display:inline;font-size:11px;letter-spacing:.06em;text-transform:uppercase;opacity:.8}
+  .j-cabeza h2{font-size:32px}
+  .j-enunciado{font-size:22px}
+  .j-pregunta{padding:24px}
+  .j-opciones{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .j-opcion{min-height:72px}
+  .j-comodines{max-width:420px}
+  .j-tras .btn{width:auto}
+  .j-resultado{max-width:640px}
+}

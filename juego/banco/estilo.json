@@ -1,0 +1,512 @@
+[
+ {
+  "id": "EST-001",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "En «el sol le golpeó la cara como un boxeador sin piedad», ¿qué figura hay?",
+  "opciones": [
+   "Metáfora",
+   "Hipérbole",
+   "Símil",
+   "Ironía"
+  ],
+  "correcta": 2,
+  "explicacion": "El símil compara dos elementos con un nexo comparativo (como, cual…).",
+  "fuente": "Figuras literarias",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-002",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "«Luna ya era un tsunami de pelo blanco y marrón» es…",
+  "opciones": [
+   "Un símil",
+   "Una metáfora",
+   "Una onomatopeya",
+   "Una anáfora"
+  ],
+  "correcta": 1,
+  "explicacion": "La metáfora identifica una cosa con otra sin nexo comparativo.",
+  "fuente": "Figuras literarias",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-003",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "«¡Guau! ¡Guau! ¡Guau!» es un ejemplo de…",
+  "opciones": [
+   "Aliteración",
+   "Antítesis",
+   "Hipérbaton",
+   "Onomatopeya"
+  ],
+  "correcta": 3,
+  "explicacion": "La onomatopeya imita o reproduce un sonido.",
+  "fuente": "Figuras literarias",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-004",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "¿Qué sabe un narrador en primera persona?",
+  "opciones": [
+   "Todo lo que piensan todos los personajes",
+   "Solo lo que el narrador siente, piensa y percibe",
+   "Lo que pasará en el futuro",
+   "Solo lo que dicen los demás"
+  ],
+  "correcta": 1,
+  "explicacion": "Su punto de vista está limitado a su propia experiencia.",
+  "fuente": "Voces narrativas",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-005",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "¿Qué caracteriza al narrador omnisciente?",
+  "opciones": [
+   "Cuenta solo desde un personaje",
+   "Es un personaje de la historia",
+   "Sabe todo: pensamientos de todos, pasado y futuro",
+   "No describe nada"
+  ],
+  "correcta": 2,
+  "explicacion": "Es un narrador externo que lo sabe todo.",
+  "fuente": "Voces narrativas",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-006",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "¿Qué ayuda a conseguir un ritmo rápido?",
+  "opciones": [
+   "Frases largas y descriptivas",
+   "Frases cortas y directas",
+   "Párrafos de introspección",
+   "Descripciones detalladas del entorno"
+  ],
+  "correcta": 1,
+  "explicacion": "Frases cortas y poco detalle aceleran la narración.",
+  "fuente": "Ritmo narrativo",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-007",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "«El viento susurraba entre los árboles» es…",
+  "opciones": [
+   "Personificación",
+   "Hipérbole",
+   "Antítesis",
+   "Símil"
+  ],
+  "correcta": 0,
+  "explicacion": "Atribuye una acción humana a algo que no lo es.",
+  "fuente": "Figuras literarias",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-008",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "«Te lo he dicho un millón de veces» es…",
+  "opciones": [
+   "Una ironía",
+   "Una metáfora",
+   "Una anáfora",
+   "Una hipérbole"
+  ],
+  "correcta": 3,
+  "explicacion": "Exageración desmesurada con fines expresivos.",
+  "fuente": "Figuras literarias",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-009",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "¿Qué significa «mostrar, no contar» (show, don't tell)?",
+  "opciones": [
+   "Evitar los diálogos",
+   "Describir siempre en detalle",
+   "Transmitir emociones con acciones y detalles en vez de nombrarlas",
+   "Escribir en presente"
+  ],
+  "correcta": 2,
+  "explicacion": "Que la escena haga sentir al lector en lugar de decirle qué sentir.",
+  "fuente": "Adverbios; Charla 1",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-010",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "«Cada mañana era la misma guerra. Cada mañana, Dani perdía. Cada mañana, Luna ganaba» es…",
+  "opciones": [
+   "Una anáfora",
+   "Una aliteración",
+   "Una antítesis",
+   "Una onomatopeya"
+  ],
+  "correcta": 0,
+  "explicacion": "Repetición de palabras al inicio de frases seguidas.",
+  "fuente": "Figuras literarias",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-011",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "«¡Qué puntual!», dicho a quien llega media hora tarde, es…",
+  "opciones": [
+   "Una hipérbole",
+   "Una ironía",
+   "Un símil",
+   "Una personificación"
+  ],
+  "correcta": 1,
+  "explicacion": "Se dice lo contrario de lo que se piensa, con intención humorística o crítica.",
+  "fuente": "Figuras literarias",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-012",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "«Dani quería silencio; Luna quería fiesta» es…",
+  "opciones": [
+   "Una anáfora",
+   "Una metáfora",
+   "Una antítesis",
+   "Una aliteración"
+  ],
+  "correcta": 2,
+  "explicacion": "Contrapone dos ideas de significado opuesto.",
+  "fuente": "Figuras literarias",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-013",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "«Ladró lastimera, larga y lentamente, lamentando…» destaca por…",
+  "opciones": [
+   "La aliteración",
+   "El hipérbaton",
+   "La ironía",
+   "La onomatopeya"
+  ],
+  "correcta": 0,
+  "explicacion": "Repite de cerca un mismo sonido consonántico (la l).",
+  "fuente": "Figuras literarias",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-014",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "¿Qué hace el hipérbaton?",
+  "opciones": [
+   "Exagera una cualidad",
+   "Compara dos elementos",
+   "Repite sonidos",
+   "Altera el orden habitual de la frase"
+  ],
+  "correcta": 3,
+  "explicacion": "Cambia el orden normal para dar énfasis o musicalidad.",
+  "fuente": "Figuras literarias",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-015",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "¿Qué ralentiza el ritmo de una escena?",
+  "opciones": [
+   "Un diálogo ágil",
+   "Detenerse en la descripción del entorno",
+   "Frases cortas",
+   "Saltar a la acción"
+  ],
+  "correcta": 1,
+  "explicacion": "Más detalle y descripción hacen que la narración avance más despacio.",
+  "fuente": "Ritmo narrativo",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-016",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "¿Qué es una narración en tercera persona limitada?",
+  "opciones": [
+   "El narrador cuenta todo lo que sucede a todos",
+   "Un narrador personaje que habla en «yo»",
+   "Un narrador externo centrado solo en un personaje",
+   "Un narrador que no tiene punto de vista"
+  ],
+  "correcta": 2,
+  "explicacion": "Se narra lo que piensa y siente ese personaje, pero no los demás.",
+  "fuente": "Voces narrativas",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-017",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "En «caminaba lentamente por el pasillo», el adverbio funciona como…",
+  "opciones": [
+   "Un cliché",
+   "Un parche de un verbo débil",
+   "Un pleonasmo",
+   "Una voz pasiva"
+  ],
+  "correcta": 1,
+  "explicacion": "Un verbo más preciso («se arrastraba», «vagaba») ya lleva la lentitud incorporada.",
+  "fuente": "Adverbios",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-018",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "¿Qué vicio de escritura hay en «subió hacia arriba las escaleras»?",
+  "opciones": [
+   "Cliché",
+   "Voz pasiva",
+   "Redundancia",
+   "Intensificador"
+  ],
+  "correcta": 2,
+  "explicacion": "«Subir» ya implica ir hacia arriba.",
+  "fuente": "Adverbios",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-019",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "Según la regla de oro del ritmo, ¿para qué sirve el ritmo lento?",
+  "opciones": [
+   "Para tensión, acción y sorpresa",
+   "Para atmósfera, emoción y reflexión",
+   "Para los diálogos",
+   "Para los finales"
+  ],
+  "correcta": 1,
+  "explicacion": "Rápido = tensión, acción, sorpresa; lento = atmósfera, emoción, reflexión.",
+  "fuente": "Ritmo narrativo",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-020",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "Un buen diálogo es como un iceberg porque…",
+  "opciones": [
+   "Es frío",
+   "Es largo",
+   "Transmite más de lo que dice",
+   "Se escribe de arriba abajo"
+  ],
+  "correcta": 2,
+  "explicacion": "Lo importante queda bajo la superficie: subtexto.",
+  "fuente": "Diálogos naturales",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-021",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "¿Por qué falla «Sorprendentemente, no esperaba encontrarla allí»?",
+  "opciones": [
+   "Es demasiado corta",
+   "El adverbio dice al lector cómo sentirse antes de que la escena lo demuestre",
+   "Falta un verbo",
+   "La coma sobra"
+  ],
+  "correcta": 1,
+  "explicacion": "Es telling en vez de showing: mejor que la acción transmita la sorpresa.",
+  "fuente": "Adverbios",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-022",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "¿Qué vicio hay en «Siempre llegaba constantemente tarde»?",
+  "opciones": [
+   "Voz pasiva",
+   "Cliché",
+   "Pleonasmo",
+   "Símil gastado"
+  ],
+  "correcta": 2,
+  "explicacion": "«Siempre» y «constantemente» dicen exactamente lo mismo.",
+  "fuente": "Adverbios",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-023",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "En la clase de elipsis, ¿qué es una hiancia?",
+  "opciones": [
+   "Un signo de puntuación",
+   "El hueco que el escritor deja en el texto a propósito",
+   "Un tipo de narrador",
+   "Una figura sonora"
+  ],
+  "correcta": 1,
+  "explicacion": "Cada elipsis crea una hiancia, y toda hiancia genera una pregunta en el lector.",
+  "fuente": "Elipsis",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-024",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "¿A qué autor se atribuye la idea de cooperación textual vista en clase?",
+  "opciones": [
+   "Jorge Luis Borges",
+   "Italo Calvino",
+   "Umberto Eco",
+   "Julio Cortázar"
+  ],
+  "correcta": 2,
+  "explicacion": "El texto nunca lo dice todo: necesita al lector para completarlo.",
+  "fuente": "Elipsis",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-025",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "Si el lector no puede reconstruir lo omitido, entonces…",
+  "opciones": [
+   "Es la mejor elipsis",
+   "Es una elipsis temporal",
+   "Es una hipérbole",
+   "No es elipsis, es confusión"
+  ],
+  "correcta": 3,
+  "explicacion": "Faltan pistas suficientes o el hueco es desmesurado.",
+  "fuente": "Elipsis",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-026",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "Para construir una elipsis con pistas, ¿qué se hace?",
+  "opciones": [
+   "Se cuenta H1 y se oculta H2",
+   "Se elimina H1 y se cuenta H2, salpicada de pistas que apuntan a H1",
+   "Se escribe H1 sin pistas",
+   "Se repite H2 dos veces"
+  ],
+  "correcta": 1,
+  "explicacion": "H1 es la historia principal oculta; H2, la que se cuenta.",
+  "fuente": "Elipsis",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-027",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "En «—¿Vas a salir esta noche?», ¿qué puede ser el subtexto?",
+  "opciones": [
+   "«No quiero que salgas»",
+   "«Hace buen tiempo»",
+   "«Tengo hambre»",
+   "«Es tarde»"
+  ],
+  "correcta": 0,
+  "explicacion": "La gente rara vez dice exactamente lo que piensa.",
+  "fuente": "Diálogos naturales",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-028",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "¿Cuál de estos NO es un error típico de un diálogo artificial?",
+  "opciones": [
+   "Info-dumping",
+   "Todos los personajes hablan igual",
+   "Exceso de verbos de habla exagerados",
+   "Subtexto"
+  ],
+  "correcta": 3,
+  "explicacion": "El subtexto es una virtud de un buen diálogo.",
+  "fuente": "Diálogos naturales",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-029",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "«Ninguno de los que vivieron allí habría reconocido la casa. Ni Claudia, que temblaba sin admitirlo, ni el hombre que la observaba desde el desván…» corresponde a un narrador…",
+  "opciones": [
+   "En primera persona",
+   "En tercera persona limitada",
+   "Omnisciente",
+   "Testigo"
+  ],
+  "correcta": 2,
+  "explicacion": "Sabe lo que sienten varios personajes y aun lo que ocultan.",
+  "fuente": "Voces narrativas",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "EST-030",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "¿Qué obra se cita en clase como ejemplo de ritmo lento con frases extensas y llenas de imágenes?",
+  "opciones": [
+   "La carretera",
+   "Cien años de soledad",
+   "1984",
+   "Harry Potter y la piedra filosofal"
+  ],
+  "correcta": 1,
+  "explicacion": "García Márquez, con frases largas y descriptivas.",
+  "fuente": "Ritmo narrativo",
+  "banco": "club",
+  "revisada": false
+ }
+]

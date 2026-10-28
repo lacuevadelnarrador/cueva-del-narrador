@@ -1,0 +1,512 @@
+[
+ {
+  "id": "GRA-001",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "¿Qué frase está bien escrita?",
+  "opciones": [
+   "No sé como decírselo.",
+   "No sé cómo decírselo.",
+   "No se cómo decírselo.",
+   "No sé cómo, decírselo."
+  ],
+  "correcta": 1,
+  "explicacion": "«Cómo» introduce una pregunta indirecta y lleva tilde.",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-002",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "¿Qué signo introduce las intervenciones de un diálogo?",
+  "opciones": [
+   "Guion corto (-)",
+   "Comillas inglesas",
+   "Raya (—)",
+   "Barra (/)"
+  ],
+  "correcta": 2,
+  "explicacion": "La raya es más larga que el guion y es la propia del diálogo.",
+  "fuente": "Rayas de diálogo",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-003",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "«___, aceptó.»",
+  "opciones": [
+   "Por su puesto",
+   "Porsupuesto",
+   "Por supuesto",
+   "Por súpuesto"
+  ],
+  "correcta": 2,
+  "explicacion": "Se escribe en dos palabras y sin «puesto».",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-004",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "«___ me miró.»",
+  "opciones": [
+   "Ni si quiera",
+   "Ni siquiera",
+   "Ni sí quiera",
+   "Nisiquiera"
+  ],
+  "correcta": 1,
+  "explicacion": "«Siquiera» va en una sola palabra.",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-005",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "¿Qué diálogo está bien escrito?",
+  "opciones": [
+   "—Nunca volveré—.",
+   "—Nunca volveré.",
+   "— Nunca volveré.",
+   "-Nunca volveré."
+  ],
+  "correcta": 1,
+  "explicacion": "Sin acotación no se cierra con raya; la de apertura va pegada y no es un guion.",
+  "fuente": "Rayas de diálogo",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-006",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "«Espero que ___ vengas.»",
+  "opciones": [
+   "tu",
+   "tú",
+   "Valen las dos",
+   "Ninguna"
+  ],
+  "correcta": 1,
+  "explicacion": "Aquí es pronombre sujeto y lleva tilde.",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-007",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "«No fue rabia, ___ miedo.»",
+  "opciones": [
+   "si no",
+   "sino",
+   "sí no",
+   "sinó"
+  ],
+  "correcta": 1,
+  "explicacion": "«Sino» corrige o sustituye lo negado.",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-008",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "«No entiendo ___ se ha ido.»",
+  "opciones": [
+   "porque",
+   "porqué",
+   "por qué",
+   "por que"
+  ],
+  "correcta": 2,
+  "explicacion": "Es una pregunta indirecta: «por qué», separado y con tilde.",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-009",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "¿Qué son los verbos dicendi?",
+  "opciones": [
+   "Los que nombran una forma de hablar (decir, susurrar…)",
+   "Los de movimiento",
+   "Los que describen gestos, como sonreír",
+   "Los pasivos"
+  ],
+  "correcta": 0,
+  "explicacion": "Por eso pueden unirse directamente al diálogo con la raya.",
+  "fuente": "Rayas de diálogo",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-010",
+  "categoria": "gramatica",
+  "nivel": "facil",
+  "pregunta": "¿Es un error escribir «Solo quería dormir» sin tilde?",
+  "opciones": [
+   "Sí, siempre lleva tilde",
+   "No: la norma actual permite «solo» sin tilde salvo ambigüedad real",
+   "Sí, porque aquí es adverbio",
+   "Depende de la tipografía"
+  ],
+  "correcta": 1,
+  "explicacion": "Lo importante es mantener un criterio uniforme.",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-011",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "«Me preguntó de ___ era el mensaje.»",
+  "opciones": [
+   "quien",
+   "quién",
+   "quíen",
+   "qien"
+  ],
+  "correcta": 1,
+  "explicacion": "Interrogativo indirecto: lleva tilde.",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-012",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "¿Cuál es correcta?",
+  "opciones": [
+   "—No pienso irme, dijo ella, y no hay nada que puedas hacer.",
+   "—No pienso irme —dijo ella— y no hay nada que puedas hacer.",
+   "—No pienso irme dijo ella y no hay nada que puedas hacer.",
+   "—No pienso irme— dijo ella —y no hay nada que puedas hacer."
+  ],
+  "correcta": 1,
+  "explicacion": "Hacen falta dos rayas: una para cerrar y otra para reabrir el diálogo.",
+  "fuente": "Rayas de diálogo",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-013",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "¿Cuál NO es un verbo dicendi?",
+  "opciones": [
+   "Susurrar",
+   "Responder",
+   "Sonreír",
+   "Preguntar"
+  ],
+  "correcta": 2,
+  "explicacion": "No se puede sonreír una frase: «—No pienso irme. Sonrió.»",
+  "fuente": "Rayas de diálogo",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-014",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "«Corre, ___ llegarás tarde.»",
+  "opciones": [
+   "sino",
+   "si no",
+   "sí no",
+   "sinó"
+  ],
+  "correcta": 1,
+  "explicacion": "Si equivale a «en caso contrario», va separado y entre pausas.",
+  "fuente": "Conectores",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-015",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "«No quería té, ___ café.»",
+  "opciones": [
+   "pero",
+   "sino",
+   "aunque",
+   "si no"
+  ],
+  "correcta": 1,
+  "explicacion": "Tras una negación, lo que corrige lo negado lleva «sino».",
+  "fuente": "Conectores",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-016",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "¿Qué falla en «Aunque estaba agotado, pero siguió caminando»?",
+  "opciones": [
+   "Doble conector de oposición",
+   "Falta una tilde",
+   "Sobra una raya",
+   "Voz pasiva"
+  ],
+  "correcta": 0,
+  "explicacion": "«Aunque» ya introduce la oposición y «pero» la repite.",
+  "fuente": "Conectores",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-017",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "¿Qué frase está mejor puntuada?",
+  "opciones": [
+   "Cierro los ojos, y apoyo la cabeza en el cristal.",
+   "Cierro los ojos y apoyo la cabeza en el cristal.",
+   "Cierro, los ojos y apoyo la cabeza en el cristal.",
+   "Cierro los ojos y, apoyo la cabeza en el cristal."
+  ],
+  "correcta": 1,
+  "explicacion": "Entre dos verbos coordinados, la coma antes de «y» suele sobrar.",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-018",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "«Ya no recordaba ___ había empezado todo.»",
+  "opciones": [
+   "cuando",
+   "cuándo",
+   "cuanto",
+   "quando"
+  ],
+  "correcta": 1,
+  "explicacion": "Interrogativo indirecto.",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-019",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "«No creo que me ___ tiempo.»",
+  "opciones": [
+   "de",
+   "dé",
+   "del",
+   "dè"
+  ],
+  "correcta": 1,
+  "explicacion": "«Dé» con tilde es del verbo dar.",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-020",
+  "categoria": "gramatica",
+  "nivel": "media",
+  "pregunta": "«Miró alrededor para ver ___ esconderse.»",
+  "opciones": [
+   "donde",
+   "dónde",
+   "adonde",
+   "don de"
+  ],
+  "correcta": 1,
+  "explicacion": "Interrogativo indirecto: lleva tilde.",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-021",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "¿Qué problema tiene «Miro el móvil, son las 23:15»?",
+  "opciones": [
+   "Dos oraciones completas unidas solo por una coma; mejor dos puntos o punto y coma",
+   "Falta una tilde en «móvil»",
+   "Sobra «el»",
+   "Ninguno"
+  ],
+  "correcta": 0,
+  "explicacion": "Mejor: «Miro el móvil: son las 23:15.»",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-022",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "«Había estudiado toda la noche, ___ suspendió el examen.»",
+  "opciones": [
+   "por eso",
+   "por lo tanto",
+   "aun así",
+   "en consecuencia"
+  ],
+  "correcta": 2,
+  "explicacion": "La relación es de oposición; «por eso» anuncia una consecuencia lógica.",
+  "fuente": "Conectores",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-023",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "¿Qué frase está bien puntuada?",
+  "opciones": [
+   "Era tarde; sin embargo, seguía trabajando.",
+   "Era tarde sin embargo seguía trabajando.",
+   "Era tarde, sin embargo seguía trabajando.",
+   "Era tarde sin embargo, seguía trabajando."
+  ],
+  "correcta": 0,
+  "explicacion": "«Sin embargo» va entre pausas.",
+  "fuente": "Conectores",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-024",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "¿Cuál es la mejor corrección de «—Vete de aquí —caminó hacia la puerta»?",
+  "opciones": [
+   "—Vete de aquí —dijo, y caminó hacia la puerta.",
+   "—Vete de aquí, caminó hacia la puerta.",
+   "—Vete de aquí —caminó— hacia la puerta.",
+   "Es correcta."
+  ],
+  "correcta": 0,
+  "explicacion": "«Caminar» es un gesto, no una forma de hablar.",
+  "fuente": "Rayas de diálogo",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-025",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "¿Qué sobra en «¿Los trenes aparcan?.»?",
+  "opciones": [
+   "El punto final",
+   "La tilde",
+   "La interrogación de apertura",
+   "Nada"
+  ],
+  "correcta": 0,
+  "explicacion": "Tras el signo de cierre de interrogación no se pone punto.",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-026",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "«Nadie sabía el ___ de aquella llamada.»",
+  "opciones": [
+   "por qué",
+   "porque",
+   "porqué",
+   "por que"
+  ],
+  "correcta": 2,
+  "explicacion": "«El porqué» es un sustantivo (= el motivo).",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-027",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "En «Dani vio a Pablo y salió corriendo», ¿qué problema tiene omitir el sujeto?",
+  "opciones": [
+   "Ambigüedad: no se sabe quién salió corriendo",
+   "Concordancia incorrecta",
+   "Falta una coma",
+   "Es voz pasiva"
+  ],
+  "correcta": 0,
+  "explicacion": "Omitir el sujeto vale solo si lo omitido sigue siendo evidente.",
+  "fuente": "Elipsis",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-028",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "En «—No, no es chinito. —Camino hacia la ventanilla…—», ¿por qué el gesto va en frase aparte?",
+  "opciones": [
+   "Porque «caminar» no es un verbo de habla y no puede atribuirse el diálogo",
+   "Porque está en presente",
+   "Porque lleva coma",
+   "Por estética"
+  ],
+  "correcta": 0,
+  "explicacion": "El gesto es un beat de acción, no una acotación.",
+  "fuente": "Rayas de diálogo",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-029",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "¿Qué se corrige en «Se sacudió las manos, los brazos, y las rodillas»?",
+  "opciones": [
+   "Quitar la coma antes de «y»",
+   "Añadir coma tras «rodillas»",
+   "Cambiar la coma por punto y coma",
+   "Nada"
+  ],
+  "correcta": 0,
+  "explicacion": "En una enumeración no se pone coma antes de «y».",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ },
+ {
+  "id": "GRA-030",
+  "categoria": "gramatica",
+  "nivel": "dificil",
+  "pregunta": "«No sé ___ me ha visto.»",
+  "opciones": [
+   "sino",
+   "si no",
+   "sí no",
+   "si-no"
+  ],
+  "correcta": 1,
+  "explicacion": "Es «si» interrogativo seguido de «no», no la conjunción adversativa.",
+  "fuente": "Charla 14",
+  "banco": "club",
+  "revisada": false
+ }
+]

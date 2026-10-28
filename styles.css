@@ -1379,3 +1379,15 @@ main[aria-busy="true"] .entrega .btn{cursor:progress}
   main.publicaciones #vista-lista>.cal-pub{position:sticky;top:calc(24px + 52px + 12px);height:var(--alto-mes)}
   main.publicaciones #vista-lista>#leyenda{position:sticky;top:calc(24px + 52px + 12px + var(--alto-mes) + 14px)}
 }
+
+/* ---------- Juego (quiz.html): entradas ----------
+   Enlace de la barra lateral: lo añade auth.js solo si JUEGO_VISIBLE es true. En el móvil no se ve (la barra inferior no cambia); desde 1024 px es
+   una fila más de la barra lateral. El resto de estilos del juego están en juego/juego.css (solo los carga quiz.html). */
+.nav a.nav-juego{display:none}
+@media (min-width:1024px){
+  .nav a.nav-juego{display:flex}
+  /* En quiz.html la marcada es "Juego" y "Más" se ve normal */
+  .nav.juego-actual>a.on:not(.nav-juego){color:var(--navdim);background:none}
+}
+/* Portada (index): el botón del juego va debajo de las pastillas, a todo el ancho del arco */
+.deadline .reto-juego{align-self:stretch}
