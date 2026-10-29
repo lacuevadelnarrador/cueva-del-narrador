@@ -1,0 +1,682 @@
+[
+ {
+  "id": "TRA-002",
+  "categoria": "trama",
+  "nivel": "facil",
+  "pregunta": "¿Cómo se llaman las tres partes de la estructura clásica?",
+  "opciones": [
+   "Gancho, giro y cierre",
+   "Planteamiento, nudo y desenlace",
+   "Presentación, clímax y epílogo",
+   "Prólogo, desarrollo y moraleja"
+  ],
+  "correcta": 1,
+  "explicacion": "Modelo de los tres actos.",
+  "fuente": "Charla 4 y 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-005",
+  "categoria": "trama",
+  "nivel": "facil",
+  "pregunta": "¿Qué ocurre en el desenlace?",
+  "opciones": [
+   "Se cuenta el pasado del protagonista",
+   "Se presenta el conflicto y a los personajes",
+   "Se resuelve el conflicto, para bien o para mal",
+   "Se multiplican los obstáculos que debe superar el héroe"
+  ],
+  "correcta": 2,
+  "explicacion": "Es el tercer acto.",
+  "fuente": "Charla 4 y 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-011",
+  "categoria": "trama",
+  "nivel": "facil",
+  "pregunta": "¿Qué es una escaleta?",
+  "opciones": [
+   "Un resumen que se envía a la editorial",
+   "Un mapa con los lugares del relato",
+   "Una ficha con los datos de los personajes",
+   "Un esquema de escenas en orden"
+  ],
+  "correcta": 3,
+  "explicacion": "Sirve para planificar la historia.",
+  "fuente": "Charla 4 y 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-016",
+  "categoria": "trama",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un giro argumental?",
+  "opciones": [
+   "Un cambio inesperado en la dirección de la historia",
+   "Una pausa para explicar el pasado de un personaje",
+   "Un cambio de narrador en el último capítulo",
+   "Una descripción detallada de un lugar nuevo"
+  ],
+  "correcta": 0,
+  "explicacion": "También se llama «plot twist».",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-018",
+  "categoria": "trama",
+  "nivel": "facil",
+  "pregunta": "¿Qué es la elipsis narrativa?",
+  "opciones": [
+   "Cambiar de narrador en mitad de una escena",
+   "Repetir un hecho desde varios puntos de vista",
+   "Describir con detalle un momento breve",
+   "Omitir parte del tiempo o de los hechos"
+  ],
+  "correcta": 3,
+  "explicacion": "Salta lo que no hace falta contar.",
+  "fuente": "Elipsis",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-022",
+  "categoria": "trama",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un capítulo?",
+  "opciones": [
+   "Un tipo de narrador",
+   "Un género literario",
+   "Una figura retórica",
+   "Una división del libro"
+  ],
+  "correcta": 3,
+  "explicacion": "Organiza el texto.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-024",
+  "categoria": "trama",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un conflicto en la trama?",
+  "opciones": [
+   "Una oposición entre deseos o fuerzas",
+   "Una dificultad al corregir el texto",
+   "Un desacuerdo entre dos lectores",
+   "Una discusión entre el autor y su editor"
+  ],
+  "correcta": 0,
+  "explicacion": "Mueve la historia.",
+  "fuente": "Charla 4 y 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-028",
+  "categoria": "trama",
+  "nivel": "facil",
+  "pregunta": "¿Qué suele presentarse al final del primer acto?",
+  "opciones": [
+   "Un epílogo en el que se despiden los personajes principales",
+   "La resolución de las subtramas en un desenlace ya cerrado",
+   "El clímax que resuelve el conflicto con un último enfrentamiento",
+   "Un punto de giro que lanza al protagonista al conflicto"
+  ],
+  "correcta": 3,
+  "explicacion": "Es el primer punto de giro.",
+  "fuente": "Charla 4 y 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-029",
+  "categoria": "trama",
+  "nivel": "facil",
+  "pregunta": "¿Qué es el mundo ordinario en el viaje del héroe?",
+  "opciones": [
+   "El mundo mágico donde vive la mayor parte del viaje",
+   "La prueba más difícil de todo el viaje",
+   "La vida cotidiana del héroe antes de la aventura",
+   "La vuelta del héroe a casa transformado"
+  ],
+  "correcta": 2,
+  "explicacion": "Es la primera etapa.",
+  "fuente": "Charla 4 y 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-038",
+  "categoria": "trama",
+  "nivel": "facil",
+  "pregunta": "¿Qué significa «mostrar, no contar» en la trama?",
+  "opciones": [
+   "Explicar con palabras al lector lo que sienten los personajes",
+   "Evitar los diálogos y describir siempre lo que ocurre alrededor",
+   "Transmitir la información con acciones y escenas, sin explicarla",
+   "Contar los hechos de forma resumida, sin pasar por las escenas"
+  ],
+  "correcta": 2,
+  "explicacion": "Es una regla clásica de escritura.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-040",
+  "categoria": "trama",
+  "nivel": "facil",
+  "pregunta": "¿Qué es la resolución?",
+  "opciones": [
+   "La presentación del conflicto",
+   "El cierre del conflicto principal",
+   "El momento más tenso de la historia",
+   "El cambio de narrador"
+  ],
+  "correcta": 1,
+  "explicacion": "Forma parte del desenlace.",
+  "fuente": "Charla 4 y 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-045",
+  "categoria": "trama",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un obstáculo?",
+  "opciones": [
+   "La voz que narra los hechos",
+   "El final que cierra la historia",
+   "El título que resume la trama",
+   "Lo que dificulta alcanzar el objetivo"
+  ],
+  "correcta": 3,
+  "explicacion": "Genera conflicto.",
+  "fuente": "Charla 4 y 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-048",
+  "categoria": "trama",
+  "nivel": "facil",
+  "pregunta": "¿Qué es la intriga?",
+  "opciones": [
+   "La explicación del pasado del héroe",
+   "El interés por saber qué va a ocurrir",
+   "La descripción de los lugares del relato",
+   "El final que resume todo"
+  ],
+  "correcta": 1,
+  "explicacion": "Mantiene al lector pendiente.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-049",
+  "categoria": "trama",
+  "nivel": "facil",
+  "pregunta": "¿Qué es el suspense?",
+  "opciones": [
+   "Descripción pausada del paisaje",
+   "Humor que rompe la seriedad",
+   "Alivio tras resolver el conflicto",
+   "Tensión por esperar un desenlace incierto"
+  ],
+  "correcta": 3,
+  "explicacion": "Se logra retrasando la resolución.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-057",
+  "categoria": "trama",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un resumen narrativo?",
+  "opciones": [
+   "Detenerse a describir con detalle un instante",
+   "Repetir una escena desde otra mirada",
+   "Anunciar lo que ocurrirá más adelante",
+   "Contar rápidamente una porción de tiempo"
+  ],
+  "correcta": 3,
+  "explicacion": "Acelera el ritmo.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-065",
+  "categoria": "trama",
+  "nivel": "media",
+  "pregunta": "¿Qué son «pruebas, aliados y enemigos» en el viaje del héroe?",
+  "opciones": [
+   "La etapa en que el héroe rechaza la aventura",
+   "La etapa final tras el regreso con el elixir",
+   "Una etapa en el mundo especial tras cruzar el umbral",
+   "Una etapa en el mundo ordinario antes de la llamada"
+  ],
+  "correcta": 2,
+  "explicacion": "Aparece tras cruzar el umbral.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-066",
+  "categoria": "trama",
+  "nivel": "media",
+  "pregunta": "¿Qué es el «elixir» al final del viaje del héroe?",
+  "opciones": [
+   "Lo que el héroe trae de vuelta para beneficiar a su mundo",
+   "Lo que el villano roba al héroe durante la prueba final",
+   "Lo que el héroe pierde al cruzar el umbral del mundo especial",
+   "Lo que el mentor le entrega al partir hacia lo desconocido"
+  ],
+  "correcta": 0,
+  "explicacion": "Es una etapa del esquema de Vogler.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-082",
+  "categoria": "trama",
+  "nivel": "media",
+  "pregunta": "¿Qué es una trama de búsqueda?",
+  "opciones": [
+   "Una historia en la que el protagonista persigue algo o a alguien",
+   "Una historia que se desarrolla en un solo escenario cerrado",
+   "Una historia que cambia el orden de un hecho histórico",
+   "Una historia que se cuenta desde el final"
+  ],
+  "correcta": 0,
+  "explicacion": "Ej.: La Odisea.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-084",
+  "categoria": "trama",
+  "nivel": "media",
+  "pregunta": "¿Qué es una trama de transformación?",
+  "opciones": [
+   "Una en la que el héroe se venga de una ofensa",
+   "Una en la que el héroe busca un objeto",
+   "Una en la que el personaje cambia profundamente",
+   "Una en la que el héroe derrota a un monstruo"
+  ],
+  "correcta": 2,
+  "explicacion": "Ej.: Cuento de Navidad.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-086",
+  "categoria": "trama",
+  "nivel": "media",
+  "pregunta": "¿Qué es la «regla de tres» en narrativa?",
+  "opciones": [
+   "Repetir un elemento tres veces para crear efecto",
+   "Escribir tres versiones de cada escena",
+   "Dividir la historia en tres actos",
+   "Limitar la historia a tres personajes"
+  ],
+  "correcta": 0,
+  "explicacion": "Muy usada en cuentos populares.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-087",
+  "categoria": "trama",
+  "nivel": "media",
+  "pregunta": "¿Para qué sirve la elipsis en el ritmo narrativo?",
+  "opciones": [
+   "Para explicar el pasado de un personaje",
+   "Para saltar el tiempo muerto y mantener el interés",
+   "Para repetir un hecho desde otro punto de vista",
+   "Para describir con detalle una escena importante"
+  ],
+  "correcta": 1,
+  "explicacion": "Evita lo irrelevante.",
+  "fuente": "Elipsis",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-089",
+  "categoria": "trama",
+  "nivel": "media",
+  "pregunta": "¿Qué es la «prolepsis»?",
+  "opciones": [
+   "Un salto narrativo al pasado que recupera un hecho previo",
+   "Un salto narrativo al futuro que anticipa lo que sucederá",
+   "Una pausa que detiene la acción para describir el entorno",
+   "Un resumen que condensa en pocas frases varios años"
+  ],
+  "correcta": 1,
+  "explicacion": "Anticipa lo que sucederá.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-090",
+  "categoria": "trama",
+  "nivel": "media",
+  "pregunta": "¿Qué es un «anticlímax»?",
+  "opciones": [
+   "Un desenlace que decepciona o rompe la tensión acumulada",
+   "Un giro que prepara el clímax con una pista falsa",
+   "Un clímax que resuelve todos los conflictos a la vez",
+   "Una escena de calma que precede al conflicto"
+  ],
+  "correcta": 0,
+  "explicacion": "Puede ser un defecto o un efecto buscado.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-095",
+  "categoria": "trama",
+  "nivel": "media",
+  "pregunta": "¿Qué estructura tiene la trama de misterio clásica?",
+  "opciones": [
+   "Un secreto, un castigo y una huida",
+   "Un crimen, una investigación y una revelación",
+   "Un encuentro, un conflicto y una reconciliación",
+   "Un viaje, una prueba y un regreso"
+  ],
+  "correcta": 1,
+  "explicacion": "Es la estructura policíaca.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-097",
+  "categoria": "trama",
+  "nivel": "media",
+  "pregunta": "¿Qué es el «punto de no retorno»?",
+  "opciones": [
+   "El momento en que el protagonista ya no puede volver atrás",
+   "El momento en que el protagonista regresa a casa",
+   "El momento en que el protagonista recibe la llamada",
+   "El momento en que el conflicto queda resuelto"
+  ],
+  "correcta": 0,
+  "explicacion": "Suele coincidir con un punto de giro.",
+  "fuente": "Charla 4 y 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-099",
+  "categoria": "trama",
+  "nivel": "media",
+  "pregunta": "¿Qué es un «conflicto de segundo nivel»?",
+  "opciones": [
+   "El conflicto que el autor tiene con su editor",
+   "Un conflicto secundario que enriquece la trama",
+   "El conflicto que resuelve el final",
+   "El conflicto principal de la historia"
+  ],
+  "correcta": 1,
+  "explicacion": "Complementa el principal.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-104",
+  "categoria": "trama",
+  "nivel": "dificil",
+  "pregunta": "¿Qué ejemplo dio Forster para diferenciar historia y trama?",
+  "opciones": [
+   "«Había una vez un rey que tuvo una reina»",
+   "«El rey y la reina murieron en el mismo año»",
+   "«El rey fue feliz y la reina fue desdichada»",
+   "«El rey murió y luego la reina murió de pena»"
+  ],
+  "correcta": 3,
+  "explicacion": "Muestra la causalidad.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-105",
+  "categoria": "trama",
+  "nivel": "dificil",
+  "pregunta": "¿Qué propone la estructura de Syd Field?",
+  "opciones": [
+   "Exposición, ascenso, clímax, descenso y desenlace final",
+   "Planteamiento, confrontación y resolución con dos puntos de giro",
+   "Mundo ordinario, umbral, prueba, recompensa y regreso",
+   "Gancho, giros, punto medio y resolución del conflicto"
+  ],
+  "correcta": 1,
+  "explicacion": "Es el paradigma del guion.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-109",
+  "categoria": "trama",
+  "nivel": "dificil",
+  "pregunta": "¿Qué función cumple el arquetipo del «embaucador» en el esquema de Vogler?",
+  "opciones": [
+   "Se opone al héroe con sus mismos recursos",
+   "Aporta humor y cuestiona el orden establecido",
+   "Anuncia al héroe la llamada a la aventura",
+   "Guía al héroe y le entrega un don"
+  ],
+  "correcta": 1,
+  "explicacion": "Arquetipos de Vogler.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-110",
+  "categoria": "trama",
+  "nivel": "dificil",
+  "pregunta": "¿Qué es el «umbral» del héroe?",
+  "opciones": [
+   "El punto donde el héroe regresa a su hogar",
+   "La despedida del mentor en el camino",
+   "El último obstáculo antes del clímax",
+   "El límite entre el mundo conocido y el especial"
+  ],
+  "correcta": 3,
+  "explicacion": "Es un cruce simbólico.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-113",
+  "categoria": "trama",
+  "nivel": "dificil",
+  "pregunta": "¿Qué produce la «ironía dramática»?",
+  "opciones": [
+   "El lector sabe algo que el personaje ignora",
+   "Nadie conoce la verdad hasta el final",
+   "El lector y el personaje saben lo mismo",
+   "El personaje sabe más que el lector"
+  ],
+  "correcta": 0,
+  "explicacion": "Genera tensión.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-115",
+  "categoria": "trama",
+  "nivel": "dificil",
+  "pregunta": "¿Qué efecto produce una «estructura fragmentada»?",
+  "opciones": [
+   "Acelera siempre el ritmo de la lectura",
+   "Obliga al lector a reconstruir la historia",
+   "Elimina el conflicto central de la trama",
+   "Aclara el orden de los hechos desde el principio"
+  ],
+  "correcta": 1,
+  "explicacion": "Ej.: algunas novelas modernas.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-117",
+  "categoria": "trama",
+  "nivel": "dificil",
+  "pregunta": "¿Qué obra clásica empieza «in medias res»?",
+  "opciones": [
+   "El Lazarillo de Tormes",
+   "La Regenta",
+   "Don Quijote de la Mancha",
+   "La Ilíada"
+  ],
+  "correcta": 3,
+  "explicacion": "La acción comienza en el décimo año de la guerra.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-122",
+  "categoria": "trama",
+  "nivel": "dificil",
+  "pregunta": "¿Qué indica que una trama sea «predecible»?",
+  "opciones": [
+   "Que es muy original y sorprendente",
+   "Que el lector anticipa lo que va a pasar",
+   "Que es muy corta para el género",
+   "Que tiene demasiados personajes"
+  ],
+  "correcta": 1,
+  "explicacion": "Falta sorpresa.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-129",
+  "categoria": "trama",
+  "nivel": "dificil",
+  "pregunta": "¿Qué significa «apretar la tuerca» en narrativa?",
+  "opciones": [
+   "Corregir los errores de un borrador",
+   "Aumentar la presión sobre el protagonista",
+   "Cerrar la historia con un giro final",
+   "Resumir los capítulos intermedios"
+  ],
+  "correcta": 1,
+  "explicacion": "Intensifica el conflicto.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-132",
+  "categoria": "trama",
+  "nivel": "facil",
+  "pregunta": "¿Qué es el planteamiento de un cuento breve?",
+  "opciones": [
+   "El inicio, donde se presenta la situación",
+   "El final, donde se resuelve todo",
+   "El título, que resume el relato",
+   "El epílogo, que cierra el texto"
+  ],
+  "correcta": 0,
+  "explicacion": "Es la primera parte.",
+  "fuente": "Charla 4 y 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-136",
+  "categoria": "trama",
+  "nivel": "media",
+  "pregunta": "¿Qué es el «clímax emocional»?",
+  "opciones": [
+   "El punto de mayor carga afectiva de la historia",
+   "El prólogo escrito con más sentimiento",
+   "El epílogo que despide a los personajes",
+   "El título que más emociona al lector"
+  ],
+  "correcta": 0,
+  "explicacion": "Puede coincidir con el clímax de acción.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-138",
+  "categoria": "trama",
+  "nivel": "media",
+  "pregunta": "¿Qué efecto tiene un «final cerrado»?",
+  "opciones": [
+   "Anuncia siempre una secuela",
+   "Da sensación de conclusión",
+   "Deja dudas al lector",
+   "Elimina el conflicto central"
+  ],
+  "correcta": 1,
+  "explicacion": "Resuelve los conflictos.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-141",
+  "categoria": "trama",
+  "nivel": "dificil",
+  "pregunta": "¿Qué es el «paradigma» de Syd Field?",
+  "opciones": [
+   "Un sistema de siete puntos para novelas",
+   "Una estructura de guion en tres actos con puntos de giro",
+   "Un esquema de doce etapas para el viaje del héroe",
+   "Un modelo de cinco actos para el teatro clásico"
+  ],
+  "correcta": 1,
+  "explicacion": "Muy usada en el cine.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "TRA-150",
+  "categoria": "trama",
+  "nivel": "media",
+  "pregunta": "¿Qué es un «gancho» al final de un capítulo?",
+  "opciones": [
+   "Un título que resume el capítulo",
+   "Un elemento que impulsa a seguir leyendo",
+   "Un prólogo que adelanta el siguiente",
+   "Un epílogo que despide al lector"
+  ],
+  "correcta": 1,
+  "explicacion": "Mantiene el interés.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ }
+]

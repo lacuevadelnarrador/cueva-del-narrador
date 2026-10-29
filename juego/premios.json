@@ -1,0 +1,12 @@
+[
+ { "categoria": "ideas", "titulo": "La hora antes del alba", "autor": "Isabel Allende", "color": "#2F5860" },
+ { "categoria": "worldbuilding", "titulo": "Memorias de Idhún", "autor": "Laura Gallego", "color": "#7A3E48" },
+ { "categoria": "personajes", "titulo": "El Power Ranger rosa", "autor": "Christo Casas", "color": "#3F4E7A" },
+ { "categoria": "trama", "titulo": "El sótano", "autor": "Roberto Leal", "color": "#5B4A7A" },
+ { "categoria": "estilo", "titulo": "La intriga del funeral inconveniente", "autor": "Eduardo Mendoza", "color": "#6B5526" },
+ { "categoria": "gramatica", "titulo": "Enviado especial", "autor": "Arturo Pérez-Reverte", "color": "#2E6150" },
+ { "categoria": "historia", "titulo": "El juicio", "autor": "Luis Zueco", "color": "#7A4A2E" },
+ { "categoria": "edicion", "titulo": "La piedra oscura", "autor": "Alberto Conejero", "color": "#4A5560" },
+ { "categoria": "marketing", "titulo": "Los huérfanos", "autor": "Carmen Mola", "color": "#3E6F77" },
+ { "categoria": "proceso", "titulo": "Principio, medio, fin", "autor": "Valeria Luiselli", "color": "#6A2E5A" }
+]

@@ -1,0 +1,682 @@
+[
+ {
+  "id": "IDE-007",
+  "categoria": "ideas",
+  "nivel": "facil",
+  "pregunta": "¿Qué ayuda a elegir entre muchas ideas?",
+  "opciones": [
+   "Escribirlas todas a la vez hasta terminarlas",
+   "Probar con una pequeña escena de cada una",
+   "Elegir siempre la primera que se te ocurrió",
+   "Descartar las que parezcan más difíciles"
+  ],
+  "correcta": 1,
+  "explicacion": "Escribir un poco de cada una muestra cuál tiene fuerza.",
+  "fuente": "Charla 7",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-010",
+  "categoria": "ideas",
+  "nivel": "facil",
+  "pregunta": "¿Cuál es la premisa de Harry Potter y la piedra filosofal?",
+  "opciones": [
+   "Un niño huérfano descubre que es mago y va a un colegio secreto",
+   "Una joven aprendiz de brujería lucha contra un imperio en guerra",
+   "Un joven aventurero busca un anillo mágico para destruirlo",
+   "Un adolescente hereda un castillo encantado en las montañas"
+  ],
+  "correcta": 0,
+  "explicacion": "Un niño huérfano con poderes mágicos estudia en un colegio de hechicería.",
+  "fuente": "Charla 6",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-012",
+  "categoria": "ideas",
+  "nivel": "facil",
+  "pregunta": "¿Cuál es la premisa de Frankenstein?",
+  "opciones": [
+   "Un médico se transforma en un monstruo por las noches",
+   "Un científico crea una criatura y luego la rechaza",
+   "Un marinero descubre una criatura marina en el Ártico",
+   "Un conde vampiro se muda a una ciudad inglesa"
+  ],
+  "correcta": 1,
+  "explicacion": "El científico rechaza a su creación, con consecuencias trágicas.",
+  "fuente": "Charla 6",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-019",
+  "categoria": "ideas",
+  "nivel": "facil",
+  "pregunta": "¿Qué es una sinopsis?",
+  "opciones": [
+   "Un resumen de la historia que despierta interés",
+   "Un índice de los capítulos con sus páginas",
+   "Una biografía breve del autor del libro",
+   "Una lista de los personajes con su edad y ocupación"
+  ],
+  "correcta": 0,
+  "explicacion": "Se usa para presentar la obra a una editorial o a los lectores.",
+  "fuente": "Charla 17",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-020",
+  "categoria": "ideas",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un gancho?",
+  "opciones": [
+   "Una descripción detallada del mundo de la novela",
+   "Un apartado con los datos técnicos del libro",
+   "Un resumen que explica el final de la historia",
+   "Un elemento que capta la atención del lector desde el principio"
+  ],
+  "correcta": 3,
+  "explicacion": "En inglés, «hook».",
+  "fuente": "MKT 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-029",
+  "categoria": "ideas",
+  "nivel": "facil",
+  "pregunta": "¿Qué es una idea de personaje?",
+  "opciones": [
+   "Un nombre elegido por su sonoridad y su rareza",
+   "La edad y la profesión del protagonista",
+   "Un personaje que ya sugiere conflicto",
+   "Una lista de rasgos físicos ordenada por importancia"
+  ],
+  "correcta": 2,
+  "explicacion": "Un personaje con deseo y obstáculo ya contiene historia.",
+  "fuente": "Charla 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-034",
+  "categoria": "ideas",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un título provisional?",
+  "opciones": [
+   "Uno que no puede cambiarse una vez elegido",
+   "Uno temporal hasta tener el definitivo",
+   "Uno que solo se pone a los cuentos infantiles",
+   "Uno que aparece únicamente en la portada del libro"
+  ],
+  "correcta": 1,
+  "explicacion": "Ayuda a empezar y puede cambiar después.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-037",
+  "categoria": "ideas",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un cuento?",
+  "opciones": [
+   "Un ensayo breve",
+   "Un poema extenso",
+   "Un texto teatral",
+   "Un relato breve"
+  ],
+  "correcta": 3,
+  "explicacion": "Narración de ficción corta.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-040",
+  "categoria": "ideas",
+  "nivel": "facil",
+  "pregunta": "¿Qué es la poesía?",
+  "opciones": [
+   "Obra pensada para representarse ante el público",
+   "Expresión literaria en verso o prosa poética",
+   "Narración extensa con personajes y conflicto",
+   "Texto argumentativo que defiende una idea"
+  ],
+  "correcta": 1,
+  "explicacion": "Puede ser rimada o de verso libre.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-042",
+  "categoria": "ideas",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un logline?",
+  "opciones": [
+   "Una cita famosa que aparece en la contraportada",
+   "Una frase que resume la historia y su conflicto",
+   "Un párrafo largo que narra el final completo",
+   "Un capítulo corto que presenta a los personajes"
+  ],
+  "correcta": 1,
+  "explicacion": "Ayuda a definir la premisa.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-049",
+  "categoria": "ideas",
+  "nivel": "facil",
+  "pregunta": "¿Qué es la ciencia ficción?",
+  "opciones": [
+   "Un género basado en avances científicos o tecnológicos imaginados",
+   "Un género basado en crímenes y detectives de ciudad",
+   "Un género basado en hechos y personajes de épocas pasadas",
+   "Un género basado en seres mágicos y reinos medievales"
+  ],
+  "correcta": 0,
+  "explicacion": "Género citado en la Charla 1.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-050",
+  "categoria": "ideas",
+  "nivel": "facil",
+  "pregunta": "¿Qué es la fantasía?",
+  "opciones": [
+   "Un género con investigación de crímenes en ciudades",
+   "Un género con magia o elementos sobrenaturales",
+   "Un género con avances científicos y tecnología futura",
+   "Un género con relatos de vidas reales y verificables"
+  ],
+  "correcta": 1,
+  "explicacion": "Género citado en la Charla 1.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-051",
+  "categoria": "ideas",
+  "nivel": "facil",
+  "pregunta": "¿Qué es el romance?",
+  "opciones": [
+   "Un género centrado en hechos históricos reales",
+   "Un género centrado en la risa y la sátira",
+   "Un género centrado en una relación amorosa",
+   "Un género centrado en el miedo y lo sobrenatural"
+  ],
+  "correcta": 2,
+  "explicacion": "Género citado en la Charla 1.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-055",
+  "categoria": "ideas",
+  "nivel": "media",
+  "pregunta": "¿Qué es un «high concept»?",
+  "opciones": [
+   "Una idea complicada que exige muchas páginas de explicación",
+   "Una idea que depende de un final muy sorprendente",
+   "Una idea basada en un género de alta literatura",
+   "Una idea fácil de resumir y muy atractiva"
+  ],
+  "correcta": 3,
+  "explicacion": "Se capta en una sola frase.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-065",
+  "categoria": "ideas",
+  "nivel": "media",
+  "pregunta": "¿Qué elementos tiene un buen inicio de historia?",
+  "opciones": [
+   "Resumen, descripción y final adelantado",
+   "Diálogo, adverbios y moraleja inicial",
+   "Prólogo, mapa y lista de personajes",
+   "Gancho, voz y una promesa de conflicto"
+  ],
+  "correcta": 3,
+  "explicacion": "Debe hacer querer seguir leyendo.",
+  "fuente": "Charla 15",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-069",
+  "categoria": "ideas",
+  "nivel": "media",
+  "pregunta": "¿Qué es un dilema moral?",
+  "opciones": [
+   "Elegir entre dos títulos para el mismo libro",
+   "Elegir entre dos finales igual de posibles",
+   "Elegir entre dos narradores de la misma historia",
+   "Elegir entre dos opciones con consecuencias éticas"
+  ],
+  "correcta": 3,
+  "explicacion": "Genera tensión en un personaje.",
+  "fuente": "Charla 3",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-076",
+  "categoria": "ideas",
+  "nivel": "media",
+  "pregunta": "¿Qué es una novela coral?",
+  "opciones": [
+   "La que se escribe en verso para ser recitada",
+   "La que está narrada por un solo personaje en primera persona",
+   "La que tiene varios protagonistas de peso similar",
+   "La que se publica por entregas en un periódico"
+  ],
+  "correcta": 2,
+  "explicacion": "Sus tramas suelen cruzarse.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-085",
+  "categoria": "ideas",
+  "nivel": "media",
+  "pregunta": "¿Qué es el pastiche?",
+  "opciones": [
+   "Copia de una obra completa sin cambios",
+   "Imitación del estilo de otro autor",
+   "Burla humorística de la trama de otra obra",
+   "Resumen del argumento de una novela célebre"
+  ],
+  "correcta": 1,
+  "explicacion": "Puede ser un homenaje o un juego.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-088",
+  "categoria": "ideas",
+  "nivel": "media",
+  "pregunta": "¿Qué es el plagio?",
+  "opciones": [
+   "Presentar como propia una obra ajena",
+   "Parafrasear una idea citando su fuente",
+   "Rendir homenaje a otra obra indicando su origen",
+   "Citar un fragmento indicando su autor y su fuente"
+  ],
+  "correcta": 0,
+  "explicacion": "Es ilícito y poco ético.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-090",
+  "categoria": "ideas",
+  "nivel": "dificil",
+  "pregunta": "¿Qué hace viable a una idea para una novela?",
+  "opciones": [
+   "Ser tan rara que nadie la haya usado antes",
+   "Tener conflicto suficiente para sostenerla",
+   "Pertenecer a un género que esté de moda",
+   "Ser lo bastante corta para escribirse rápido"
+  ],
+  "correcta": 1,
+  "explicacion": "Debe dar para muchas escenas.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-093",
+  "categoria": "ideas",
+  "nivel": "dificil",
+  "pregunta": "¿Qué hace un conflicto para sostener una premisa?",
+  "opciones": [
+   "Elimina la necesidad de un final claro",
+   "Genera obstáculos y obliga a los personajes a cambiar",
+   "Resume la historia en una sola escena",
+   "Reduce el número de personajes necesarios"
+  ],
+  "correcta": 1,
+  "explicacion": "Es el motor del relato.",
+  "fuente": "Charla 4 y 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-100",
+  "categoria": "ideas",
+  "nivel": "dificil",
+  "pregunta": "¿Qué sucede si a una idea le falta argumento?",
+  "opciones": [
+   "Sobra tensión porque todo es posible a la vez",
+   "Sobra mundo que ocupa el lugar de los hechos",
+   "Falta decidir qué ocurre y en qué orden",
+   "Sobran personajes que actúan sin objetivos"
+  ],
+  "correcta": 2,
+  "explicacion": "El argumento organiza los hechos.",
+  "fuente": "Charla 4 y 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-101",
+  "categoria": "ideas",
+  "nivel": "dificil",
+  "pregunta": "¿Qué se entiende por «intersección de ideas»?",
+  "opciones": [
+   "Cruzar dos o más ideas para crear una nueva",
+   "Resumir varias ideas en una frase para quedarse con una",
+   "Borrar las ideas repetidas de una lista larga",
+   "Copiar una idea ajena para adaptarla al estilo propio"
+  ],
+  "correcta": 0,
+  "explicacion": "Es una forma de mezcla creativa.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-105",
+  "categoria": "ideas",
+  "nivel": "dificil",
+  "pregunta": "¿Qué mejora «una mujer que busca a su hermano» al añadir un obstáculo?",
+  "opciones": [
+   "Elimina el conflicto al dar más pistas al lector",
+   "Sustituye al narrador por otro más objetivo",
+   "Crea conflicto: el deseo choca con algo que lo impide",
+   "Cambia el género de la historia a uno de misterio"
+  ],
+  "correcta": 2,
+  "explicacion": "Deseo + obstáculo = conflicto.",
+  "fuente": "Charla 4 y 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-106",
+  "categoria": "ideas",
+  "nivel": "dificil",
+  "pregunta": "¿Qué problema refleja «tengo muchas ideas, pero no sé cuál elegir»?",
+  "opciones": [
+   "Falta de tiempo para escribir con constancia",
+   "Dificultad para seleccionar una y comprometerse con ella",
+   "Falta de ritmo en la escritura de las escenas",
+   "Falta de imaginación y de ideas originales"
+  ],
+  "correcta": 1,
+  "explicacion": "Aparece en la lista de problemas de la Charla 7.",
+  "fuente": "Charla 7",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-112",
+  "categoria": "ideas",
+  "nivel": "dificil",
+  "pregunta": "¿Qué suele explorar la ciencia ficción?",
+  "opciones": [
+   "Cómo se resuelven los crímenes en ciudades modernas",
+   "Cómo se superan los miedos en la infancia",
+   "Cómo era la vida cotidiana en épocas pasadas",
+   "Cómo afectan los cambios tecnológicos a las personas"
+  ],
+  "correcta": 3,
+  "explicacion": "Es su rasgo central.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-113",
+  "categoria": "ideas",
+  "nivel": "dificil",
+  "pregunta": "¿Qué explora la distopía?",
+  "opciones": [
+   "Los peligros de ciertas tendencias sociales o políticas",
+   "El día a día de una familia en una ciudad real",
+   "Las ventajas de una sociedad gobernada por la ciencia",
+   "Los viajes de un héroe por reinos mágicos"
+  ],
+  "correcta": 0,
+  "explicacion": "Como en 1984 o Los juegos del hambre.",
+  "fuente": "Charla 6",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-116",
+  "categoria": "ideas",
+  "nivel": "dificil",
+  "pregunta": "¿Qué critica la sátira de Rebelión en la granja?",
+  "opciones": [
+   "Cómo era la vida sencilla de los granjeros",
+   "Cómo se sucedían las malas cosechas",
+   "Cómo el poder corrompe a los líderes revolucionarios",
+   "Cómo se organizaba el trabajo en el campo"
+  ],
+  "correcta": 2,
+  "explicacion": "Es una alegoría política.",
+  "fuente": "Charla 6",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-119",
+  "categoria": "ideas",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un protagonista?",
+  "opciones": [
+   "El personaje principal de la historia",
+   "La voz que cuenta los hechos",
+   "El personaje que aparece solo al final",
+   "El personaje que se opone al héroe"
+  ],
+  "correcta": 0,
+  "explicacion": "Alrededor de él gira la trama.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-123",
+  "categoria": "ideas",
+  "nivel": "facil",
+  "pregunta": "¿Qué es el escenario de una historia?",
+  "opciones": [
+   "El lugar y el momento donde ocurre",
+   "La forma en que se cuenta la historia",
+   "La idea de fondo que se explora",
+   "El conjunto de personajes que intervienen"
+  ],
+  "correcta": 0,
+  "explicacion": "Ambienta la acción.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-124",
+  "categoria": "ideas",
+  "nivel": "facil",
+  "pregunta": "¿Qué género busca resolver un crimen o un enigma?",
+  "opciones": [
+   "Novela histórica o de costumbres",
+   "Novela de formación o de aprendizaje",
+   "Novela policíaca o de misterio",
+   "Novela de aventuras o de viajes"
+  ],
+  "correcta": 2,
+  "explicacion": "Se centra en una investigación.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-126",
+  "categoria": "ideas",
+  "nivel": "media",
+  "pregunta": "¿Qué se gana al convertir una idea en una pregunta?",
+  "opciones": [
+   "Obliga a resumir el final desde el principio",
+   "Elimina la necesidad de un conflicto central",
+   "Abre posibilidades que invitan a explorar",
+   "Cierra la historia con una respuesta única"
+  ],
+  "correcta": 2,
+  "explicacion": "La pregunta invita a explorar.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-128",
+  "categoria": "ideas",
+  "nivel": "media",
+  "pregunta": "¿Qué ayuda a que una idea no quede vaga?",
+  "opciones": [
+   "Concretar personaje, deseo y obstáculo",
+   "Añadir adjetivos que le den un tono más literario",
+   "Alargarla con descripciones del lugar y del tiempo",
+   "Cambiar el título por uno más llamativo y corto"
+  ],
+  "correcta": 0,
+  "explicacion": "Son los tres elementos básicos de toda historia.",
+  "fuente": "Charla 4 y 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-129",
+  "categoria": "ideas",
+  "nivel": "media",
+  "pregunta": "¿Qué es una idea de «giro»?",
+  "opciones": [
+   "Una sorpresa que cambia el sentido de lo ocurrido",
+   "Un personaje nuevo que aparece en el primer acto",
+   "Un cambio de narrador a mitad de la historia",
+   "Un salto en el tiempo entre dos capítulos"
+  ],
+  "correcta": 0,
+  "explicacion": "Altera lo que el lector creía.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-130",
+  "categoria": "ideas",
+  "nivel": "media",
+  "pregunta": "¿Qué efecto puede tener limitar una idea con una restricción?",
+  "opciones": [
+   "Alarga el texto porque exige más explicaciones",
+   "Hace que la historia pierda siempre el conflicto",
+   "Impide escribir porque limita demasiado las ideas",
+   "Puede estimular la creatividad al obligar a buscar soluciones"
+  ],
+  "correcta": 3,
+  "explicacion": "Las restricciones obligan a inventar.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-134",
+  "categoria": "ideas",
+  "nivel": "media",
+  "pregunta": "¿Por qué conviene escribir las ideas antes de juzgarlas?",
+  "opciones": [
+   "Porque la voz creativa necesita la ayuda de un corrector",
+   "Porque lo exige la persona que revisa el manuscrito",
+   "Porque conviene corregir cada frase al terminarla",
+   "Porque la voz crítica es útil, pero debe llegar después de escribir"
+  ],
+  "correcta": 3,
+  "explicacion": "Conviene separar escribir y editar.",
+  "fuente": "Charla 9",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-135",
+  "categoria": "ideas",
+  "nivel": "media",
+  "pregunta": "¿Qué suele aportar una restricción de extensión, como el microrrelato?",
+  "opciones": [
+   "Exige crear más personajes de reparto",
+   "Facilita desarrollar varias tramas paralelas",
+   "Obliga a ser conciso y a centrarse en lo esencial",
+   "Permite añadir más descripciones del entorno"
+  ],
+  "correcta": 2,
+  "explicacion": "Exige sintetizar.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-136",
+  "categoria": "ideas",
+  "nivel": "media",
+  "pregunta": "¿Qué es un detonante?",
+  "opciones": [
+   "El suceso que pone en marcha el conflicto",
+   "El recuerdo que explica el pasado del héroe",
+   "El hecho que cierra el conflicto central",
+   "El momento de mayor tensión de la historia"
+  ],
+  "correcta": 0,
+  "explicacion": "Inicia la acción.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-138",
+  "categoria": "ideas",
+  "nivel": "media",
+  "pregunta": "¿Qué es un narrador omnisciente?",
+  "opciones": [
+   "Uno que lo sabe todo de la historia y sus personajes",
+   "Uno que solo describe lo que se puede ver",
+   "Uno que cuenta lo que siente él mismo",
+   "Uno que solo conoce lo que piensa un personaje"
+  ],
+  "correcta": 0,
+  "explicacion": "Narración en tercera persona.",
+  "fuente": "Charla 4 y 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "IDE-147",
+  "categoria": "ideas",
+  "nivel": "dificil",
+  "pregunta": "¿Qué puede indicar que una idea «no da para más»?",
+  "opciones": [
+   "Que su conflicto no tiene recorrido para sostener una novela",
+   "Que está tan bien escrita que no admite cambios",
+   "Que es demasiado larga para un relato breve",
+   "Que tiene demasiados personajes para un cuento"
+  ],
+  "correcta": 0,
+  "explicacion": "Puede servir para un relato breve.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ }
+]

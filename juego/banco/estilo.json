@@ -1,0 +1,682 @@
+[
+ {
+  "id": "EST-001",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "En «el sol le golpeó la cara como un boxeador sin piedad», ¿qué figura hay?",
+  "opciones": [
+   "Metáfora",
+   "Hipérbole",
+   "Símil",
+   "Ironía"
+  ],
+  "correcta": 2,
+  "explicacion": "El símil compara dos elementos con un nexo comparativo (como, cual…).",
+  "fuente": "Figuras literarias",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-004",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "¿Qué sabe un narrador en primera persona?",
+  "opciones": [
+   "Todo lo que piensan todos los personajes",
+   "Solo lo que él mismo siente, piensa y percibe",
+   "Lo que ocurrirá en el futuro de la historia",
+   "Solo lo que le cuentan los demás personajes"
+  ],
+  "correcta": 1,
+  "explicacion": "Su punto de vista está limitado a su propia experiencia.",
+  "fuente": "Voces narrativas",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-005",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "¿Qué caracteriza al narrador omnisciente?",
+  "opciones": [
+   "Cuenta solo desde la mirada de un personaje",
+   "Es un personaje más que participa en la historia",
+   "Sabe todo: pensamientos de todos, pasado y futuro",
+   "Describe solo lo que se ve desde fuera, sin interpretar"
+  ],
+  "correcta": 2,
+  "explicacion": "Es un narrador externo que lo sabe todo.",
+  "fuente": "Voces narrativas",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-007",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "«El viento susurraba entre los árboles» es…",
+  "opciones": [
+   "Personificación",
+   "Hipérbole",
+   "Antítesis",
+   "Símil"
+  ],
+  "correcta": 0,
+  "explicacion": "Atribuye una acción humana a algo que no lo es.",
+  "fuente": "Figuras literarias",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-012",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "«Dani quería silencio; Luna quería fiesta» es…",
+  "opciones": [
+   "Una anáfora",
+   "Una metáfora",
+   "Una antítesis",
+   "Una aliteración"
+  ],
+  "correcta": 2,
+  "explicacion": "Contrapone dos ideas de significado opuesto.",
+  "fuente": "Figuras literarias",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-015",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "¿Qué ralentiza el ritmo de una escena?",
+  "opciones": [
+   "Un diálogo ágil entre personajes",
+   "Detenerse en la descripción del entorno",
+   "Frases cortas y directas",
+   "Saltar de golpe a la acción"
+  ],
+  "correcta": 1,
+  "explicacion": "Más detalle y descripción hacen que la narración avance más despacio.",
+  "fuente": "Ritmo narrativo",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-017",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "En «caminaba lentamente por el pasillo», el adverbio funciona como…",
+  "opciones": [
+   "Un cliché muy repetido en la lengua",
+   "Un parche para un verbo débil",
+   "Un pleonasmo evidente en la frase",
+   "Una voz pasiva encubierta"
+  ],
+  "correcta": 1,
+  "explicacion": "Un verbo más preciso («se arrastraba», «vagaba») ya lleva la lentitud incorporada.",
+  "fuente": "Adverbios",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-019",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "Según la regla de oro del ritmo, ¿para qué sirve el ritmo lento?",
+  "opciones": [
+   "Para tensión, acción y sorpresa",
+   "Para atmósfera, emoción y reflexión",
+   "Para los diálogos de los personajes",
+   "Para los finales de capítulo"
+  ],
+  "correcta": 1,
+  "explicacion": "Rápido = tensión, acción, sorpresa; lento = atmósfera, emoción, reflexión.",
+  "fuente": "Ritmo narrativo",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-021",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "¿Por qué falla «Sorprendentemente, no esperaba encontrarla allí»?",
+  "opciones": [
+   "Es demasiado corta para tener sentido",
+   "El adverbio anticipa la emoción en vez de mostrarla",
+   "Le falta un verbo principal en la oración",
+   "Sobra la coma que sigue al adverbio"
+  ],
+  "correcta": 1,
+  "explicacion": "Es telling en vez de showing: mejor que la acción transmita la sorpresa.",
+  "fuente": "Adverbios",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-022",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "¿Qué vicio hay en «Siempre llegaba constantemente tarde»?",
+  "opciones": [
+   "Voz pasiva",
+   "Cliché",
+   "Pleonasmo",
+   "Símil gastado"
+  ],
+  "correcta": 2,
+  "explicacion": "«Siempre» y «constantemente» dicen exactamente lo mismo.",
+  "fuente": "Adverbios",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-026",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "Para construir una elipsis con pistas, ¿qué se hace?",
+  "opciones": [
+   "Se cuenta H1 y se oculta H2",
+   "Se elimina H1 y se cuenta H2, con pistas que apuntan a H1",
+   "Se escribe H1 sin dar pistas",
+   "Se repite H2 dos veces seguidas"
+  ],
+  "correcta": 1,
+  "explicacion": "H1 es la historia principal oculta; H2, la que se cuenta.",
+  "fuente": "Elipsis",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-028",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "¿Cuál de estos NO es un error típico de un diálogo artificial?",
+  "opciones": [
+   "Info-dumping constante",
+   "Todos los personajes hablan igual",
+   "Exceso de verbos de habla exagerados",
+   "Subtexto bien trabajado"
+  ],
+  "correcta": 3,
+  "explicacion": "El subtexto es una virtud de un buen diálogo.",
+  "fuente": "Diálogos naturales",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-030",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "¿Qué obra se cita en clase como ejemplo de ritmo lento con frases extensas y llenas de imágenes?",
+  "opciones": [
+   "La carretera",
+   "Cien años de soledad",
+   "1984",
+   "Rayuela"
+  ],
+  "correcta": 1,
+  "explicacion": "García Márquez, con frases largas y descriptivas.",
+  "fuente": "Ritmo narrativo",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-032",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "¿Qué figura es «fuerte como un roble»?",
+  "opciones": [
+   "Símil",
+   "Personificación",
+   "Metáfora",
+   "Ironía"
+  ],
+  "correcta": 0,
+  "explicacion": "Compara con un nexo comparativo («como»).",
+  "fuente": "Figuras literarias",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-033",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "«El tic-tac del reloj» es un ejemplo de…",
+  "opciones": [
+   "Antítesis",
+   "Hipérbaton",
+   "Aliteración",
+   "Onomatopeya"
+  ],
+  "correcta": 3,
+  "explicacion": "Reproduce un sonido.",
+  "fuente": "Figuras literarias",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-036",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "¿Cuál de estas es una hipérbole?",
+  "opciones": [
+   "Almorzaré algo ligero",
+   "Cocino muy bien",
+   "Estoy muerto de hambre",
+   "Tengo bastante hambre"
+  ],
+  "correcta": 2,
+  "explicacion": "Exagera con fines expresivos.",
+  "fuente": "Figuras literarias",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-040",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "¿Qué narrador cuenta desde fuera, centrado en un solo personaje?",
+  "opciones": [
+   "Tercera persona limitada",
+   "Narrador en primera persona",
+   "Narrador testigo",
+   "Narrador omnisciente externo"
+  ],
+  "correcta": 0,
+  "explicacion": "Solo accede a lo que piensa ese personaje.",
+  "fuente": "Voces narrativas",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-041",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "Un diálogo natural debe…",
+  "opciones": [
+   "Ser siempre largo y muy elaborado",
+   "Sonar real sin perder claridad literaria",
+   "Explicarlo todo con detalle al lector",
+   "Usar solo exclamaciones y gritos"
+  ],
+  "correcta": 1,
+  "explicacion": "Es el objetivo de la Charla 12.",
+  "fuente": "Diálogos naturales",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-045",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "¿Qué es «mostrar» en «mostrar, no contar»?",
+  "opciones": [
+   "Resumir la trama de la escena en una línea",
+   "Hacer sentir con acciones y detalles",
+   "Usar adverbios de modo para cada acción",
+   "Explicar la emoción directamente al lector"
+  ],
+  "correcta": 1,
+  "explicacion": "Es transmitir mediante escena.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-046",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "Para mostrar que alguien está nervioso, mejor…",
+  "opciones": [
+   "Se sentía muy nervioso",
+   "Tenía muchos nervios",
+   "Estaba nerviosísimo",
+   "Se mordía las uñas"
+  ],
+  "correcta": 3,
+  "explicacion": "Un gesto lo muestra sin nombrar la emoción.",
+  "fuente": "Charla 1",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-056",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "¿Qué tipo de conector es «además»?",
+  "opciones": [
+   "De oposición",
+   "De causa",
+   "De consecuencia",
+   "De suma"
+  ],
+  "correcta": 3,
+  "explicacion": "Añade información.",
+  "fuente": "Conectores",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-063",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "¿Cuál NO es una figura sonora?",
+  "opciones": [
+   "Antítesis",
+   "Rima",
+   "Onomatopeya",
+   "Aliteración"
+  ],
+  "correcta": 0,
+  "explicacion": "La antítesis es de pensamiento, no sonora.",
+  "fuente": "Figuras literarias",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-065",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "¿Qué figura es «el sol sonríe»?",
+  "opciones": [
+   "Hipérbaton",
+   "Símil",
+   "Personificación",
+   "Antítesis"
+  ],
+  "correcta": 2,
+  "explicacion": "Atribuye una acción humana al sol.",
+  "fuente": "Figuras literarias",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-067",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "¿Qué se evita con el «idiolecto» de cada personaje?",
+  "opciones": [
+   "Que todos hablen igual",
+   "Los gerundios en exceso",
+   "Los diálogos largos",
+   "Los adverbios en exceso"
+  ],
+  "correcta": 0,
+  "explicacion": "Las novelas donde todos hablan igual rozan el absurdo.",
+  "fuente": "Construcción de personajes",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-075",
+  "categoria": "estilo",
+  "nivel": "facil",
+  "pregunta": "¿Qué figura es «dormía con la dignidad de una reina en el exilio»?",
+  "opciones": [
+   "Anáfora",
+   "Onomatopeya",
+   "Personificación",
+   "Antítesis"
+  ],
+  "correcta": 2,
+  "explicacion": "Atribuye dignidad humana a la perra.",
+  "fuente": "Figuras literarias",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-081",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "¿Qué es la metonimia?",
+  "opciones": [
+   "Imitar un sonido real con palabras",
+   "Comparar con el nexo «como» o «cual»",
+   "Nombrar algo por otra cosa cercana",
+   "Repetir palabras al final de frases seguidas"
+  ],
+  "correcta": 2,
+  "explicacion": "Ej.: «beber un vaso» (el contenido).",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-084",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "¿Qué es un epíteto?",
+  "opciones": [
+   "Una comparación entre dos términos con un nexo",
+   "Adjetivo que resalta una cualidad propia del sustantivo",
+   "Una exageración expresiva de una cualidad",
+   "Una repetición de palabras al inicio de la frase"
+  ],
+  "correcta": 1,
+  "explicacion": "Ej.: «la blanca nieve».",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-094",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "¿Qué narrador usa «tú» para dirigirse al protagonista?",
+  "opciones": [
+   "Segunda persona",
+   "Testigo",
+   "Omnisciente",
+   "Primera persona"
+  ],
+  "correcta": 0,
+  "explicacion": "Es poco frecuente.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-095",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "¿Qué es un narrador testigo?",
+  "opciones": [
+   "Lo sabe absolutamente todo sobre los personajes",
+   "Cuenta lo que ve de otros sin ser el protagonista",
+   "Es el protagonista y cuenta su propia historia",
+   "Habla directamente al lector durante el relato"
+  ],
+  "correcta": 1,
+  "explicacion": "Es un personaje secundario que narra.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-096",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "¿Qué es un narrador no fiable?",
+  "opciones": [
+   "Uno omnisciente y completamente externo",
+   "Uno que narra en tercera persona",
+   "Uno cuya versión de los hechos no es de fiar",
+   "Uno que lo cuenta absolutamente todo con precisión"
+  ],
+  "correcta": 2,
+  "explicacion": "Crea ambigüedad.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-098",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "¿Qué vicio es «Lloraba amargamente»?",
+  "opciones": [
+   "Cliché por asociación automática",
+   "Pleonasmo por repetición de la misma idea",
+   "Voz pasiva innecesaria en la oración",
+   "Redundancia entre el verbo y el adverbio"
+  ],
+  "correcta": 0,
+  "explicacion": "El lector reconoce la fórmula.",
+  "fuente": "Adverbios",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-103",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "¿Cuál es una elipsis de acción?",
+  "opciones": [
+   "Callar el nombre de un personaje importante",
+   "Omitir el sujeto de una oración larga",
+   "Saltar un año entero de la historia sin avisar",
+   "Mostrar el antes y el después sin el momento central"
+  ],
+  "correcta": 3,
+  "explicacion": "Ej.: «solo quedaban el plato y una cola».",
+  "fuente": "Elipsis",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-107",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "¿Qué necesita una elipsis para funcionar?",
+  "opciones": [
+   "Que el hueco tenga sentido y haya pistas suficientes",
+   "Que el hueco sea tan grande que nadie lo entienda",
+   "Que no haya ninguna pista que oriente al lector",
+   "Que haya siempre un narrador omnisciente"
+  ],
+  "correcta": 0,
+  "explicacion": "Y que el hueco no sea desmesurado.",
+  "fuente": "Elipsis",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-113",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "¿Cuál es una virtud de un diálogo?",
+  "opciones": [
+   "Que use muchos adverbios de modo",
+   "Que lo explique todo con detalle",
+   "Economía: corta lo obvio",
+   "Que sea perfectamente simétrico"
+  ],
+  "correcta": 2,
+  "explicacion": "El buen diálogo corta lo obvio.",
+  "fuente": "Diálogos naturales",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-121",
+  "categoria": "estilo",
+  "nivel": "media",
+  "pregunta": "¿Qué hace «El polvo conocía sus nombres»?",
+  "opciones": [
+   "Aliteración de sonidos",
+   "Antítesis entre dos ideas",
+   "Personificación del polvo",
+   "Anáfora de una palabra"
+  ],
+  "correcta": 2,
+  "explicacion": "Atribuye saber al polvo.",
+  "fuente": "Voces narrativas",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-129",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "¿Qué falla si no hay pistas de la elipsis?",
+  "opciones": [
+   "El texto resulta demasiado corto",
+   "El lector no nota que falta algo",
+   "Sobra tensión en el relato",
+   "Es una trampa de estilo"
+  ],
+  "correcta": 1,
+  "explicacion": "No se señala el hueco.",
+  "fuente": "Elipsis",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-130",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "Un final con pistas que el lector no puede mirar atrás y ver es…",
+  "opciones": [
+   "Una trampa",
+   "Una elipsis perfecta",
+   "Un símil",
+   "Un giro limpio"
+  ],
+  "correcta": 0,
+  "explicacion": "Exige juego limpio.",
+  "fuente": "Elipsis",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-131",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "¿Qué elipsis es «Tres semanas después…»?",
+  "opciones": [
+   "De información",
+   "De acción",
+   "Temporal explícita",
+   "Temporal implícita"
+  ],
+  "correcta": 2,
+  "explicacion": "Con marca temporal.",
+  "fuente": "Elipsis",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-135",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "¿Qué conjunto describe la verosimilitud de un personaje?",
+  "opciones": [
+   "Virtudes, defectos y miedos del personaje",
+   "Idiolecto, particularidad y profundidad",
+   "Edad, altura, nombre y aspecto del personaje",
+   "Pasado, presente y futuro del personaje"
+  ],
+  "correcta": 1,
+  "explicacion": "Las tres características de la clase.",
+  "fuente": "Construcción de personajes",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "EST-144",
+  "categoria": "estilo",
+  "nivel": "dificil",
+  "pregunta": "¿Qué figura es «la perra más obediente del mundo, si obediente significa ignorar cada orden»?",
+  "opciones": [
+   "Anáfora",
+   "Ironía",
+   "Antítesis",
+   "Hipérbole"
+  ],
+  "correcta": 1,
+  "explicacion": "Dice lo contrario de lo que ocurre.",
+  "fuente": "Figuras literarias",
+  "banco": "publico",
+  "revisada": false
+ }
+]

@@ -1,0 +1,682 @@
+[
+ {
+  "id": "HIS-002",
+  "categoria": "historia",
+  "nivel": "facil",
+  "pregunta": "¿Quién escribió Cien años de soledad?",
+  "opciones": [
+   "Julio Cortázar",
+   "Gabriel García Márquez",
+   "Jorge Luis Borges",
+   "Mario Vargas Llosa"
+  ],
+  "correcta": 1,
+  "explicacion": "Obra del realismo mágico.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-011",
+  "categoria": "historia",
+  "nivel": "facil",
+  "pregunta": "¿Quién escribió Fuenteovejuna?",
+  "opciones": [
+   "Quevedo",
+   "Lope de Vega",
+   "Calderón",
+   "Cervantes"
+  ],
+  "correcta": 1,
+  "explicacion": "Drama del Siglo de Oro.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-018",
+  "categoria": "historia",
+  "nivel": "facil",
+  "pregunta": "¿Quién escribió Los tres mosqueteros?",
+  "opciones": [
+   "Alexandre Dumas",
+   "Julio Verne",
+   "Honoré de Balzac",
+   "Víctor Hugo"
+  ],
+  "correcta": 0,
+  "explicacion": "Novela de aventuras.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-020",
+  "categoria": "historia",
+  "nivel": "facil",
+  "pregunta": "¿Quién escribió Veinte mil leguas de viaje submarino?",
+  "opciones": [
+   "Alexandre Dumas",
+   "H. G. Wells",
+   "Julio Verne",
+   "Víctor Hugo"
+  ],
+  "correcta": 2,
+  "explicacion": "Novela de aventuras.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-024",
+  "categoria": "historia",
+  "nivel": "facil",
+  "pregunta": "¿Quién escribió Alicia en el país de las maravillas?",
+  "opciones": [
+   "Roald Dahl",
+   "J. M. Barrie",
+   "C. S. Lewis",
+   "Lewis Carroll"
+  ],
+  "correcta": 3,
+  "explicacion": "Publicada en 1865.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-025",
+  "categoria": "historia",
+  "nivel": "facil",
+  "pregunta": "¿Quién escribió Peter Pan?",
+  "opciones": [
+   "Roald Dahl",
+   "C. S. Lewis",
+   "Lewis Carroll",
+   "J. M. Barrie"
+  ],
+  "correcta": 3,
+  "explicacion": "Obra de 1904.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-028",
+  "categoria": "historia",
+  "nivel": "facil",
+  "pregunta": "¿Quién escribió Matilda?",
+  "opciones": [
+   "C. S. Lewis",
+   "Lewis Carroll",
+   "Roald Dahl",
+   "J. K. Rowling"
+  ],
+  "correcta": 2,
+  "explicacion": "Novela infantil.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-031",
+  "categoria": "historia",
+  "nivel": "facil",
+  "pregunta": "¿Quién escribió La metamorfosis?",
+  "opciones": [
+   "Hermann Hesse",
+   "Franz Kafka",
+   "Robert Musil",
+   "Thomas Mann"
+  ],
+  "correcta": 1,
+  "explicacion": "Relato de 1915.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-032",
+  "categoria": "historia",
+  "nivel": "facil",
+  "pregunta": "¿Quién escribió El proceso?",
+  "opciones": [
+   "Hermann Hesse",
+   "Robert Musil",
+   "Franz Kafka",
+   "Thomas Mann"
+  ],
+  "correcta": 2,
+  "explicacion": "Novela póstuma.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-034",
+  "categoria": "historia",
+  "nivel": "facil",
+  "pregunta": "¿Quién escribió Rayuela?",
+  "opciones": [
+   "Mario Vargas Llosa",
+   "Jorge Luis Borges",
+   "Gabriel García Márquez",
+   "Julio Cortázar"
+  ],
+  "correcta": 3,
+  "explicacion": "Novela de 1963.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-036",
+  "categoria": "historia",
+  "nivel": "facil",
+  "pregunta": "¿Quién escribió La sombra del viento?",
+  "opciones": [
+   "Carlos Ruiz Zafón",
+   "Javier Marías",
+   "Arturo Pérez-Reverte",
+   "Eduardo Mendoza"
+  ],
+  "correcta": 0,
+  "explicacion": "Novela de 2001.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-044",
+  "categoria": "historia",
+  "nivel": "facil",
+  "pregunta": "¿Quién escribió El gran Gatsby?",
+  "opciones": [
+   "Ernest Hemingway",
+   "William Faulkner",
+   "F. Scott Fitzgerald",
+   "John Steinbeck"
+  ],
+  "correcta": 2,
+  "explicacion": "Novela de 1925.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-046",
+  "categoria": "historia",
+  "nivel": "facil",
+  "pregunta": "¿Quién escribió Las uvas de la ira?",
+  "opciones": [
+   "Ernest Hemingway",
+   "John Steinbeck",
+   "F. Scott Fitzgerald",
+   "William Faulkner"
+  ],
+  "correcta": 1,
+  "explicacion": "Novela de 1939.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-047",
+  "categoria": "historia",
+  "nivel": "facil",
+  "pregunta": "¿Quién escribió Matar a un ruiseñor?",
+  "opciones": [
+   "Harper Lee",
+   "Margaret Atwood",
+   "Maya Angelou",
+   "Toni Morrison"
+  ],
+  "correcta": 0,
+  "explicacion": "Novela de 1960.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-055",
+  "categoria": "historia",
+  "nivel": "facil",
+  "pregunta": "¿Quién escribió Fortunata y Jacinta?",
+  "opciones": [
+   "Emilia Pardo Bazán",
+   "Leopoldo Alas «Clarín»",
+   "Benito Pérez Galdós",
+   "Juan Valera"
+  ],
+  "correcta": 2,
+  "explicacion": "Novela realista.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-056",
+  "categoria": "historia",
+  "nivel": "facil",
+  "pregunta": "¿Quién escribió El Lazarillo de Tormes?",
+  "opciones": [
+   "Lope de Vega",
+   "Es de autor anónimo",
+   "Quevedo",
+   "Cervantes"
+  ],
+  "correcta": 1,
+  "explicacion": "Novela picaresca de 1554.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-062",
+  "categoria": "historia",
+  "nivel": "media",
+  "pregunta": "¿Qué siglo corresponde al Siglo de Oro español, aproximadamente?",
+  "opciones": [
+   "XIV y XV",
+   "XIX y XX",
+   "XVIII y XIX",
+   "XVI y XVII"
+  ],
+  "correcta": 3,
+  "explicacion": "Renacimiento y Barroco.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-073",
+  "categoria": "historia",
+  "nivel": "media",
+  "pregunta": "¿Quién escribió Esperando a Godot?",
+  "opciones": [
+   "Harold Pinter",
+   "Eugène Ionesco",
+   "Samuel Beckett",
+   "Bertolt Brecht"
+  ],
+  "correcta": 2,
+  "explicacion": "Teatro del absurdo.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-076",
+  "categoria": "historia",
+  "nivel": "media",
+  "pregunta": "¿Quién escribió El extranjero?",
+  "opciones": [
+   "Albert Camus",
+   "Simone de Beauvoir",
+   "Jean-Paul Sartre",
+   "Marcel Proust"
+  ],
+  "correcta": 0,
+  "explicacion": "Novela de 1942.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-080",
+  "categoria": "historia",
+  "nivel": "media",
+  "pregunta": "¿Quién escribió Ana Karenina?",
+  "opciones": [
+   "Fiódor Dostoyevski",
+   "Nikolái Gógol",
+   "León Tolstói",
+   "Antón Chéjov"
+  ],
+  "correcta": 2,
+  "explicacion": "Novela rusa de 1877.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-088",
+  "categoria": "historia",
+  "nivel": "media",
+  "pregunta": "¿Quién escribió Grandes esperanzas?",
+  "opciones": [
+   "George Eliot",
+   "William Thackeray",
+   "Charles Dickens",
+   "Thomas Hardy"
+  ],
+  "correcta": 2,
+  "explicacion": "Novela de 1861.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-090",
+  "categoria": "historia",
+  "nivel": "media",
+  "pregunta": "¿Quién escribió Los viajes de Gulliver?",
+  "opciones": [
+   "Samuel Richardson",
+   "Henry Fielding",
+   "Jonathan Swift",
+   "Daniel Defoe"
+  ],
+  "correcta": 2,
+  "explicacion": "Sátira de 1726.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-091",
+  "categoria": "historia",
+  "nivel": "media",
+  "pregunta": "¿Quién escribió Robinson Crusoe?",
+  "opciones": [
+   "Samuel Richardson",
+   "Daniel Defoe",
+   "Jonathan Swift",
+   "Henry Fielding"
+  ],
+  "correcta": 1,
+  "explicacion": "Novela de 1719.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-093",
+  "categoria": "historia",
+  "nivel": "media",
+  "pregunta": "¿Quién escribió Fausto?",
+  "opciones": [
+   "Thomas Mann",
+   "Johann Wolfgang von Goethe",
+   "Hermann Hesse",
+   "Friedrich Schiller"
+  ],
+  "correcta": 1,
+  "explicacion": "Obra cumbre alemana.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-099",
+  "categoria": "historia",
+  "nivel": "media",
+  "pregunta": "¿Quién escribió Los heraldos negros?",
+  "opciones": [
+   "Pablo Neruda",
+   "Gabriela Mistral",
+   "Octavio Paz",
+   "César Vallejo"
+  ],
+  "correcta": 3,
+  "explicacion": "Poemario de 1919.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-101",
+  "categoria": "historia",
+  "nivel": "media",
+  "pregunta": "¿Quién escribió Niebla?",
+  "opciones": [
+   "Azorín",
+   "Pío Baroja",
+   "Valle-Inclán",
+   "Miguel de Unamuno"
+  ],
+  "correcta": 3,
+  "explicacion": "Novela de 1914.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-107",
+  "categoria": "historia",
+  "nivel": "media",
+  "pregunta": "¿Quién escribió El Aleph?",
+  "opciones": [
+   "Jorge Luis Borges",
+   "Mario Vargas Llosa",
+   "Gabriel García Márquez",
+   "Julio Cortázar"
+  ],
+  "correcta": 0,
+  "explicacion": "Cuentos de 1949.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-108",
+  "categoria": "historia",
+  "nivel": "media",
+  "pregunta": "¿Quién escribió El amor en los tiempos del cólera?",
+  "opciones": [
+   "Mario Vargas Llosa",
+   "Gabriel García Márquez",
+   "Isabel Allende",
+   "Julio Cortázar"
+  ],
+  "correcta": 1,
+  "explicacion": "Novela de 1985.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-109",
+  "categoria": "historia",
+  "nivel": "media",
+  "pregunta": "¿Quién escribió Como agua para chocolate?",
+  "opciones": [
+   "Isabel Allende",
+   "Laura Esquivel",
+   "Clarice Lispector",
+   "Elena Poniatowska"
+  ],
+  "correcta": 1,
+  "explicacion": "Novela de 1989.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-112",
+  "categoria": "historia",
+  "nivel": "media",
+  "pregunta": "¿Quién escribió Los hermanos Karamázov?",
+  "opciones": [
+   "León Tolstói",
+   "Antón Chéjov",
+   "Fiódor Dostoyevski",
+   "Nikolái Gógol"
+  ],
+  "correcta": 2,
+  "explicacion": "Novela de 1880.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-114",
+  "categoria": "historia",
+  "nivel": "dificil",
+  "pregunta": "¿Quién escribió «La invención de Morel»?",
+  "opciones": [
+   "Adolfo Bioy Casares",
+   "Jorge Luis Borges",
+   "Ernesto Sabato",
+   "Julio Cortázar"
+  ],
+  "correcta": 0,
+  "explicacion": "Novela fantástica de 1940.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-118",
+  "categoria": "historia",
+  "nivel": "dificil",
+  "pregunta": "¿Quién escribió «Paradiso»?",
+  "opciones": [
+   "Alejo Carpentier",
+   "Guillermo Cabrera Infante",
+   "Reinaldo Arenas",
+   "José Lezama Lima"
+  ],
+  "correcta": 3,
+  "explicacion": "Novela barroca cubana.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-125",
+  "categoria": "historia",
+  "nivel": "dificil",
+  "pregunta": "¿Quién escribió «Aullido»?",
+  "opciones": [
+   "Jack Kerouac",
+   "Walt Whitman",
+   "Allen Ginsberg",
+   "William S. Burroughs"
+  ],
+  "correcta": 2,
+  "explicacion": "Poema de 1956.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-128",
+  "categoria": "historia",
+  "nivel": "dificil",
+  "pregunta": "¿Quién escribió «El ruido y la furia»?",
+  "opciones": [
+   "William Faulkner",
+   "Ernest Hemingway",
+   "F. Scott Fitzgerald",
+   "John Steinbeck"
+  ],
+  "correcta": 0,
+  "explicacion": "Novela de 1929.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-134",
+  "categoria": "historia",
+  "nivel": "dificil",
+  "pregunta": "¿Quién escribió «Fahrenheit 451»?",
+  "opciones": [
+   "George Orwell",
+   "Isaac Asimov",
+   "Ray Bradbury",
+   "Aldous Huxley"
+  ],
+  "correcta": 2,
+  "explicacion": "Novela de 1953.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-138",
+  "categoria": "historia",
+  "nivel": "dificil",
+  "pregunta": "¿Quién escribió «La mano izquierda de la oscuridad»?",
+  "opciones": [
+   "Philip K. Dick",
+   "Ursula K. Le Guin",
+   "Ray Bradbury",
+   "Isaac Asimov"
+  ],
+  "correcta": 1,
+  "explicacion": "Novela de 1969.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-139",
+  "categoria": "historia",
+  "nivel": "dificil",
+  "pregunta": "¿Quién escribió «Un mago de Terramar»?",
+  "opciones": [
+   "Ursula K. Le Guin",
+   "J. R. R. Tolkien",
+   "Isaac Asimov",
+   "C. S. Lewis"
+  ],
+  "correcta": 0,
+  "explicacion": "Novela de fantasía de 1968.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-142",
+  "categoria": "historia",
+  "nivel": "dificil",
+  "pregunta": "¿Quién escribió «Guía del autoestopista galáctico»?",
+  "opciones": [
+   "Terry Pratchett",
+   "Neil Gaiman",
+   "Isaac Asimov",
+   "Douglas Adams"
+  ],
+  "correcta": 3,
+  "explicacion": "Comedia de ciencia ficción.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-143",
+  "categoria": "historia",
+  "nivel": "dificil",
+  "pregunta": "¿Quién escribió «Coraline»?",
+  "opciones": [
+   "Roald Dahl",
+   "Neil Gaiman",
+   "Douglas Adams",
+   "Terry Pratchett"
+  ],
+  "correcta": 1,
+  "explicacion": "Novela de fantasía oscura.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "HIS-148",
+  "categoria": "historia",
+  "nivel": "dificil",
+  "pregunta": "¿Quién fue la primera mujer en ganar el Nobel de Literatura?",
+  "opciones": [
+   "Virginia Woolf",
+   "Selma Lagerlöf",
+   "Gabriela Mistral",
+   "Pearl S. Buck"
+  ],
+  "correcta": 1,
+  "explicacion": "En 1909.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ }
+]

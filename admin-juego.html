@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Juego (gestión) · Administración · La Cueva del Narrador</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#528A93">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="admin-juego.css">
+</head>
+<body>
+<div class="app">
+  <header class="pagehead">
+    <div class="top">
+      <div class="brand">
+        <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
+        <span>La Cueva<br>del Narrador</span>
+      </div>
+      <div class="avatar" aria-label="Tu perfil"></div>
+    </div>
+    <nav class="migas" aria-label="Ruta"><ol><li><a class="migas-admin" href="admin.html"><svg class="migas-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><span>Administración</span></a></li><li data-miga-seccion aria-current="page">Juego (gestión)</li><li data-miga-vista hidden></li></ol></nav>
+    <h1 class="largo">Juego (gestión)</h1>
+    <p class="sub">Preguntas del club, reportes de los socios y temporadas del juego.</p>
+  </header>
+
+  <main class="panel">
+    <a class="volver" href="admin.html">&#8249; Volver al panel</a>
+    <div id="estado"></div>
+
+    <!-- Lista: seis pestañas. Nada se pide al servidor hasta que la guardia confirma que eres administrador. -->
+    <section id="vista-lista" aria-label="Juego" hidden>
+      <div class="tabs jadm-tabs" id="tabs" role="tablist" aria-label="Secciones del juego">
+        <button type="button" class="tab" role="tab" id="tab-resumen" aria-controls="panel-resumen" aria-selected="true">Resumen</button>
+        <button type="button" class="tab" role="tab" id="tab-preguntas" aria-controls="panel-preguntas" aria-selected="false" tabindex="-1">Preguntas</button>
+        <button type="button" class="tab" role="tab" id="tab-reportes" aria-controls="panel-reportes" aria-selected="false" tabindex="-1">Reportes<span class="jadm-cuenta-tab" id="cuenta-reportes" hidden></span></button>
+        <button type="button" class="tab" role="tab" id="tab-fallos" aria-controls="panel-fallos" aria-selected="false" tabindex="-1">Más falladas</button>
+        <button type="button" class="tab" role="tab" id="tab-jugadores" aria-controls="panel-jugadores" aria-selected="false" tabindex="-1">Jugadores</button>
+        <button type="button" class="tab" role="tab" id="tab-temporada" aria-controls="panel-temporada" aria-selected="false" tabindex="-1">Temporada</button>
+      </div>
+
+      <!-- 1. Resumen -->
+      <div id="panel-resumen" role="tabpanel" aria-labelledby="tab-resumen" class="panel-admin jadm-panel" tabindex="-1">
+        <div id="resumen"></div>
+      </div>
+
+      <!-- 2. Preguntas -->
+      <div id="panel-preguntas" role="tabpanel" aria-labelledby="tab-preguntas" class="panel-admin jadm-panel" tabindex="-1" hidden>
+        <p class="msg">Aquí están las preguntas del club, las que juegan los socios con su cuenta. Las 40 preguntas públicas de cada categoría están en archivos del repositorio y no se editan aquí.</p>
+        <div class="jadm-filtros">
+          <div class="campo">
+            <label for="f-categoria">Categoría</label>
+            <select class="entrada" id="f-categoria"><option value="">Todas</option></select>
+          </div>
+          <div class="campo">
+            <label for="f-buscar">Buscar</label>
+            <input class="buscador" id="f-buscar" type="search" placeholder="Texto o id (por ejemplo, GRA-012)" autocomplete="off" maxlength="60">
+          </div>
+        </div>
+        <div class="chips" id="f-nivel" role="group" aria-label="Filtrar por nivel">
+          <button type="button" class="chip on" data-v="" aria-pressed="true">Todos los niveles</button>
+          <button type="button" class="chip" data-v="facil" aria-pressed="false">Fácil</button>
+          <button type="button" class="chip" data-v="media" aria-pressed="false">Media</button>
+          <button type="button" class="chip" data-v="dificil" aria-pressed="false">Difícil</button>
+        </div>
+        <div class="chips" id="f-activa" role="group" aria-label="Filtrar por estado">
+          <button type="button" class="chip on" data-v="" aria-pressed="true">Activas e inactivas</button>
+          <button type="button" class="chip" data-v="si" aria-pressed="false">Activas</button>
+          <button type="button" class="chip" data-v="no" aria-pressed="false">Inactivas</button>
+        </div>
+        <div class="barra-admin"><p class="cuenta" id="cuenta-preguntas" aria-live="polite"></p></div>
+        <div id="lista-preguntas"></div>
+        <nav class="jadm-paginas" id="paginas" aria-label="Páginas de preguntas" hidden>
+          <button type="button" class="btn sec" id="pag-anterior">&#8249; Anterior</button>
+          <span id="pag-texto"></span>
+          <button type="button" class="btn sec" id="pag-siguiente">Siguiente &#8250;</button>
+        </nav>
+      </div>
+
+      <!-- 3. Reportes -->
+      <div id="panel-reportes" role="tabpanel" aria-labelledby="tab-reportes" class="panel-admin jadm-panel" tabindex="-1" hidden>
+        <div class="chips" id="f-estado" role="group" aria-label="Filtrar reportes por estado">
+          <button type="button" class="chip on" data-v="nuevo" aria-pressed="true">Nuevos</button>
+          <button type="button" class="chip" data-v="revisado" aria-pressed="false">Revisados</button>
+          <button type="button" class="chip" data-v="descartado" aria-pressed="false">Descartados</button>
+          <button type="button" class="chip" data-v="" aria-pressed="false">Todos</button>
+        </div>
+        <p class="cuenta" id="cuenta-lista-reportes" aria-live="polite"></p>
+        <div id="lista-reportes"></div>
+      </div>
+
+      <!-- 4. Más falladas -->
+      <div id="panel-fallos" role="tabpanel" aria-labelledby="tab-fallos" class="panel-admin jadm-panel" tabindex="-1" hidden>
+        <div class="jadm-filtros">
+          <div class="campo">
+            <label for="f-vistas">Mínimo de veces que ha salido</label>
+            <select class="entrada" id="f-vistas">
+              <option value="3">3 o más</option>
+              <option value="5">5 o más</option>
+              <option value="10">10 o más</option>
+              <option value="20">20 o más</option>
+            </select>
+          </div>
+        </div>
+        <p class="pista">Las 30 preguntas con más porcentaje de fallo entre las que han salido al menos ese número de veces.</p>
+        <div id="lista-fallos"></div>
+      </div>
+
+      <!-- 5. Jugadores: ranking de actividad (partidas y logros de la temporada actual) -->
+      <div id="panel-jugadores" role="tabpanel" aria-labelledby="tab-jugadores" class="panel-admin jadm-panel" tabindex="-1" hidden>
+        <p class="pista">Socios que han jugado, de más a menos partidas (y, con las mismas partidas, de más a menos logros de la temporada actual).</p>
+        <p class="cuenta" id="cuenta-jugadores" aria-live="polite"></p>
+        <div id="lista-jugadores"></div>
+      </div>
+
+      <!-- 6. Temporada -->
+      <div id="panel-temporada" role="tabpanel" aria-labelledby="tab-temporada" class="panel-admin jadm-panel" tabindex="-1" hidden>
+        <section class="card jadm-temporada" aria-labelledby="t-temporada">
+          <h2 id="t-temporada">Temporada actual</h2>
+          <p class="jadm-temporada-num" id="temporada-actual">…</p>
+          <h3>¿Qué hace «Nueva temporada»?</h3>
+          <ul class="jadm-lista">
+            <li>El ranking vuelve a cero: todos los socios empiezan la nueva temporada sin logros.</li>
+            <li>Los logros de las temporadas anteriores (insignias, libros y tiempos) se conservan en la base de datos; no se borra nada.</li>
+            <li>No se puede deshacer.</li>
+          </ul>
+          <p class="msg" id="temporada-resultado" role="status" hidden></p>
+          <button type="button" class="btn peligro" id="nueva-temporada">Nueva temporada…</button>
+          <form class="formulario jadm-confirmar" id="form-temporada" novalidate hidden>
+            <p class="msg" data-estado hidden></p>
+            <div class="campo">
+              <label for="confirmar-temporada">Para confirmar, escribe NUEVA TEMPORADA</label>
+              <input class="entrada" id="confirmar-temporada" name="confirmacion" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false">
+            </div>
+            <div class="botones-form">
+              <button type="button" class="btn sec" id="cancelar-temporada">Cancelar</button>
+              <button type="submit" class="btn peligro" id="confirmar-boton" disabled>Empezar la temporada nueva</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </section>
+
+    <!-- Editor de una pregunta -->
+    <section id="vista-pregunta" hidden data-miga="Editar pregunta">
+      <form class="card formulario" id="form-pregunta" novalidate>
+        <h2 id="pq-titulo" tabindex="-1" data-foco>Editar pregunta</h2>
+        <p class="msg" data-estado hidden></p>
+        <p class="jadm-ficha" id="pq-ficha"></p>
+        <div class="campo">
+          <label for="pq-id">Id (no se puede cambiar)</label>
+          <input class="entrada" id="pq-id" type="text" readonly>
+        </div>
+        <div class="campo perfil-campo-switch jadm-activa">
+          <span class="perfil-switch-et" id="pq-activa-et">Pregunta activa</span>
+          <button type="button" class="perfil-switch" role="switch" id="pq-activa" aria-checked="true" aria-labelledby="pq-activa-et" aria-describedby="pq-activa-pista"><span class="perfil-switch-pista" aria-hidden="true"><span></span></span><span class="perfil-switch-texto" aria-hidden="true">Sí</span></button>
+          <p class="pista" id="pq-activa-pista">Las preguntas inactivas no salen en las partidas. Desactivar es la forma de «borrar»: se guarda en el momento.</p>
+        </div>
+        <div class="campo">
+          <label for="pq-pregunta">Enunciado</label>
+          <textarea class="entrada" id="pq-pregunta" name="pregunta" maxlength="400" required rows="3" aria-describedby="pq-pregunta-cuenta"></textarea>
+          <p class="pista" id="pq-pregunta-cuenta" data-cuenta-de="pq-pregunta"></p>
+        </div>
+        <div class="campo"><label for="pq-op0">Opción A</label><input class="entrada" id="pq-op0" name="op0" type="text" required autocomplete="off"></div>
+        <div class="campo"><label for="pq-op1">Opción B</label><input class="entrada" id="pq-op1" name="op1" type="text" required autocomplete="off"></div>
+        <div class="campo"><label for="pq-op2">Opción C</label><input class="entrada" id="pq-op2" name="op2" type="text" required autocomplete="off"></div>
+        <div class="campo"><label for="pq-op3">Opción D</label><input class="entrada" id="pq-op3" name="op3" type="text" required autocomplete="off"></div>
+        <fieldset class="opciones" id="pq-correcta">
+          <legend>Opción correcta</legend>
+          <div class="etiquetas">
+            <label class="etiqueta"><input type="radio" name="correcta" value="0" required><span>A</span></label>
+            <label class="etiqueta"><input type="radio" name="correcta" value="1"><span>B</span></label>
+            <label class="etiqueta"><input type="radio" name="correcta" value="2"><span>C</span></label>
+            <label class="etiqueta"><input type="radio" name="correcta" value="3"><span>D</span></label>
+          </div>
+        </fieldset>
+        <div class="campo">
+          <label for="pq-explicacion">Explicación</label>
+          <textarea class="entrada" id="pq-explicacion" name="explicacion" maxlength="600" rows="2" aria-describedby="pq-explicacion-cuenta"></textarea>
+          <p class="pista" id="pq-explicacion-cuenta" data-cuenta-de="pq-explicacion"></p>
+        </div>
+        <div class="campo">
+          <label for="pq-fuente">Fuente</label>
+          <input class="entrada" id="pq-fuente" name="fuente" type="text" maxlength="120" autocomplete="off" aria-describedby="pq-fuente-cuenta">
+          <p class="pista" id="pq-fuente-cuenta" data-cuenta-de="pq-fuente"></p>
+        </div>
+
+        <!-- Vista previa: aparece al pulsar «Revisar y guardar»; los cambios se guardan desde aquí -->
+        <section class="jadm-previa" id="pq-previa" aria-labelledby="pq-previa-t" hidden>
+          <h3 id="pq-previa-t" tabindex="-1">Vista previa: así la verá el socio</h3>
+          <p class="pista">En cada partida, el orden de las opciones se baraja.</p>
+          <div class="jadm-previa-caja">
+            <p class="jadm-previa-enunciado" id="pq-previa-enunciado"></p>
+            <ol class="jadm-opciones" id="pq-previa-opciones"></ol>
+            <p class="jadm-previa-expl" id="pq-previa-expl"></p>
+          </div>
+        </section>
+
+        <div class="botones-form">
+          <button type="button" class="btn sec" data-cancelar>Volver</button>
+          <button type="button" class="btn sec" id="pq-editar-mas" hidden>Seguir editando</button>
+          <button type="submit" class="btn" id="pq-guardar">Revisar y guardar</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="inicio.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="calendario.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a>
+    <a href="curso.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/></svg>Curso</a>
+    <a href="biblioteca.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/></svg>Biblioteca</a>
+    <a href="mas.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
+  </nav>
+</div>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script src="admin.js"></script>
+<script src="juego/estante.js"></script>
+<script src="admin-juego.js"></script>
+<script>
+if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+</script>
+</body>
+</html>

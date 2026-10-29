@@ -4,6 +4,10 @@
 //   inferior por la de socios y se muestra el avatar.
 // Ocultar botones no protege nada: la seguridad real la dan las políticas de la base de datos.
 
+// INTERRUPTOR DEL JUEGO (quiz.html). Con false no se ve ninguna entrada: ni la tarjeta de "Más", ni la pastilla de
+// inicio e index, ni el enlace de la barra lateral de escritorio. quiz.html sigue existiendo, pero nada lleva a ella.
+const JUEGO_VISIBLE = true;
+
 const Cueva = (function () {
   // supabase-js con versión fijada. Si cambias la versión, cambia también el código de integridad, y los dos en el
   // <link rel="preload"> del <head> de las páginas que lo precargan (inicio, calendario, curso, biblioteca, perfil, retos,
@@ -167,10 +171,31 @@ const Cueva = (function () {
     if (activa) {
       if (navVisitante === null) navVisitante = nav.innerHTML;
       nav.innerHTML = navSocio();
+      pintarJuego();
       pintarGrupoAdmin();
     } else if (navVisitante !== null) {
       nav.innerHTML = navVisitante;
+      pintarJuego();
     }
+  }
+
+  // ---------- Entradas al juego (JUEGO_VISIBLE, arriba del todo) ----------
+  // Las de "Más", inicio e index están en el HTML con data-juego y hidden: aquí solo se muestran. El enlace de la barra
+  // lateral se añade a la nav (entre «Biblioteca» y «Más») y styles.css lo oculta por debajo de 1024 px.
+  function pintarJuego() {
+    if (!JUEGO_VISIBLE) return;
+    document.querySelectorAll('[data-juego]').forEach(el => { el.hidden = false; });
+    const nav = document.querySelector('.nav');
+    if (!nav || nav.querySelector('.nav-juego')) return;
+    const aqui = (location.pathname.split('/').pop() || '') === 'quiz.html';
+    const a = document.createElement('a');
+    a.href = 'quiz.html';
+    a.className = 'nav-juego' + (aqui ? ' on' : '');
+    if (aqui) a.setAttribute('aria-current', 'page');
+    a.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 01-8 0z"/><path d="M8 6H5a3 3 0 003 4M16 6h3a3 3 0 01-3 4M12 13v4M8 20h8"/></svg>Juego';
+    // Entre «Biblioteca» (o «Nuestra biblioteca») y «Más»; si una barra no tiene «Más», al final, antes de Administración.
+    nav.insertBefore(a, nav.querySelector(':scope > a[href="mas.html"]') || nav.querySelector('.nav-admin'));
+    nav.classList.toggle('juego-actual', aqui);
   }
 
   // ---------- Barra lateral de escritorio (solo presentación) ----------
@@ -187,6 +212,7 @@ const Cueva = (function () {
     ['admin-publicaciones', 'Publicaciones', '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/>'],
     ['admin-informes', 'Informes', '<path d="M4 20h16M7 16v-5M12 16V6M17 16v-8"/>'],
     ['admin-avisos', 'Avisos', '<path d="M18 16v-5a6 6 0 10-12 0v5l-2 2h16z"/><path d="M10 21h4"/>'],
+    ['admin-juego', 'Juego (gestión)', '<path d="M8 4h8v5a4 4 0 01-8 0z"/><path d="M8 6H5a3 3 0 003 4M16 6h3a3 3 0 01-3 4M12 13v4M8 20h8"/>'],
     ['admin-copia', 'Copia de seguridad', '<path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v3h16v-3"/>']
   ];
   let rolConocido = null;
@@ -505,6 +531,7 @@ const Cueva = (function () {
   });
 
   if (document.body) enlazarAvatares();
+  if (document.body) pintarJuego();
   if (document.body && document.body.dataset.acceso === 'publico') publica();
   if (document.body) avisoDeLaUrl();
   visitaEnReposo();

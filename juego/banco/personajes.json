@@ -1,0 +1,682 @@
+[
+ {
+  "id": "PER-004",
+  "categoria": "personajes",
+  "nivel": "facil",
+  "pregunta": "¿Cuál es una manera de crear personajes?",
+  "opciones": [
+   "Copiándolos de otra novela publicada",
+   "Dejando que el editor los cree",
+   "Sin darles ningún nombre propio",
+   "Improvisándolos mientras se escribe"
+  ],
+  "correcta": 3,
+  "explicacion": "Es la creación improvisada.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-006",
+  "categoria": "personajes",
+  "nivel": "facil",
+  "pregunta": "¿Qué desventaja tiene la creación improvisada?",
+  "opciones": [
+   "Los personajes no cobran vida",
+   "No se adaptan a los giros de la trama",
+   "Es fácil caer en errores de continuidad",
+   "Cuesta mucho empezar a escribir"
+  ],
+  "correcta": 2,
+  "explicacion": "Se olvida cuántos hermanos tenía.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-008",
+  "categoria": "personajes",
+  "nivel": "facil",
+  "pregunta": "¿Qué es el método inductivo?",
+  "opciones": [
+   "Copiar un personaje de otra novela",
+   "Improvisar mientras se escribe la historia",
+   "Partir de un rasgo y deducir el resto",
+   "Rellenar una hoja de personaje con campos estándar"
+  ],
+  "correcta": 3,
+  "explicacion": "Es el de la ficha estándar.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-022",
+  "categoria": "personajes",
+  "nivel": "facil",
+  "pregunta": "¿Cuál es un ejemplo de conflicto interno?",
+  "opciones": [
+   "Superman y la criptonita",
+   "Locura frente a cordura en Don Quijote",
+   "Un incendio que arrasa la ciudad",
+   "Un ladrón que asalta el banco"
+  ],
+  "correcta": 1,
+  "explicacion": "Ocurre dentro del personaje.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-027",
+  "categoria": "personajes",
+  "nivel": "facil",
+  "pregunta": "¿Qué se define en «Metas y motivaciones»?",
+  "opciones": [
+   "Su casa, su barrio y su ciudad",
+   "Su ropa, su aspecto físico y su estilo",
+   "Su coche, su trabajo y su sueldo",
+   "Qué desea profundamente y qué está dispuesto a hacer"
+  ],
+  "correcta": 3,
+  "explicacion": "Incluye su día a día.",
+  "fuente": "Charla 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-029",
+  "categoria": "personajes",
+  "nivel": "facil",
+  "pregunta": "¿Qué se anota en «Evolución a lo largo de la historia»?",
+  "opciones": [
+   "Su peso, su altura y su complexión",
+   "Cómo empieza y qué aprende o cómo cambia",
+   "Su ropa, su aspecto físico y su estilo",
+   "Su dinero, sus bienes y sus deudas"
+  ],
+  "correcta": 1,
+  "explicacion": "Resume el arco.",
+  "fuente": "Charla 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-032",
+  "categoria": "personajes",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un personaje secundario?",
+  "opciones": [
+   "El narrador que cuenta los hechos",
+   "El villano principal de la trama",
+   "El que apoya la historia sin ser protagonista",
+   "El lector que recibe la obra"
+  ],
+  "correcta": 2,
+  "explicacion": "Contribuye a la trama.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-037",
+  "categoria": "personajes",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un personaje redondo?",
+  "opciones": [
+   "Uno plano, con pocos rasgos y sin evolución",
+   "Uno secundario, sin importancia en la trama",
+   "Uno sin nombre ni rasgos reconocibles",
+   "Uno complejo, con conflictos internos"
+  ],
+  "correcta": 3,
+  "explicacion": "Tiene profundidad.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-039",
+  "categoria": "personajes",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un estereotipo?",
+  "opciones": [
+   "Un narrador poco fiable",
+   "Una imagen simplificada y repetida",
+   "Un personaje único y original",
+   "Un conflicto sin resolver"
+  ],
+  "correcta": 1,
+  "explicacion": "Evita la particularidad.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-041",
+  "categoria": "personajes",
+  "nivel": "facil",
+  "pregunta": "¿Qué hace único al personaje de una bibliotecaria?",
+  "opciones": [
+   "Que sea callada, discreta y muy ordenada",
+   "Que lleve siempre una rebeca de punto",
+   "Que lleve gafas de lectura sobre la nariz",
+   "Que hable en voz baja con los libros devueltos"
+  ],
+  "correcta": 3,
+  "explicacion": "El ejemplo de la clase.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-042",
+  "categoria": "personajes",
+  "nivel": "facil",
+  "pregunta": "¿Qué deseo es «deseo profundo»?",
+  "opciones": [
+   "Lo que oye decir a los demás sobre él",
+   "Lo que ve a su alrededor cada día",
+   "Lo que realmente quiere el personaje",
+   "Lo que dice que quiere ante los demás"
+  ],
+  "correcta": 2,
+  "explicacion": "Puede no reconocerlo.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-044",
+  "categoria": "personajes",
+  "nivel": "facil",
+  "pregunta": "¿Qué fase del método deductivo elabora preguntas?",
+  "opciones": [
+   "Fase 2",
+   "Fase 4",
+   "Fase 3",
+   "Fase 1"
+  ],
+  "correcta": 0,
+  "explicacion": "Elaboración de preguntas.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-049",
+  "categoria": "personajes",
+  "nivel": "facil",
+  "pregunta": "¿Qué escenas se escriben en el ejercicio de tres escenas?",
+  "opciones": [
+   "Mañana, tarde y noche",
+   "Inicio, nudo y desenlace",
+   "Verano, otoño e invierno",
+   "Pasado, presente y futuro"
+  ],
+  "correcta": 3,
+  "explicacion": "Una por cada tiempo.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-052",
+  "categoria": "personajes",
+  "nivel": "facil",
+  "pregunta": "¿Cuántas escenas tiene la biografía por escenas?",
+  "opciones": [
+   "Cinco",
+   "Siete",
+   "Tres",
+   "Diez"
+  ],
+  "correcta": 0,
+  "explicacion": "Nacimiento, cinco años, once o doce, juventud, adultez.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-058",
+  "categoria": "personajes",
+  "nivel": "facil",
+  "pregunta": "¿Qué es un defecto del personaje?",
+  "opciones": [
+   "Una debilidad que lo hace imperfecto",
+   "Un narrador que lo cuenta",
+   "Una virtud que lo hace admirable",
+   "Un título que lo define"
+  ],
+  "correcta": 0,
+  "explicacion": "Lo hace humano.",
+  "fuente": "Charla 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-059",
+  "categoria": "personajes",
+  "nivel": "facil",
+  "pregunta": "¿Qué es una virtud?",
+  "opciones": [
+   "Una debilidad que lo hace imperfecto",
+   "Un miedo que lo bloquea",
+   "Una cualidad positiva",
+   "Un trauma de la infancia"
+  ],
+  "correcta": 2,
+  "explicacion": "Es lo contrario del defecto.",
+  "fuente": "Charla 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-063",
+  "categoria": "personajes",
+  "nivel": "media",
+  "pregunta": "¿Qué es un foil?",
+  "opciones": [
+   "Un villano que persigue al protagonista por todo el mundo",
+   "Un narrador que cuenta los hechos desde fuera",
+   "Un personaje que contrasta con otro para resaltarlo",
+   "Un mentor que guía al protagonista en su camino"
+  ],
+  "correcta": 2,
+  "explicacion": "Realza rasgos por contraste.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-064",
+  "categoria": "personajes",
+  "nivel": "media",
+  "pregunta": "¿Qué es un antihéroe?",
+  "opciones": [
+   "Un narrador que cuenta la historia",
+   "Un secundario que le acompaña",
+   "Un villano que persigue al protagonista",
+   "Un protagonista con rasgos poco heroicos"
+  ],
+  "correcta": 3,
+  "explicacion": "Puede ser egoísta o cínico.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-072",
+  "categoria": "personajes",
+  "nivel": "media",
+  "pregunta": "¿Qué es un conflicto interno en Don Quijote?",
+  "opciones": [
+   "Quijote frente a molinos",
+   "Quijote frente a Sancho",
+   "Locura frente a cordura",
+   "Quijote frente a gigantes"
+  ],
+  "correcta": 2,
+  "explicacion": "Al final la cordura triunfa.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-083",
+  "categoria": "personajes",
+  "nivel": "media",
+  "pregunta": "¿Qué tipo de preguntas dan mejores personajes?",
+  "opciones": [
+   "Inesperadas y originales",
+   "Ordinarias y previsibles",
+   "Obvias y de manual",
+   "Genéricas y muy repetidas"
+  ],
+  "correcta": 0,
+  "explicacion": "Escarban en lo incompleto.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-084",
+  "categoria": "personajes",
+  "nivel": "media",
+  "pregunta": "¿Qué es «cómo se arrastra a sí mismo hacia su autodestrucción»?",
+  "opciones": [
+   "Una pregunta sobre su profesión y su oficio",
+   "Una pregunta para profundizar el conflicto interno",
+   "Una pregunta sobre su aspecto físico general",
+   "Una pregunta sobre su edad y su pasado"
+  ],
+  "correcta": 1,
+  "explicacion": "De las ideas de la clase.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-088",
+  "categoria": "personajes",
+  "nivel": "media",
+  "pregunta": "¿Qué efecto tiene un personaje que solo se enfrenta a conflictos externos?",
+  "opciones": [
+   "Resulta un personaje redondo",
+   "Evoluciona muy poco",
+   "Evoluciona mucho",
+   "Resulta un personaje profundo"
+  ],
+  "correcta": 1,
+  "explicacion": "Los internos provocan la evolución.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-091",
+  "categoria": "personajes",
+  "nivel": "media",
+  "pregunta": "¿Qué ventaja da partir de la idea previa de la historia al crear personajes?",
+  "opciones": [
+   "Aumenta el tamaño de la obra",
+   "Reduce los conflictos de la trama",
+   "Mantiene el foco en la historia",
+   "Evita tener que crear personajes"
+  ],
+  "correcta": 2,
+  "explicacion": "El método deductivo parte de ahí.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-097",
+  "categoria": "personajes",
+  "nivel": "media",
+  "pregunta": "¿Qué es un personaje arquetípico?",
+  "opciones": [
+   "Un villano sin motivaciones claras",
+   "Un narrador poco fiable de la historia",
+   "Un modelo universal repetido en muchas historias",
+   "Un personaje único, irrepetible y original"
+  ],
+  "correcta": 2,
+  "explicacion": "Ej.: el mentor, el héroe.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-098",
+  "categoria": "personajes",
+  "nivel": "media",
+  "pregunta": "¿Qué es un personaje ambiguo?",
+  "opciones": [
+   "Uno con rasgos buenos y malos",
+   "Uno siempre bueno en cualquier circunstancia",
+   "Uno siempre malo en cualquier circunstancia",
+   "Uno sin ningún conflicto interno"
+  ],
+  "correcta": 0,
+  "explicacion": "Más humano.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-100",
+  "categoria": "personajes",
+  "nivel": "media",
+  "pregunta": "¿Qué diferencia hay entre antagonista y villano?",
+  "opciones": [
+   "Son lo mismo y se usan como sinónimos",
+   "El antagonista se opone; el villano es malvado",
+   "El villano es siempre un personaje bueno",
+   "El antagonista es siempre el narrador de la historia"
+  ],
+  "correcta": 1,
+  "explicacion": "Un antagonista puede no ser malvado.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-101",
+  "categoria": "personajes",
+  "nivel": "media",
+  "pregunta": "¿Por qué los personajes «cobran vida»?",
+  "opciones": [
+   "Se borran cada pocas páginas",
+   "Toman decisiones por sí mismos",
+   "Se copian de otras novelas",
+   "Se editan mientras se escribe"
+  ],
+  "correcta": 1,
+  "explicacion": "Ventaja de improvisar.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-102",
+  "categoria": "personajes",
+  "nivel": "dificil",
+  "pregunta": "¿Qué implica que un personaje sea redondo?",
+  "opciones": [
+   "Habla mucho a lo largo de la obra",
+   "Es el protagonista absoluto de la historia",
+   "Tiene conflictos internos que lo hacen profundo",
+   "Tiene muchísimos rasgos acumulados en la ficha"
+  ],
+  "correcta": 2,
+  "explicacion": "No es acumular rasgos.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-106",
+  "categoria": "personajes",
+  "nivel": "dificil",
+  "pregunta": "¿Qué es el método inductivo respecto al deductivo?",
+  "opciones": [
+   "Va de lo particular recopilado a completar un formulario",
+   "Es breve y poco detallado para el autor",
+   "Es improvisado desde el principio de la historia",
+   "Va de lo general a lo particular en el personaje"
+  ],
+  "correcta": 0,
+  "explicacion": "El deductivo va de lo general a lo particular.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-107",
+  "categoria": "personajes",
+  "nivel": "dificil",
+  "pregunta": "¿Qué pasa si el personaje «solo cumple su función»?",
+  "opciones": [
+   "Resulta profundo y complejo",
+   "Resulta complejo y cambiante",
+   "Resulta redondo y creíble",
+   "Resulta plano"
+  ],
+  "correcta": 3,
+  "explicacion": "Sin conflicto interno.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-109",
+  "categoria": "personajes",
+  "nivel": "dificil",
+  "pregunta": "¿Qué es la «consistencia psíquica»?",
+  "opciones": [
+   "Que el personaje esté siempre cuerdo y equilibrado",
+   "Que el personaje sea siempre el protagonista",
+   "Que el personaje no cambie nunca en la historia",
+   "Que el personaje se comporte con coherencia interna"
+  ],
+  "correcta": 3,
+  "explicacion": "Ventaja de la elaboración previa.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-122",
+  "categoria": "personajes",
+  "nivel": "dificil",
+  "pregunta": "¿Qué es un personaje «vivo» según la clase?",
+  "opciones": [
+   "Uno famoso entre los lectores de la obra",
+   "Uno que nunca muere en toda la historia",
+   "Uno joven, lleno de energía y vitalidad",
+   "Uno que parece persona real por su verosimilitud"
+  ],
+  "correcta": 3,
+  "explicacion": "Se puede amar, odiar o recordar.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-125",
+  "categoria": "personajes",
+  "nivel": "dificil",
+  "pregunta": "¿Qué descripción es de una elaboración previa?",
+  "opciones": [
+   "Se borran al terminar cada capítulo del borrador",
+   "Se inventan mientras se escribe cada escena de la novela",
+   "Se copian de otras novelas conocidas del género",
+   "Se escribe sobre los relevantes antes de lanzarse al borrador"
+  ],
+  "correcta": 3,
+  "explicacion": "Es lo opuesto a improvisar.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-126",
+  "categoria": "personajes",
+  "nivel": "dificil",
+  "pregunta": "¿Qué significa la «hoja de personaje» estándar?",
+  "opciones": [
+   "Un resumen de toda la trama de la novela",
+   "Un guion con diálogos y acotaciones para teatro",
+   "Un formulario con campos como nombre, aspecto y traumas",
+   "Un dosier con respuestas, datos y escenas de su vida"
+  ],
+  "correcta": 2,
+  "explicacion": "Método inductivo.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-127",
+  "categoria": "personajes",
+  "nivel": "dificil",
+  "pregunta": "¿Qué problema tiene «rellenar campos estándar»?",
+  "opciones": [
+   "Puede alejar al personaje de la idea original",
+   "Resulta demasiado corto para ser útil",
+   "Resulta demasiado creativo para ser fiable",
+   "Resulta demasiado caro de elaborar"
+  ],
+  "correcta": 0,
+  "explicacion": "Valoración del inductivo.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-131",
+  "categoria": "personajes",
+  "nivel": "dificil",
+  "pregunta": "¿Qué es «de qué manera se arrastra a sí mismo a la autodestrucción»?",
+  "opciones": [
+   "Una pregunta sobre su ropa",
+   "Una pregunta sobre su aspecto físico",
+   "Una pregunta sobre su conflicto interno",
+   "Una pregunta sobre su profesión actual"
+  ],
+  "correcta": 2,
+  "explicacion": "Profundiza.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-135",
+  "categoria": "personajes",
+  "nivel": "media",
+  "pregunta": "Un personaje con deseo o conflicto, un obstáculo y una resolución: ¿qué son?",
+  "opciones": [
+   "Elementos esenciales de toda narración",
+   "Un género literario concreto",
+   "Un tipo de narrador omnisciente",
+   "Una figura retórica clásica"
+  ],
+  "correcta": 0,
+  "explicacion": "Según la introducción de la sesión.",
+  "fuente": "Voces narrativas y argumento",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-136",
+  "categoria": "personajes",
+  "nivel": "media",
+  "pregunta": "¿Qué hace que un lector empatice con un personaje?",
+  "opciones": [
+   "Su fama entre los demás personajes",
+   "Su fortuna y su poder sobre los demás",
+   "Su perfección en todos los aspectos de su vida",
+   "Deseos, miedos y contradicciones creíbles"
+  ],
+  "correcta": 3,
+  "explicacion": "Humanidad.",
+  "fuente": "Conocimiento general",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-139",
+  "categoria": "personajes",
+  "nivel": "media",
+  "pregunta": "¿Qué se anota sobre el pasado en la ficha?",
+  "opciones": [
+   "El sueldo que cobraba entonces",
+   "El momento más importante de su pasado",
+   "El color favorito de su infancia",
+   "La ropa que solía vestir"
+  ],
+  "correcta": 1,
+  "explicacion": "Pregunta de la ficha.",
+  "fuente": "Charla 2",
+  "banco": "publico",
+  "revisada": false
+ },
+ {
+  "id": "PER-147",
+  "categoria": "personajes",
+  "nivel": "dificil",
+  "pregunta": "¿Qué es «la fantasía» de un personaje en la clase?",
+  "opciones": [
+   "La escena de su sueldo en el presente",
+   "La escena de su trauma más profundo",
+   "La escena de su infancia más temprana",
+   "La escena que muestra su mayor deseo imaginado"
+  ],
+  "correcta": 3,
+  "explicacion": "Corresponde al futuro.",
+  "fuente": "Charla 5",
+  "banco": "publico",
+  "revisada": false
+ }
+]

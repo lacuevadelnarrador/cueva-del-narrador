@@ -1,0 +1,139 @@
+/* PANEL: JUEGO (admin-juego.html). Solo lo carga esa página. Todo con prefijo .jadm-; reutiliza .tabs, .card, .fila,
+   .chip, .msg, .campo, .entrada, .etiquetas, .perfil-switch y .pista de styles.css. */
+:root{--jadm-err:#A33A25;--jadm-err-bg:#FBE9E5;--jadm-ok:#2E6B3A;--jadm-ok-bg:#E3F1E5}
+@media (prefers-color-scheme:dark){ :root{--jadm-err:#F2A08E;--jadm-err-bg:#3A2420;--jadm-ok:#A8DDB0;--jadm-ok-bg:#1E3A2A} }
+
+/* Pestañas: seis; en el móvil se desplazan en horizontal, en escritorio caben todas */
+.jadm-tabs{display:flex;overflow-x:auto;scrollbar-width:none;gap:4px}
+.jadm-tabs::-webkit-scrollbar{display:none}
+.jadm-tabs .tab{flex:none;padding:8px 14px;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+@media (min-width:1024px){ .jadm-tabs{display:grid;grid-template-columns:repeat(6,1fr)} .jadm-tabs .tab{padding:8px 4px} }
+.jadm-cuenta-tab{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#B3412B;color:#fff;font-size:12px;letter-spacing:0}
+.jadm-panel:focus{outline:none}
+
+/* Resumen */
+.jadm-temporada-cab{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-size:14px}
+.jadm-alerta{margin:0}
+.jadm-alerta p{font-weight:600}
+.jadm-alerta ul{margin:6px 0 0;padding-left:20px}
+.jadm-cifras{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:560px){ .jadm-cifras{grid-template-columns:1fr 1fr} }
+.jadm-cifra{padding:16px 18px;display:grid;gap:2px;align-content:start}
+.jadm-cifra-et{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:13px;color:var(--muted)}
+.jadm-cifra-num{font-family:'Oswald',sans-serif;font-weight:700;font-size:34px;line-height:1.1;color:var(--title)}
+.jadm-cifra-det{font-size:14px;color:var(--muted)}
+.jadm-enlace{justify-self:start;margin-top:6px;min-height:44px;padding:0;border:0;background:none;color:var(--link);font:inherit;font-size:15px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.jadm-bloque{display:grid;gap:8px}
+.jadm-bloque h2{font-family:'Oswald',sans-serif;font-weight:500;font-size:18px;text-transform:uppercase;letter-spacing:.04em;color:var(--title)}
+
+/* Tablas */
+.jadm-tabla-caja{padding:4px 0;overflow-x:auto}
+.jadm-tabla{width:100%;border-collapse:collapse;font-size:15px}
+.jadm-tabla th,.jadm-tabla td{padding:9px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.jadm-tabla tbody tr:last-child th,.jadm-tabla tbody tr:last-child td{border-bottom:0}
+.jadm-tabla thead th{font-family:'Oswald',sans-serif;font-weight:500;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.jadm-tabla tbody th{font-weight:600}
+.jadm-tabla .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.jadm-bajo{color:var(--jadm-err);background:var(--jadm-err-bg);font-weight:700}
+.jadm-bajo-txt{display:block;font-size:12px;font-weight:600}
+
+/* Preguntas */
+.jadm-filtros{display:grid;gap:12px}
+@media (min-width:700px){ .jadm-filtros{grid-template-columns:minmax(180px,1fr) 2fr;align-items:end} }
+.jadm-filtros .campo{margin-bottom:0}
+.panel-admin .jadm-filtros + .chips{padding-top:0}
+.jadm-fila{align-items:flex-start}
+.jadm-fila::after{align-self:center}
+.jadm-fila .st{display:grid;gap:2px;min-width:0}
+.jadm-fila .st b{font-family:'Oswald',sans-serif;font-weight:500;letter-spacing:.04em}
+.jadm-fila-meta{color:var(--muted);font-size:13px}
+.jadm-fila-texto{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:15px}
+.jadm-fila .estado{flex:none;align-self:center}
+#lista-preguntas .fila:last-child{margin-bottom:0}
+.jadm-paginas{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.jadm-paginas span{color:var(--muted);font-size:14px;text-align:center}
+.jadm-paginas .btn:disabled{opacity:.45;cursor:default}
+
+/* Editor y vista previa */
+.jadm-ficha{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.05em;font-size:13px;color:var(--muted);margin-bottom:12px}
+.jadm-activa{padding:6px 0 4px}
+.jadm-activa .pista{flex-basis:100%;margin:0}
+.jadm-previa{margin:8px 0 4px;padding:14px;border:2px dashed var(--chipline);border-radius:var(--r-m)}
+.jadm-previa h3{font-family:'Oswald',sans-serif;font-weight:500;font-size:16px;text-transform:uppercase;letter-spacing:.04em;color:var(--title)}
+.jadm-previa h3:focus{outline:none}
+.jadm-previa-caja{margin-top:10px;padding:14px;background:var(--bg);border-radius:var(--r-s)}
+.jadm-previa-enunciado{font-size:18px;font-weight:600;line-height:1.4;overflow-wrap:anywhere}
+.jadm-previa-expl{margin-top:10px;font-size:15px;color:var(--muted);overflow-wrap:anywhere}
+
+/* Opciones con la correcta marcada (por color y por texto) */
+.jadm-opciones{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:6px}
+.jadm-opciones li{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border:1.5px solid var(--line);border-radius:var(--r-s);background:var(--card);font-size:15px}
+.jadm-opciones li.correcta{border-color:var(--jadm-ok);background:var(--jadm-ok-bg)}
+.jadm-letra{flex:none;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--bg);font-family:'Oswald',sans-serif;font-size:13px;color:var(--muted)}
+.jadm-opciones li.correcta .jadm-letra{background:var(--jadm-ok);color:var(--card)}
+.jadm-op{flex:1;min-width:0;overflow-wrap:anywhere}
+.jadm-marca{flex:none;font-family:'Oswald',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--jadm-ok);font-weight:700}
+
+/* Reportes */
+.jadm-reporte{display:grid;gap:8px}
+.jadm-reporte[aria-busy="true"]{opacity:.6}
+.jadm-reporte-cab{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+.jadm-reporte .jadm-ficha{margin:0}
+.jadm-enunciado{font-weight:600;font-size:17px;line-height:1.4;overflow-wrap:anywhere}
+.jadm-reporte .pista{overflow-wrap:anywhere;margin:0}
+.jadm-detalle-et{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.05em;font-size:13px;color:var(--muted)}
+.jadm-detalle{margin:0;padding:8px 14px;border-left:4px solid var(--amber);background:var(--bg);border-radius:0 var(--r-s) var(--r-s) 0;white-space:pre-line;overflow-wrap:anywhere}
+.jadm-estado-nuevo{background:var(--amber);color:#14262A}
+.jadm-estado-revisado{background:var(--aqua);color:#14262A}
+.jadm-estado-descartado{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.jadm-reporte .botones-form{margin-top:4px}
+
+/* Más falladas: tabla en pantallas anchas; tarjetas apiladas en el móvil */
+.jadm-fallos-preg b{font-family:'Oswald',sans-serif;font-weight:500;letter-spacing:.04em;margin-right:8px}
+.jadm-fallos-texto{display:block;font-size:14px;color:var(--muted);overflow-wrap:anywhere;margin-top:2px}
+.jadm-fallos .estado{font-size:11px}
+.jadm-pct{font-weight:700;color:var(--jadm-err)}
+.jadm-accion .btn{min-height:40px;padding:0 14px}
+@media (max-width:699px){
+  .jadm-fallos thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .jadm-fallos,.jadm-fallos tbody,.jadm-fallos tr,.jadm-fallos td{display:block;width:100%}
+  .jadm-fallos tr{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .jadm-fallos tbody tr:last-child{border-bottom:0}
+  .jadm-fallos td{padding:0;border:0;text-align:left}
+  .jadm-fallos td.num{text-align:left}
+  .jadm-fallos td[data-et]:not(.jadm-fallos-preg):not(.jadm-accion)::before{content:attr(data-et) ": ";color:var(--muted);font-size:13px;font-weight:400}
+  .jadm-fallos .jadm-fallos-preg,.jadm-fallos .jadm-accion{grid-column:1 / -1}
+  .jadm-fallos .jadm-accion{margin-top:6px}
+  .jadm-tabla-caja:has(.jadm-fallos){overflow:visible}
+}
+
+/* Jugadores: tabla en pantallas anchas; tarjetas en el móvil (posición y nombre arriba, cifras en dos columnas) */
+.jadm-jugadores .jadm-pos{width:3em;font-family:'Oswald',sans-serif;font-weight:700;color:var(--title)}
+.jadm-jugadores .jadm-jug-nombre{overflow-wrap:anywhere}
+.jadm-jugadores .jadm-ultima{white-space:nowrap;font-variant-numeric:tabular-nums}
+@media (max-width:699px){
+  .jadm-jugadores thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .jadm-jugadores,.jadm-jugadores tbody,.jadm-jugadores tr,.jadm-jugadores td,.jadm-jugadores th{display:block;width:100%}
+  .jadm-jugadores tr{display:grid;grid-template-columns:auto 1fr 1fr;gap:4px 12px;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .jadm-jugadores tbody tr:last-child{border-bottom:0}
+  .jadm-jugadores td,.jadm-jugadores th{padding:0;border:0;text-align:left}
+  .jadm-jugadores td.num{text-align:left}
+  .jadm-jugadores .jadm-pos{grid-column:1;grid-row:1 / span 4;width:auto;font-size:22px;line-height:1.2;padding-right:2px}
+  .jadm-jugadores .jadm-pos::before{content:"#"}
+  .jadm-jugadores .jadm-jug-nombre{grid-column:2 / -1;font-size:17px}
+  .jadm-jugadores .jadm-ultima{grid-column:2 / -1}
+  .jadm-jugadores td[data-et]:not(.jadm-pos)::before{content:attr(data-et) ": ";color:var(--muted);font-size:13px;font-weight:400}
+  .jadm-tabla-caja:has(.jadm-jugadores){overflow:visible}
+}
+
+/* Temporada */
+.jadm-temporada{display:grid;gap:10px}
+.jadm-temporada h2{font-family:'Oswald',sans-serif;font-weight:500;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.jadm-temporada h3{font-family:'Oswald',sans-serif;font-weight:500;font-size:17px;text-transform:uppercase;letter-spacing:.04em;color:var(--title);margin-top:6px}
+.jadm-temporada-num{font-family:'Oswald',sans-serif;font-weight:700;font-size:38px;line-height:1.1;color:var(--title)}
+.jadm-lista{padding-left:20px;display:grid;gap:4px}
+.jadm-temporada .btn{justify-self:start}
+.jadm-temporada .msg{margin:0}
+.jadm-temporada .msg:focus{outline:none}
+.jadm-confirmar{padding-top:6px;border-top:1px solid var(--line)}
+.jadm-confirmar .btn:disabled{opacity:.5;cursor:default}

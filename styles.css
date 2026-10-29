@@ -1379,3 +1379,59 @@ main[aria-busy="true"] .entrega .btn{cursor:progress}
   main.publicaciones #vista-lista>.cal-pub{position:sticky;top:calc(24px + 52px + 12px);height:var(--alto-mes)}
   main.publicaciones #vista-lista>#leyenda{position:sticky;top:calc(24px + 52px + 12px + var(--alto-mes) + 14px)}
 }
+
+/* ---------- Juego (quiz.html): entradas ----------
+   Enlace de la barra lateral: lo añade auth.js solo si JUEGO_VISIBLE es true. En el móvil no se ve (la barra inferior no cambia); desde 1024 px es
+   una fila más de la barra lateral. El resto de estilos del juego están en juego/juego.css (solo los carga quiz.html). */
+.nav a.nav-juego{display:none}
+@media (min-width:1024px){
+  .nav a.nav-juego{display:flex}
+  /* En quiz.html la marcada es "Juego" y "Más" se ve normal */
+  .nav.juego-actual>a.on:not(.nav-juego){color:var(--navdim);background:none}
+}
+/* Portada (index): el botón del juego va debajo de las pastillas, a todo el ancho del arco */
+.deadline .reto-juego{align-self:stretch}
+
+/* ---------- Inicio: banner del juego (inicio.html, a.juego-banner) ----------
+   Primer elemento de main.inicio, a todo el ancho (en escritorio ocupa las dos columnas). Fondo ámbar de la marca con
+   texto #14262A (contraste 9,3:1, también en modo oscuro). Todo el banner es un enlace: foco con anillo doble (oscuro
+   por dentro, color del texto de la página por fuera) para que se vea sobre el ámbar y sobre el fondo.
+   Movimiento: un brillo que cruza el banner cada 8 s y el trofeo que se balancea solo con el ratón encima o con foco.
+   Nada de esto con prefers-reduced-motion. */
+.juego-banner{position:relative;overflow:hidden;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:12px 14px;min-height:88px;padding:16px 18px;border-radius:var(--r-m);background:var(--amber);color:#14262A;text-decoration:none;box-shadow:var(--sh2);transition:transform .2s var(--ease),box-shadow .2s var(--ease)}
+.juego-banner-ic{flex:none;width:52px;height:52px;border-radius:50%;background:#14262A;display:grid;place-items:center}
+.juego-banner-ic svg{width:28px;height:28px;fill:none;stroke:var(--amber);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transform-origin:50% 90%}
+.juego-banner-tx{display:grid;gap:3px}
+.juego-banner-tx b{font-family:'Oswald',sans-serif;font-weight:700;font-size:21px;line-height:1.15;text-transform:uppercase;letter-spacing:.02em}
+.juego-banner-tx span{font-size:15px;line-height:1.4}
+.juego-banner-btn{grid-column:2;justify-self:start;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px 0 18px;border-radius:999px;background:#14262A;color:var(--amber);font-family:'Oswald',sans-serif;font-weight:500;font-size:15px;letter-spacing:.06em;text-transform:uppercase}
+.juego-banner-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s var(--ease)}
+.juego-banner:focus-visible{outline:3px solid var(--ink);outline-offset:3px;box-shadow:inset 0 0 0 3px #14262A,var(--sh2)}
+.juego-banner:active{transform:scale(.99)}
+@media (hover:hover){ .juego-banner:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(31,58,64,.14),0 14px 30px rgba(31,58,64,.2)} }
+.juego-banner:hover .juego-banner-btn svg,.juego-banner:focus-visible .juego-banner-btn svg{transform:translateX(3px)}
+@media (min-width:600px){
+  .juego-banner{grid-template-columns:auto minmax(0,1fr) auto;padding:18px 22px;gap:18px}
+  .juego-banner-btn{grid-column:auto;min-height:44px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .juego-banner::after{content:"";position:absolute;top:0;bottom:0;left:0;width:45%;pointer-events:none;
+    background:linear-gradient(100deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 100%);
+    transform:translateX(-120%);animation:juego-brillo 8s var(--ease) 1.5s infinite}
+  .juego-banner:hover .juego-banner-ic svg,.juego-banner:focus-visible .juego-banner-ic svg{animation:juego-trofeo .8s var(--ease) 1}
+}
+@media (prefers-reduced-motion:reduce){
+  .juego-banner,.juego-banner-btn svg{transition:none}
+  .juego-banner:hover,.juego-banner:active{transform:none}
+  .juego-banner:hover .juego-banner-btn svg,.juego-banner:focus-visible .juego-banner-btn svg{transform:none}
+}
+/* El brillo cruza en el primer 15 % del ciclo (~1,2 s) y el resto del tiempo está fuera del banner */
+@keyframes juego-brillo{0%{transform:translateX(-120%)}15%,100%{transform:translateX(330%)}}
+@keyframes juego-trofeo{0%,100%{transform:rotate(0)}25%{transform:rotate(-10deg)}55%{transform:rotate(8deg)}80%{transform:rotate(-3deg)}}
+@media (min-width:1024px){
+  /* Con el banner a la vista, una fila más arriba que ocupa las dos columnas (sin él, no queda hueco) */
+  main.inicio:has(>.juego-banner:not([hidden])){grid-template-areas:"juego juego" "eventos biblioteca" "apuntes recomendados"}
+  main.inicio>.juego-banner{grid-area:juego;min-height:104px;padding:20px 28px}
+  .juego-banner-tx b{font-size:24px}
+  .juego-banner-tx span{font-size:16px}
+}

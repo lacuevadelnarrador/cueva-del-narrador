@@ -25,6 +25,8 @@ jobs:
       - uses: actions/configure-pages@v5
       # La Edge Function se despliega en Supabase, no forma parte de la web
       - run: rm -rf supabase
+      # Las preguntas de socios nunca se publican (además, juego/_club/ está en .gitignore)
+      - run: rm -rf juego/_club
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
