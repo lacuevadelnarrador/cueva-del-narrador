@@ -212,7 +212,7 @@ const Cueva = (function () {
     ['admin-publicaciones', 'Publicaciones', '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/>'],
     ['admin-informes', 'Informes', '<path d="M4 20h16M7 16v-5M12 16V6M17 16v-8"/>'],
     ['admin-avisos', 'Avisos', '<path d="M18 16v-5a6 6 0 10-12 0v5l-2 2h16z"/><path d="M10 21h4"/>'],
-    ['admin-juego', 'Juego (gestión)', '<path d="M8 4h8v5a4 4 0 01-8 0z"/><path d="M8 6H5a3 3 0 003 4M16 6h3a3 3 0 01-3 4M12 13v4M8 20h8"/>'],
+    ['admin-juego', 'Juego', '<path d="M8 4h8v5a4 4 0 01-8 0z"/><path d="M8 6H5a3 3 0 003 4M16 6h3a3 3 0 01-3 4M12 13v4M8 20h8"/>', 'Juego (administración)'],
     ['admin-copia', 'Copia de seguridad', '<path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v3h16v-3"/>']
   ];
   let rolConocido = null;
@@ -220,12 +220,13 @@ const Cueva = (function () {
     const nav = document.querySelector('.nav');
     if (rolConocido !== 'admin' || !nav || nav.querySelector('.nav-admin')) return;
     const pagina = (location.pathname.split('/').pop() || '').replace(/\.html$/, '');
-    const enlace = (k, n, icono, clase) => '<a href="' + k + '.html"' + (k === pagina ? ' class="on' + (clase ? ' ' + clase : '') + '" aria-current="page"' : (clase ? ' class="' + clase + '"' : '')) +
+    // nombre: nombre accesible distinto del texto visible (aria-label), solo si hace falta desambiguar.
+    const enlace = (k, n, icono, clase, nombre) => '<a href="' + k + '.html"' + (nombre ? ' aria-label="' + nombre + '"' : '') + (k === pagina ? ' class="on' + (clase ? ' ' + clase : '') + '" aria-current="page"' : (clase ? ' class="' + clase + '"' : '')) +
       '><svg viewBox="0 0 24 24" aria-hidden="true">' + icono + '</svg>' + n + '</a>';
     const grupo = document.createElement('div');
     grupo.className = 'nav-admin';
     grupo.innerHTML = enlace('admin', 'Administración', '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>', 'nav-admin-t') +
-      SECCIONES_ADMIN.map(([k, n, icono]) => enlace(k, n, icono)).join('');
+      SECCIONES_ADMIN.map(([k, n, icono, nombre]) => enlace(k, n, icono, null, nombre)).join('');
     nav.appendChild(grupo);
     nav.classList.toggle('admin-actual', !!grupo.querySelector('.on'));
   }
