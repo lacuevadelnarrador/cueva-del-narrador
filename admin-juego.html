@@ -34,13 +34,14 @@
     <a class="volver" href="admin.html">&#8249; Volver al panel</a>
     <div id="estado"></div>
 
-    <!-- Lista: cinco pestañas. Nada se pide al servidor hasta que la guardia confirma que eres administrador. -->
+    <!-- Lista: seis pestañas. Nada se pide al servidor hasta que la guardia confirma que eres administrador. -->
     <section id="vista-lista" aria-label="Juego" hidden>
       <div class="tabs jadm-tabs" id="tabs" role="tablist" aria-label="Secciones del juego">
         <button type="button" class="tab" role="tab" id="tab-resumen" aria-controls="panel-resumen" aria-selected="true">Resumen</button>
         <button type="button" class="tab" role="tab" id="tab-preguntas" aria-controls="panel-preguntas" aria-selected="false" tabindex="-1">Preguntas</button>
         <button type="button" class="tab" role="tab" id="tab-reportes" aria-controls="panel-reportes" aria-selected="false" tabindex="-1">Reportes<span class="jadm-cuenta-tab" id="cuenta-reportes" hidden></span></button>
         <button type="button" class="tab" role="tab" id="tab-fallos" aria-controls="panel-fallos" aria-selected="false" tabindex="-1">Más falladas</button>
+        <button type="button" class="tab" role="tab" id="tab-jugadores" aria-controls="panel-jugadores" aria-selected="false" tabindex="-1">Jugadores</button>
         <button type="button" class="tab" role="tab" id="tab-temporada" aria-controls="panel-temporada" aria-selected="false" tabindex="-1">Temporada</button>
       </div>
 
@@ -111,7 +112,14 @@
         <div id="lista-fallos"></div>
       </div>
 
-      <!-- 5. Temporada -->
+      <!-- 5. Jugadores: ranking de actividad (partidas y logros de la temporada actual) -->
+      <div id="panel-jugadores" role="tabpanel" aria-labelledby="tab-jugadores" class="panel-admin jadm-panel" tabindex="-1" hidden>
+        <p class="pista">Socios que han jugado, de más a menos partidas (y, con las mismas partidas, de más a menos logros de la temporada actual).</p>
+        <p class="cuenta" id="cuenta-jugadores" aria-live="polite"></p>
+        <div id="lista-jugadores"></div>
+      </div>
+
+      <!-- 6. Temporada -->
       <div id="panel-temporada" role="tabpanel" aria-labelledby="tab-temporada" class="panel-admin jadm-panel" tabindex="-1" hidden>
         <section class="card jadm-temporada" aria-labelledby="t-temporada">
           <h2 id="t-temporada">Temporada actual</h2>

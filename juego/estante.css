@@ -13,12 +13,17 @@
 .j-lomo:nth-child(3n+2){height:148px}
 .j-lomo:nth-child(4n+3){height:126px}
 .j-lomo:nth-child(5n){height:142px}
-.j-lomo-titulo{max-height:100%;font-family:'Oswald',sans-serif;font-weight:500;font-size:11px;letter-spacing:.02em;text-transform:uppercase;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.j-lomo-autor{max-height:100%;font-size:10px;font-style:italic;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.9}
+.j-lomo-titulo{max-height:100%;font-family:'Oswald',sans-serif;font-weight:500;font-size:11px;letter-spacing:.02em;line-height:1.05;text-align:center;overflow-wrap:normal;hyphens:none}
+.j-lomo-autor{max-height:100%;font-size:9px;font-style:italic;line-height:1.05;text-align:center;opacity:.9}
+/* Títulos largos (estante.js: más de 18 o de 28 caracteres): letra algo más pequeña para que quepan enteros en dos o tres líneas */
+.j-lomo-largo .j-lomo-titulo{font-size:10px}
+.j-lomo-muylargo .j-lomo-titulo{font-size:9px;letter-spacing:0}
 .j-hueco{background:var(--j-hueco);box-shadow:none;border:1.5px dashed var(--line)}
-.j-lomo-grande{width:72px;height:230px;margin:6px auto 20px;transform:rotate(180deg);flex:none;padding:16px 0}
+.j-lomo-grande{width:96px;height:250px;margin:6px auto 20px;transform:rotate(180deg);flex:none;padding:16px 0;gap:6px}
 .j-lomo-grande .j-lomo-titulo{font-size:19px}
 .j-lomo-grande .j-lomo-autor{font-size:14px}
+.j-lomo-grande.j-lomo-largo .j-lomo-titulo{font-size:18px}
+.j-lomo-grande.j-lomo-muylargo .j-lomo-titulo{font-size:16px;letter-spacing:.02em}
 
 @media (min-width:1024px){
   .j-libros{min-height:230px;gap:8px}
@@ -28,6 +33,8 @@
   .j-lomo:nth-child(5n){height:208px}
   .j-lomo-titulo{font-size:15px}
   .j-lomo-autor{font-size:12px}
+  .j-lomo-largo .j-lomo-titulo{font-size:13px}
+  .j-lomo-muylargo .j-lomo-titulo{font-size:12px}
   .j-libros{justify-content:center}
 }
 

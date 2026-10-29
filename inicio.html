@@ -40,7 +40,6 @@
         <p id="reto-plazo"></p>
         <div class="reto-pastillas">
           <a class="chip" href="retos.html" id="reto-enlace">Ver los retos</a>
-          <a class="chip" href="quiz.html" data-juego hidden>Juego</a>
           <a class="chip" href="https://www.instagram.com/lacuevadelnarrador/" target="_blank" rel="noopener" id="reto-instagram">Instagram<span class="perfil-sr"> (se abre en otra pestaña)</span></a>
         </div>
         <p class="reto-etiquetas"><span>#lacuevadelnarrador</span> · <span>@lacuevadelnarrador</span></p>
@@ -76,6 +75,12 @@
   </header>
 
   <main class="inicio">
+    <!-- Banner del juego: solo se ve con JUEGO_VISIBLE (auth.js quita el hidden de los [data-juego]). Todo el banner es un enlace. -->
+    <a class="juego-banner" href="quiz.html" data-juego hidden>
+      <span class="juego-banner-ic" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M8 4h8v5a4 4 0 01-8 0z"/><path d="M8 6H5a3 3 0 003 4M16 6h3a3 3 0 01-3 4M12 13v4M8 20h8"/></svg></span>
+      <span class="juego-banner-tx"><b>¿Estás preparado para ser escritor?</b><span>Pon a prueba lo que sabes: 10 temas, 3 insignias y un libro de premio</span></span>
+      <span class="juego-banner-btn" aria-hidden="true">Jugar<svg viewBox="0 0 24 24" focusable="false"><path d="M9 5l7 7-7 7"/></svg></span>
+    </a>
     <section id="eventos">
       <div class="sec-head"><h2>Próximos eventos</h2><a href="calendario.html">Ver calendario</a></div>
       <div id="proximos"></div>

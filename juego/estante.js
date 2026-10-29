@@ -50,9 +50,17 @@ const Estante = (function () {
     if (ganado) {
       const p = premio(cat);
       el.style.setProperty('--lomo', p.color);
-      if (p.titulo) el.appendChild(crear('span', 'j-lomo-titulo', p.titulo));
-      if (p.autor) el.appendChild(crear('span', 'j-lomo-autor', p.autor));
-      el.appendChild(crear('span', 'perfil-sr', ' (premio de ' + c.nombre + ')'));
+      // Título y autor se ven en el lomo (partidos en varias líneas si hace falta; letra más pequeña si son largos).
+      // Los lectores de pantalla leen «Título, de Autor». Sin premios cargados, solo la categoría.
+      if (p.titulo) {
+        if (p.titulo.length > 18) el.classList.add(p.titulo.length > 28 ? 'j-lomo-muylargo' : 'j-lomo-largo');
+        const t = el.appendChild(crear('span', 'j-lomo-titulo', p.titulo));
+        t.setAttribute('aria-hidden', 'true');
+        if (p.autor) el.appendChild(crear('span', 'j-lomo-autor', p.autor)).setAttribute('aria-hidden', 'true');
+        el.appendChild(crear('span', 'perfil-sr', p.titulo + (p.autor ? ', de ' + p.autor : '')));
+      } else {
+        el.appendChild(crear('span', 'perfil-sr', 'Libro de ' + c.nombre));
+      }
     } else {
       el.appendChild(crear('span', 'perfil-sr', 'Hueco libre: ' + c.nombre));
     }

@@ -131,7 +131,7 @@
 .j-cat-btn .j-ins-fila{margin-left:auto;padding-left:8px}
 .j-hito-ins{display:flex;justify-content:center;margin-bottom:14px}
 .j-res-libro{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:12px 18px;margin-bottom:6px}
-.j-res-libro .j-lomo-grande{margin:6px 0 20px;width:72px;height:230px} /* gana a .j-lomo:nth-child() de estante.css */
+.j-res-libro .j-lomo-grande{margin:6px 0 20px;width:96px;height:250px;flex:none} /* gana a .j-lomo:nth-child() y al .j-lomo de escritorio de estante.css */
 .j-res-libro .j-ins-grande{margin-bottom:20px}
 .j-res-nuevo{display:inline-block;margin:-8px 0 16px;padding:4px 12px;border-radius:999px;background:var(--amber);color:#14262A;
   font-family:'Oswald',sans-serif;font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase}

@@ -7,6 +7,8 @@
 //   viven en juego/banco/*.json (repositorio) y no están en esta tabla.
 // - Reportes: RPC juego_admin_reportes(p_estado) para leer; tabla juego_reportes (RLS de admin) para cambiar el estado.
 // - Más falladas: RPC juego_admin_fallos(p_limite, p_min_vistas).
+// - Jugadores: RPC juego_admin_jugadores() → filas { nombre, partidas, ganadas, perdidas, abandonadas, logros (temporada
+//   actual), ultima_partida }, ya ordenadas por partidas y luego logros (de más a menos).
 // - Temporada: RPC juego_nueva_temporada() → entero (la temporada nueva). Doble confirmación.
 // Nada se pide al servidor antes de que la guardia confirme el rol de administrador; cada pestaña pide sus datos la
 // primera vez que se abre. Todo lo que viene de la base de datos se pinta con textContent (nunca innerHTML con datos).
@@ -18,7 +20,7 @@
   const NIVELES_MIN = { facil: 'fácil', media: 'media', dificil: 'difícil' };
   const MOTIVOS = { respuesta_incorrecta: 'Respuesta incorrecta', enunciado_confuso: 'Enunciado confuso', errata: 'Errata', otra: 'Otra cosa' };
   const ESTADOS = { nuevo: 'Nuevo', revisado: 'Revisado', descartado: 'Descartado' };
-  const PESTANAS = ['resumen', 'preguntas', 'reportes', 'fallos', 'temporada'];
+  const PESTANAS = ['resumen', 'preguntas', 'reportes', 'fallos', 'jugadores', 'temporada'];
   const POR_PAGINA = 25;
   const MINIMO_ACTIVAS = 6;   // 5 por nivel en cada partida + 1 para el comodín Saltar
   const LETRAS = ['A', 'B', 'C', 'D'];
@@ -570,7 +572,45 @@
     caja.appendChild(cajaTabla);
   }
 
-  // ---------- 5. Temporada ----------
+  // ---------- 5. Jugadores (ranking de actividad) ----------
+  // Las filas ya llegan ordenadas del servidor: la posición es el orden de la lista. Tabla en pantallas anchas, tarjetas en el móvil.
+  function cargarJugadores() {
+    el('cuenta-jugadores').textContent = '';
+    cargarEn(el('lista-jugadores'), () => sb.rpc('juego_admin_jugadores'), pintarJugadores);
+  }
+  function pintarJugadores(filas) {
+    const caja = el('lista-jugadores');
+    caja.textContent = '';
+    filas = Array.isArray(filas) ? filas : [];
+    el('cuenta-jugadores').textContent = filas.length === 1 ? '1 jugador' : filas.length ? numero(filas.length) + ' jugadores' : '';
+    if (!filas.length) { caja.appendChild(t('p', 'card empty', 'Todavía nadie ha jugado')); return; }
+    const tb = t('table', 'jadm-tabla jadm-jugadores');
+    tb.appendChild(t('caption', 'perfil-sr', 'Jugadores, de más a menos partidas'));
+    const thead = t('thead'), tr = t('tr');
+    ['#', 'Nombre', 'Partidas', 'Ganadas', 'Perdidas', 'Abandonadas', 'Logros', 'Última partida'].forEach((c, i) => {
+      const th = t('th', i === 0 || (i >= 2 && i <= 6) ? 'num' : null, i === 0 ? null : c); th.scope = 'col';
+      if (i === 0) { th.appendChild(t('span', null, '#')); th.firstChild.setAttribute('aria-hidden', 'true'); th.appendChild(t('span', 'perfil-sr', 'Posición')); }
+      tr.appendChild(th);
+    });
+    thead.appendChild(tr); tb.appendChild(thead);
+    const tbody = t('tbody');
+    filas.forEach((f, i) => {
+      const fila = t('tr');
+      const pos = t('td', 'num jadm-pos', String(i + 1)); pos.dataset.et = 'Posición'; fila.appendChild(pos);
+      const nombre = t('th', 'jadm-jug-nombre', String(f.nombre || 'Socio')); nombre.scope = 'row'; nombre.dataset.et = 'Nombre'; fila.appendChild(nombre);
+      [['Partidas', f.partidas], ['Ganadas', f.ganadas], ['Perdidas', f.perdidas], ['Abandonadas', f.abandonadas], ['Logros', f.logros]].forEach(([et, v]) => {
+        const td = t('td', 'num', numero(Number(v))); td.dataset.et = et; fila.appendChild(td);
+      });
+      const ult = t('td', 'jadm-ultima', f.ultima_partida ? fechaHora(f.ultima_partida) || '—' : '—'); ult.dataset.et = 'Última partida'; fila.appendChild(ult);
+      tbody.appendChild(fila);
+    });
+    tb.appendChild(tbody);
+    const cajaTabla = t('div', 'card jadm-tabla-caja');
+    cajaTabla.appendChild(tb);
+    caja.appendChild(cajaTabla);
+  }
+
+  // ---------- 6. Temporada ----------
   function pintarTemporada() {
     const n = resumen && Number.isInteger(resumen.temporada) ? resumen.temporada : null;
     el('temporada-actual').textContent = n ? 'Temporada ' + n : '—';
@@ -636,5 +676,6 @@
     }
   });
 
-  const CARGAR = { resumen: () => cargarResumen(true), preguntas: cargarPreguntas, reportes: cargarReportes, fallos: cargarFallos, temporada: cargarTemporada };
+  const CARGAR = { resumen: () => cargarResumen(true), preguntas: cargarPreguntas, reportes: cargarReportes, fallos: cargarFallos,
+    jugadores: cargarJugadores, temporada: cargarTemporada };
 })();

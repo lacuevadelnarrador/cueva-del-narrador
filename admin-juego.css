@@ -3,11 +3,11 @@
 :root{--jadm-err:#A33A25;--jadm-err-bg:#FBE9E5;--jadm-ok:#2E6B3A;--jadm-ok-bg:#E3F1E5}
 @media (prefers-color-scheme:dark){ :root{--jadm-err:#F2A08E;--jadm-err-bg:#3A2420;--jadm-ok:#A8DDB0;--jadm-ok-bg:#1E3A2A} }
 
-/* Pestañas: cinco; en el móvil se desplazan en horizontal, en pantallas anchas caben todas */
+/* Pestañas: seis; en el móvil se desplazan en horizontal, en escritorio caben todas */
 .jadm-tabs{display:flex;overflow-x:auto;scrollbar-width:none;gap:4px}
 .jadm-tabs::-webkit-scrollbar{display:none}
 .jadm-tabs .tab{flex:none;padding:8px 14px;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
-@media (min-width:700px){ .jadm-tabs{display:grid;grid-template-columns:repeat(5,1fr)} .jadm-tabs .tab{padding:8px 6px} }
+@media (min-width:1024px){ .jadm-tabs{display:grid;grid-template-columns:repeat(6,1fr)} .jadm-tabs .tab{padding:8px 4px} }
 .jadm-cuenta-tab{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#B3412B;color:#fff;font-size:12px;letter-spacing:0}
 .jadm-panel:focus{outline:none}
 
@@ -105,6 +105,25 @@
   .jadm-fallos .jadm-fallos-preg,.jadm-fallos .jadm-accion{grid-column:1 / -1}
   .jadm-fallos .jadm-accion{margin-top:6px}
   .jadm-tabla-caja:has(.jadm-fallos){overflow:visible}
+}
+
+/* Jugadores: tabla en pantallas anchas; tarjetas en el móvil (posición y nombre arriba, cifras en dos columnas) */
+.jadm-jugadores .jadm-pos{width:3em;font-family:'Oswald',sans-serif;font-weight:700;color:var(--title)}
+.jadm-jugadores .jadm-jug-nombre{overflow-wrap:anywhere}
+.jadm-jugadores .jadm-ultima{white-space:nowrap;font-variant-numeric:tabular-nums}
+@media (max-width:699px){
+  .jadm-jugadores thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .jadm-jugadores,.jadm-jugadores tbody,.jadm-jugadores tr,.jadm-jugadores td,.jadm-jugadores th{display:block;width:100%}
+  .jadm-jugadores tr{display:grid;grid-template-columns:auto 1fr 1fr;gap:4px 12px;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .jadm-jugadores tbody tr:last-child{border-bottom:0}
+  .jadm-jugadores td,.jadm-jugadores th{padding:0;border:0;text-align:left}
+  .jadm-jugadores td.num{text-align:left}
+  .jadm-jugadores .jadm-pos{grid-column:1;grid-row:1 / span 4;width:auto;font-size:22px;line-height:1.2;padding-right:2px}
+  .jadm-jugadores .jadm-pos::before{content:"#"}
+  .jadm-jugadores .jadm-jug-nombre{grid-column:2 / -1;font-size:17px}
+  .jadm-jugadores .jadm-ultima{grid-column:2 / -1}
+  .jadm-jugadores td[data-et]:not(.jadm-pos)::before{content:attr(data-et) ": ";color:var(--muted);font-size:13px;font-weight:400}
+  .jadm-tabla-caja:has(.jadm-jugadores){overflow:visible}
 }
 
 /* Temporada */
