@@ -10,6 +10,17 @@ html.leyendo,html.leyendo body{overflow:hidden}
 .lector-volver{flex:none;display:inline-flex;align-items:center;gap:2px;min-height:44px;min-width:44px;padding:0 14px 0 6px;background:rgba(15,29,32,.25);color:#fff;border:0;border-radius:999px;font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
 .lector-volver svg{width:22px;height:22px;flex:none;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .lector-volver:focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 5px var(--teal-deep)}
+/* Botón "Descargar" y su línea de estado (solo con descargable, proyecto.html). */
+.lector-descargar{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:44px;min-width:44px;padding:0 14px 0 10px;background:#fff;color:var(--teal-deep);border:0;border-radius:999px;font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
+.lector-descargar svg{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.lector-descargar:focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 5px var(--teal-deep)}
+.lector-descargar[aria-disabled="true"]{cursor:progress;opacity:.85}
+.lector-descarga{flex:none;margin:0;padding:8px max(14px,env(safe-area-inset-right)) 8px max(14px,env(safe-area-inset-left));background:var(--card);border-bottom:1px solid var(--line);color:var(--ink);font-size:15px;line-height:1.4;overflow-wrap:anywhere}
+.lector-descarga.ok{color:var(--ent-ok);background:var(--ent-ok-bg)}
+.lector-descarga.mal{color:var(--ent-err);font-weight:600}
+.lector-descarga a{color:inherit;text-decoration:underline}
+/* Con descargable se puede seleccionar y copiar el texto (Word; el PDF no tiene capa de texto). */
+html.lector-libre .lector{user-select:text;-webkit-user-select:text;-webkit-touch-callout:default}
 .lector-barra h2{flex:1;min-width:0;font-size:17px;line-height:1.15;letter-spacing:.03em;color:#fff;overflow:hidden;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2}
 .lector-cuerpo{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:16px max(12px,env(safe-area-inset-right)) calc(28px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left))}
 .lector-cuerpo:focus{outline:none}
@@ -30,13 +41,31 @@ html.leyendo,html.leyendo body{overflow:hidden}
 .lector-docx ul,.lector-docx ol{padding-left:1.4em}
 .lector-docx blockquote{padding-left:1em;border-left:3px solid var(--aqua);color:var(--muted);font-style:italic}
 .lector-nota{margin:0 0 1em;color:var(--muted);font-size:14px;font-style:italic;line-height:1.5}
+/* Móvil estrecho: el botón "Descargar" se queda en el icono (44 px) para dejar sitio al título; el texto sigue para
+   los lectores de pantalla y el estado se lee en la línea de debajo. */
+@media (max-width:420px){
+  .lector-descargar{padding:0;justify-content:center;width:44px}
+  .lector-descargar .lector-etq{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+}
 @media (max-width:400px){
   .lector-cuerpo{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right))}
   .lector-docx{padding:18px 14px 24px;font-size:17px}
 }
-/* Imprimir: el lector no sale nunca; con el lector abierto solo se imprime un aviso. */
+/* Imprimir: el lector no sale nunca; con el lector abierto solo se imprime un aviso. Con descargable (html.lector-libre)
+   el Word se imprime entero y el PDF imprime el aviso de la página ("descárgalo y ábrelo en tu visor"). El diálogo
+   modal está en la capa superior, donde "static" pasa a "absolute": se deja absoluto, arriba y con la altura del texto. */
 @media print{
-  .lector,.lector *{display:none!important}
+  html:not(.lector-libre) .lector,html:not(.lector-libre) .lector *{display:none!important}
   html.leyendo .app{display:none!important}
-  html.leyendo .leer-sin-imprimir{display:block!important;padding:24px;color:#000;font:16px Georgia,serif}
+  html.leyendo:not(.lector-libre) .leer-sin-imprimir{display:block!important;padding:24px;color:#000;font:16px Georgia,serif}
+  html.lector-libre.lector-con-pdf .lector,html.lector-libre.lector-con-pdf .lector *{display:none!important}
+  html.leyendo.lector-libre.lector-con-pdf .leer-sin-imprimir{display:block!important;padding:24px;color:#000;font:16px Georgia,serif}
+  html.leyendo.lector-libre,html.leyendo.lector-libre body{overflow:visible!important;height:auto!important}
+  html.lector-libre .lector{position:absolute!important;inset:0 0 auto 0!important;display:block!important;width:auto;height:auto!important;max-height:none!important;overflow:visible!important;background:#fff;color:#000}
+  html.lector-libre .lector::backdrop{display:none}
+  html.lector-libre .lector-volver,html.lector-libre .lector-descargar,html.lector-libre .lector-descarga{display:none!important}
+  html.lector-libre .lector-barra{display:block;padding:0 0 12px;background:none;box-shadow:none}
+  html.lector-libre .lector-barra h2{display:block;color:#000;overflow:visible;-webkit-line-clamp:none;line-clamp:none;font-size:20px}
+  html.lector-libre .lector-cuerpo{overflow:visible!important;padding:0;height:auto}
+  html.lector-libre .lector-docx{max-width:none;padding:0;border:0;box-shadow:none;background:none;color:#000}
 }
