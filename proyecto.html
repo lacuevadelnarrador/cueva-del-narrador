@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Proyecto común · La Cueva del Narrador</title>
+<meta name="theme-color" content="#528A93">
+<meta name="referrer" content="no-referrer">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://vxzvpucuthpvmdgmwgdk.supabase.co" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="lector.css">
+<style>
+/* Estilos solo de esta página (prefijo .proy-). Reutiliza .tabs, .tab, .fila, .st, .card, .campo, .entrada, .btn, .msg,
+   .empty y .error-campo de styles.css, y el lector de lector.css. */
+.proy-desc{white-space:pre-line}
+.proy-tabs{margin-bottom:18px}
+.proy-panel:focus{outline:none}
+.proy-panel:focus-visible{outline:3px solid var(--amber);outline-offset:4px;border-radius:var(--r-s)}
+.proy-h2{font-size:22px;letter-spacing:.02em;color:var(--title);margin:22px 0 10px}
+.proy-h2:first-child{margin-top:0}
+.proy-h2:focus{outline:none}
+.proy-lista{list-style:none;padding:0;margin:0}
+.proy-lista .st b{overflow-wrap:anywhere}
+.proy-lista .st small{overflow-wrap:anywhere}
+.proy-desc-doc{display:block;font-size:14px;color:var(--ink);margin-top:2px;overflow-wrap:anywhere}
+.proy-num{flex:none;display:grid;place-items:center;min-width:44px;height:44px;padding:0 6px;border-radius:12px;background:var(--bg);border:1px solid var(--line);color:var(--title);font-family:'Oswald',sans-serif;font-size:18px}
+.proy-etqs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.proy-etq{display:inline-flex;align-items:center;padding:2px 8px;border:1px solid var(--line);border-radius:6px;color:var(--muted);font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+.proy-etq.mio{color:var(--ent-ok);background:var(--ent-ok-bg);border-color:var(--ent-ok-bg)}
+.proy-mios{margin-bottom:8px}
+.proy-mio{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 14px;margin-bottom:10px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh1)}
+.proy-mio .st{flex:1 1 180px}
+.proy-mio .chip{flex:none}
+.proy-acciones{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 14px}
+.proy-form{margin-bottom:18px}
+.proy-form h3{font-size:20px;color:var(--title);margin-bottom:10px}
+.proy-form h3:focus{outline:none}
+.proy-form input[readonly]{background:var(--bg);color:var(--muted)}
+.proy-progreso{display:block;width:100%;height:10px;margin:4px 0 12px;accent-color:var(--teal-700)}
+.proy-estado{margin:0 0 14px}
+.proy-estado:focus{outline:none}
+.proy-estado:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.proy-cerrado{margin-bottom:16px;text-align:left;font-style:normal}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="pagehead">
+    <div class="top">
+      <div class="brand">
+        <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
+        <span>La Cueva<br>del Narrador</span>
+      </div>
+      <div class="avatar" aria-label="Tu perfil"></div>
+    </div>
+    <h1 class="largo" id="proy-titulo">Proyecto común</h1>
+    <p class="sub proy-desc" id="proy-desc">La novela que escribimos entre todos los socios.</p>
+  </header>
+
+  <main class="lectura">
+    <p class="msg aviso proy-cerrado" id="proy-cerrado" role="status" hidden>Las subidas de capítulos están cerradas. Puedes leer la documentación y los capítulos, pero ahora no se pueden subir capítulos nuevos ni versiones nuevas.</p>
+    <div id="estado"></div>
+    <div id="proyecto" hidden>
+      <div class="tabs proy-tabs" role="tablist" aria-label="Secciones del proyecto">
+        <button type="button" class="tab" role="tab" id="tab-doc" aria-controls="panel-doc" aria-selected="true">Documentación</button>
+        <button type="button" class="tab" role="tab" id="tab-cap" aria-controls="panel-cap" aria-selected="false" tabindex="-1">Capítulos</button>
+      </div>
+      <section class="proy-panel" role="tabpanel" id="panel-doc" aria-labelledby="tab-doc" tabindex="0"></section>
+      <section class="proy-panel" role="tabpanel" id="panel-cap" aria-labelledby="tab-cap" tabindex="0" hidden>
+        <h2 class="proy-h2">Tus capítulos</h2>
+        <p class="msg proy-estado" id="subida-estado" tabindex="-1" hidden></p>
+        <div class="proy-acciones" id="acciones-subida"></div>
+        <form class="card formulario proy-form" id="form-cap" novalidate hidden>
+          <h3 id="form-cap-titulo" tabindex="-1">Subir mi capítulo</h3>
+          <p class="pista leyenda-obligatorio">Todos los campos son obligatorios. PDF o Word (.docx), de 3 MB como máximo.</p>
+          <div class="campo">
+            <label for="cap-numero">Número del capítulo (1 a 99)</label>
+            <input class="entrada" id="cap-numero" name="numero" type="number" inputmode="numeric" min="1" max="99" step="1" required aria-required="true" aria-describedby="cap-numero-error">
+            <p class="error-campo" id="cap-numero-error" hidden></p>
+          </div>
+          <div class="campo">
+            <label for="cap-titulo">Título del capítulo</label>
+            <input class="entrada" id="cap-titulo" name="titulo" type="text" minlength="3" maxlength="100" required aria-required="true" autocomplete="off" aria-describedby="cap-titulo-error">
+            <p class="error-campo" id="cap-titulo-error" hidden></p>
+          </div>
+          <div class="campo">
+            <label for="cap-archivo">Archivo (PDF o Word .docx, hasta 3 MB)</label>
+            <input class="entrada" id="cap-archivo" name="archivo" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required aria-required="true" aria-describedby="cap-archivo-error">
+            <p class="error-campo" id="cap-archivo-error" hidden></p>
+          </div>
+          <progress class="proy-progreso" id="cap-progreso" max="3" value="0" hidden aria-label="Progreso de la subida"></progress>
+          <div class="botones-form">
+            <button type="submit" class="btn" id="cap-enviar">Subir capítulo</button>
+            <button type="button" class="btn sec" id="cap-cancelar">Cancelar</button>
+          </div>
+        </form>
+        <div id="mis-capitulos" class="proy-mios"></div>
+        <h2 class="proy-h2">Todos los capítulos</h2>
+        <div id="lista-capitulos"></div>
+      </section>
+    </div>
+  </main>
+
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="inicio.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="calendario.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a>
+    <a href="curso.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/></svg>Curso</a>
+    <a href="retos.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>Retos</a>
+    <a href="proyecto.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4C12 4 7 9 6 16l-2 4 4-2c7-1 12-6 12-14z"/><path d="M6 16l7-7"/></svg>Proyecto</a>
+    <a href="mas.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
+  </nav>
+</div>
+
+<!-- Lector a pantalla completa (lector.js). Solo lectura: sin descargar, imprimir ni copiar. -->
+<dialog class="lector" id="lector" aria-labelledby="lector-titulo">
+  <div class="lector-barra">
+    <button type="button" class="lector-volver" id="lector-volver"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7"/></svg>Volver</button>
+    <h2 id="lector-titulo"></h2>
+  </div>
+  <div class="lector-cuerpo" id="lector-cuerpo" tabindex="0" aria-label="Texto"></div>
+</dialog>
+<p class="leer-sin-imprimir">La impresión no está disponible en el lector del proyecto.</p>
+
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script src="campana.js"></script>
+<script src="lector.js"></script>
+<script src="proyecto.js"></script>
+<script>
+if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+</script>
+</body>
+</html>

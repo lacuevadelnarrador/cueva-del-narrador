@@ -13,7 +13,7 @@
   // aunque Biblioteca viva en "Más"; "Más" cuenta solo mas.html. Retos incluye leer (las entregas de los compañeros).
   // Retos y Juego (quiz) solo llegan a la zona socios desde el 12/11/2026 (script 37): antes, Retos iba a la pública.
   const SECCIONES = [
-    ['Inicio', ['inicio']], ['Calendario', ['calendario']], ['Curso', ['curso']], ['Retos', ['retos', 'leer']],
+    ['Inicio', ['inicio']], ['Calendario', ['calendario']], ['Curso', ['curso']], ['Retos', ['retos', 'leer']], ['Proyecto', ['proyecto']],
     ['Biblioteca', ['biblioteca']], ['Juego', ['quiz']], ['Más', ['mas']], ['Perfil', ['perfil']]
   ];
   const SECCION_DE = new Map(SECCIONES.flatMap(([nombre, paginas]) => paginas.map(p => [p, nombre])));

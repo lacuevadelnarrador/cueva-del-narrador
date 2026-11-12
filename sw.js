@@ -4,7 +4,7 @@
 // Los datos de socios vienen de Supabase y NUNCA se guardan en caché: sin sesión o sin conexión no están disponibles.
 // Las fotos de los socios tampoco: vienen del almacén privado de Supabase y se descargan con la sesión.
 // Ni los textos entregados a los retos ni las librerías del lector (pdf.js, mammoth): son de otro dominio y pasan directos.
-const VERSION = 'cueva-v44';
+const VERSION = 'cueva-v45';
 const ARCHIVOS = [
   './',
   'index.html',
@@ -27,6 +27,10 @@ const ARCHIVOS = [
   'entregas.js',
   'leer.html',
   'leer.js',
+  'lector.js',
+  'lector.css',
+  'proyecto.html',
+  'proyecto.js',
   // Juego: la página, su código y la lista de premios. Los bancos de preguntas (juego/banco/*.json) NO se precargan:
   // se descargan solo al elegir la categoría y quedan guardados entonces, como cualquier otro archivo de la web.
   'quiz.html',
@@ -45,6 +49,7 @@ const ARCHIVOS = [
   'admin-copia.html',
   'admin-avisos.html',
   'admin-juego.html',
+  'admin-proyecto.html',
   'admin.js',
   'admin-portadas.js',
   'admin-socios.js',
@@ -55,6 +60,7 @@ const ARCHIVOS = [
   'admin-juego.js',
   'admin-juego.css',
   'admin-entregas.js',
+  'admin-proyecto.js',
   'zip.js',
   'fotos.js',
   'carne.js',
