@@ -81,13 +81,19 @@ const Cueva = (function () {
     inicio: '<path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/>',
     calendario: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
     curso: '<path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/>',
-    biblioteca: '<path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/>',
+    retos: '<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
     mas: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>'
   };
-  const NAV_SOCIO = [['inicio', 'Inicio'], ['calendario', 'Calendario'], ['curso', 'Curso'], ['biblioteca', 'Biblioteca'], ['mas', 'Más']];
-  // En las páginas públicas, la pestaña marcada para un socio es siempre "Más".
-  const navSocio = () => NAV_SOCIO.map(([k, n]) =>
-    '<a href="' + k + '.html"' + (k === 'mas' ? ' class="on" aria-current="page"' : '') + '><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONOS[k] + '</svg>' + n + '</a>').join('');
+  // OJO: esta barra de socio está también escrita a mano en las páginas privadas (inicio, calendario, curso, biblioteca,
+  // perfil, leer y admin*): hay que mantenerlas a la par. Biblioteca vive en "Más" (tarjeta de mas.html).
+  const NAV_SOCIO = [['inicio', 'Inicio'], ['calendario', 'Calendario'], ['curso', 'Curso'], ['retos', 'Retos'], ['mas', 'Más']];
+  // En las páginas públicas, la pestaña marcada para un socio es "Retos" en retos.html y "Más" en todas las demás
+  // (en quiz.html, en escritorio, el resaltado pasa a «Juego»: ver pintarJuego).
+  const navSocio = () => {
+    const activa = (location.pathname.split('/').pop() || '') === 'retos.html' ? 'retos' : 'mas';
+    return NAV_SOCIO.map(([k, n]) =>
+      '<a href="' + k + '.html"' + (k === activa ? ' class="on" aria-current="page"' : '') + '><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONOS[k] + '</svg>' + n + '</a>').join('');
+  };
 
   const inicialDe = nombre => (Array.from(String(nombre || '').trim())[0] || '').toLocaleUpperCase('es');
   function guardarInicial(nombre) {
@@ -181,7 +187,7 @@ const Cueva = (function () {
 
   // ---------- Entradas al juego (JUEGO_VISIBLE, arriba del todo) ----------
   // Las de "Más", inicio e index están en el HTML con data-juego y hidden: aquí solo se muestran. El enlace de la barra
-  // lateral se añade a la nav (entre «Biblioteca» y «Más») y styles.css lo oculta por debajo de 1024 px.
+  // lateral se añade a la nav (entre «Retos» y «Más») y styles.css lo oculta por debajo de 1024 px.
   function pintarJuego() {
     if (!JUEGO_VISIBLE) return;
     document.querySelectorAll('[data-juego]').forEach(el => { el.hidden = false; });
@@ -193,7 +199,7 @@ const Cueva = (function () {
     a.className = 'nav-juego' + (aqui ? ' on' : '');
     if (aqui) a.setAttribute('aria-current', 'page');
     a.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 01-8 0z"/><path d="M8 6H5a3 3 0 003 4M16 6h3a3 3 0 01-3 4M12 13v4M8 20h8"/></svg>Juego';
-    // Entre «Biblioteca» (o «Nuestra biblioteca») y «Más»; si una barra no tiene «Más», al final, antes de Administración.
+    // Entre «Retos» (o «Nuestra biblioteca», en la barra de visitante) y «Más»; si una barra no tiene «Más», al final, antes de Administración.
     nav.insertBefore(a, nav.querySelector(':scope > a[href="mas.html"]') || nav.querySelector('.nav-admin'));
     nav.classList.toggle('juego-actual', aqui);
   }
