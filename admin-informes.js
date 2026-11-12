@@ -8,7 +8,15 @@
 (function () {
   const esc = Admin.esc, el = id => document.getElementById(id);
   const LOTE = 1000; // Supabase devuelve como máximo 1000 filas por consulta: se lee por tramos
-  const SECCIONES = { inicio: 'Inicio', calendario: 'Calendario', curso: 'Curso', biblioteca: 'Biblioteca', mas: 'Más', perfil: 'Perfil' };
+  // Barras de "Secciones más usadas por los socios": nombre y páginas de uso_diario (zona socios) que suma cada una.
+  // Van en el orden del menú, que es el que se mantiene en caso de empate. Biblioteca y Retos tienen barra propia
+  // aunque Biblioteca viva en "Más"; "Más" cuenta solo mas.html. Retos incluye leer (las entregas de los compañeros).
+  // Retos y Juego (quiz) solo llegan a la zona socios desde el 12/11/2026 (script 37): antes, Retos iba a la pública.
+  const SECCIONES = [
+    ['Inicio', ['inicio']], ['Calendario', ['calendario']], ['Curso', ['curso']], ['Retos', ['retos', 'leer']],
+    ['Biblioteca', ['biblioteca']], ['Juego', ['quiz']], ['Más', ['mas']], ['Perfil', ['perfil']]
+  ];
+  const SECCION_DE = new Map(SECCIONES.flatMap(([nombre, paginas]) => paginas.map(p => [p, nombre])));
 
   // ---------- Fechas (hora de Madrid) ----------
   function hoyMadrid() {
@@ -141,15 +149,18 @@
         : '<p class="empty">Todavía no hay entradas de socios en este periodo.</p>');
 
     // 3) Secciones más usadas por los socios
-    const usos = new Map(Object.keys(SECCIONES).map(k => [k, 0]));
-    DATOS.uso.forEach(u => { if (u.zona === 'socios' && dentro(u.dia) && usos.has(u.pagina)) usos.set(u.pagina, usos.get(u.pagina) + (Number(u.total) || 0)); });
+    const usos = new Map(SECCIONES.map(([nombre]) => [nombre, 0]));
+    DATOS.uso.forEach(u => {
+      const s = u.zona === 'socios' && dentro(u.dia) && SECCION_DE.get(u.pagina);
+      if (s) usos.set(s, usos.get(s) + (Number(u.total) || 0));
+    });
     const totalSocios = [...usos.values()].reduce((a, b) => a + b, 0);
     const orden = [...usos].sort((a, b) => b[1] - a[1]); // con empate, se queda el orden de la barra inferior
     el('secciones').innerHTML = totalSocios
       ? '<p class="inf-total"><b>' + numero(totalSocios) + '</b> ' + (totalSocios === 1 ? 'visita' : 'visitas') + ' de socios en el periodo</p><ol class="inf-ranking">' +
         orden.map(([k, n]) => {
           const p = totalSocios ? n * 100 / totalSocios : 0;
-          return '<li><span class="inf-r-nom">' + esc(SECCIONES[k]) + '</span><span class="inf-r-dato">' + plural(n, 'visita', 'visitas') + ' · ' + porcentaje(n, totalSocios) + '</span>' +
+          return '<li><span class="inf-r-nom">' + esc(k) + '</span><span class="inf-r-dato">' + plural(n, 'visita', 'visitas') + ' · ' + porcentaje(n, totalSocios) + '</span>' +
             '<span class="inf-r-barra" aria-hidden="true"><i style="width:' + Math.round(p * 10) / 10 + '%"></i></span></li>';
         }).join('') + '</ol>'
       : '<p class="empty">Todavía no hay visitas de socios en este periodo.</p>';

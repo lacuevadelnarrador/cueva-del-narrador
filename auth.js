@@ -414,11 +414,13 @@ const Cueva = (function () {
   // Una llamada a registrar_visita por carga de página, solo con el nombre de la página: la base de datos suma 1 al
   // contador del día y, si hay sesión, guarda la fecha del último acceso del socio. Las páginas de administración no
   // se cuentan. Las de socios (y "mas", que es pública pero está en la lista de socios) solo se cuentan con sesión.
+  // "retos" y "quiz" son mixtas en la base de datos (script 37): con un socio activo van a la zona de socios y, si no,
+  // a la pública. Aquí figuran como públicas para que también las mande un visitante.
   // Es silenciosa: no espera a nada de la página y, si falla, no muestra ni escribe nada.
   const VISITAS = {
-    index: 'publica', retos: 'publica', 'nuestra-biblioteca': 'publica', club: 'publica', entidades: 'publica',
+    index: 'publica', retos: 'publica', quiz: 'publica', 'nuestra-biblioteca': 'publica', club: 'publica', entidades: 'publica',
     contacto: 'publica', instalar: 'publica', privacidad: 'publica', acceso: 'publica',
-    inicio: 'socios', calendario: 'socios', curso: 'socios', biblioteca: 'socios', mas: 'socios', perfil: 'socios'
+    inicio: 'socios', calendario: 'socios', curso: 'socios', biblioteca: 'socios', mas: 'socios', perfil: 'socios', leer: 'socios'
   };
   // Para no contar dos veces una recarga inmediata: solo se guarda en esta pestaña la última página y la hora.
   const CLAVE_VISITA = 'cueva-visita', VENTANA_VISITA = 60000;
