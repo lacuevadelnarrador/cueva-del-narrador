@@ -1,7 +1,8 @@
 // PROYECTO COMÚN (proyecto.html): la novela que escriben entre todos los socios (script 38).
 // - Solo para socios activos: la guardia es Cueva.privada() y las funciones de la base de datos lo vuelven a comprobar.
 // - Lectura: proyecto_info() (título, descripción y si las subidas están abiertas), proyecto_documentos() y
-//   proyecto_capitulos(). Los archivos se leen dentro de la página con el visor común (lector.js, almacén "proyecto").
+//   proyecto_capitulos(). Los archivos se leen dentro de la página con el visor común (lector.js, almacén "proyecto")
+//   y, a diferencia de los retos, se pueden descargar (opción descargable; se guardan con su nombre_archivo).
 // - Subir un capítulo o una versión nueva, en tres pasos: proyecto_iniciar_capitulo (da la ruta) → subida al almacén
 //   (upsert: la versión nueva sustituye a la anterior) → proyecto_confirmar_capitulo. El socio NO puede borrar.
 // - Los textos de error de las funciones vienen en castellano para el socio y se muestran tal cual (si no son técnicos).
@@ -157,7 +158,7 @@
             el('small', { texto: detalle })
           ])
         ]);
-        b.addEventListener('click', () => abrir(d.ruta, d.extension, d.titulo || 'Documento', 'Documento del proyecto', b));
+        b.addEventListener('click', () => abrir(d.ruta, d.extension, d.titulo || 'Documento', 'Documento del proyecto', b, d.nombre_archivo));
         ul.appendChild(el('li', null, [b]));
       });
       partes.push(el('h2', { clase: 'proy-h2', texto: nombre }), ul);
@@ -218,16 +219,17 @@
           c.es_mio === true ? el('span', { clase: 'proy-etqs' }, [el('span', { clase: 'proy-etq mio', texto: 'Mío' })]) : null
         ])
       ]);
-      b.addEventListener('click', () => abrir(c.ruta, c.extension, nombreCap(c) + ' · ' + (c.autor || 'Socio del club'), 'Texto del capítulo', b));
+      b.addEventListener('click', () => abrir(c.ruta, c.extension, nombreCap(c) + ' · ' + (c.autor || 'Socio del club'), 'Texto del capítulo', b, c.nombre_archivo));
       ul.appendChild(el('li', null, [b]));
     });
     lista.replaceChildren(ul);
   }
 
   // ---------- Lector ----------
-  function abrir(ruta, extension, titulo, etiqueta, origen) {
+  // En el proyecto los archivos se pueden descargar (descargable): el botón "Descargar" está en el visor.
+  function abrir(ruta, extension, titulo, etiqueta, origen, nombre) {
     if (ocupado) return;
-    Lector.abrir({ almacen: 'proyecto', ruta, extension, titulo, origen, etiqueta, estado: { proyecto: true },
+    Lector.abrir({ almacen: 'proyecto', ruta, extension, titulo, origen, etiqueta, estado: { proyecto: true }, descargable: true, nombre,
       sesion: 'Inicia sesión para leer el proyecto común.', registro: 'No se ha podido abrir un archivo del proyecto' });
   }
   window.addEventListener('popstate', () => {

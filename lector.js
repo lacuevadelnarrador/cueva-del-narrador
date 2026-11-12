@@ -8,6 +8,10 @@
 //   ni en ningún almacenamiento. Al cerrar el lector se sueltan los datos, los canvas y el worker.
 // - Solo lectura "de comodidad": sin descargar, imprimir, copiar ni menú contextual dentro del lector. NO es una medida
 //   de seguridad: quien lee el texto en su pantalla siempre puede capturarlo.
+// - Con la opción descargable (solo la usa proyecto.js; leer.html nunca la pasa) el lector añade el botón "Descargar"
+//   en la barra y deja copiar e imprimir (Word: el texto entero; PDF: un aviso para descargarlo, porque el visor solo
+//   dibuja las páginas cercanas). El botón del visor (guardar) usa la misma petición sin caché y guarda el archivo
+//   con su nombre_archivo.
 // - Todo el texto se pinta con textContent o con nodos creados uno a uno. El HTML del Word pasa por un saneador con
 //   lista blanca (sanear) y nunca se inserta tal cual.
 // - Historial: abrir añade un nivel ({ ...estado, nivel: 'lector' }); "Volver", Escape y el botón "atrás" lo quitan.
@@ -150,6 +154,96 @@ const Lector = (function () {
     return false;
   }
 
+  // ---------- Guardar el archivo (solo con descargable) ----------
+  const TIPOS = { pdf: 'application/pdf', docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' };
+  // Nombre para el disco: el nombre_archivo de la fila sin caracteres que no admiten los sistemas de archivos y con la
+  // extensión real (la del archivo, no la que diga el nombre). Si no hay nombre, el título; si tampoco, "Documento".
+  function nombreSeguro(nombre, ext, titulo) {
+    const limpiar = s => String(s || '').replace(/[\u0000-\u001f\u007f/\\:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/^[.\s]+|[.\s]+$/g, '');
+    let n = limpiar(nombre);
+    if (!n || n === 'pendiente') n = limpiar(titulo) || 'Documento';
+    n = n.replace(/\.(pdf|docx?)$/i, '').slice(0, 150).trim() || 'Documento';
+    return n + '.' + ext;
+  }
+  // Un <a download> con una dirección blob: (no pasa por la caché del navegador ni por el service worker). El enlace y
+  // la dirección se sueltan pasados 45 s: en algunos móviles (Safari en iOS) soltarlos al momento cancela la descarga.
+  // Con el lector abierto el enlace va dentro del diálogo (fuera, la página está inerte).
+  function guardarBytes(bytes, ext, nombre) {
+    const url = URL.createObjectURL(new Blob([bytes], { type: TIPOS[ext] }));
+    const a = el('a', { href: url, download: nombre, rel: 'noopener' });
+    a.hidden = true;
+    (dlg.open ? dlg : document.body).appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 45000);
+  }
+  function textoErrorGuardar(e, sesion) {
+    if (caducada(e)) return 'Tu sesión ha caducado. ' + (sesion || SESION);
+    if (e && e.noEsta) return 'Este archivo ya no está disponible.';
+    if (e && e.danado) return 'El archivo está dañado y no se puede descargar.';
+    if (e && (e.red || Cueva.esErrorDeRed(e))) return 'No se ha podido descargar el archivo. Comprueba tu conexión y vuelve a intentarlo.';
+    return 'No se ha podido descargar el archivo. Vuelve a intentarlo dentro de un momento.';
+  }
+  // o: { almacen, ruta, extension, nombre (nombre_archivo), titulo, sesion, registro, boton (el que se ha pulsado),
+  // aviso (elemento role="status" donde se escribe el estado) }. Mientras descarga, el botón dice "Descargando…" y no
+  // admite otro clic (aria-disabled: no pierde el foco).
+  async function guardar(o) {
+    const b = o.boton, aviso = o.aviso, ext = String(o.extension || '').toLowerCase();
+    if (b && b.getAttribute('aria-disabled') === 'true') return;
+    const nombre = nombreSeguro(o.nombre, ext, o.titulo);
+    const poner = (texto, clase, enlace) => {
+      if (!aviso) return;
+      aviso.className = aviso.className.replace(/\s*\b(ok|mal)\b/g, '') + (clase ? ' ' + clase : '');
+      aviso.replaceChildren(texto, enlace ? ' ' : '', enlace || '');
+      aviso.hidden = !texto;
+    };
+    const etiqueta = b ? b.querySelector('.lector-etq') || b : null, antes = etiqueta ? etiqueta.textContent : '';
+    if (b) b.setAttribute('aria-disabled', 'true');
+    if (etiqueta) etiqueta.textContent = 'Descargando…';
+    poner('Descargando ' + nombre + '…');
+    try {
+      if (!TIPOS[ext]) throw { formato: true, code: 'formato' };
+      let datos = await descargar(o.almacen, o.ruta);
+      if (!firmaValida(datos, ext)) throw { danado: true, code: 'firma' };
+      guardarBytes(datos, ext, nombre);
+      datos = null;
+      poner('Descargado: ' + nombre + '.', 'ok');
+    } catch (e) {
+      Cueva.registrar(o.registro || 'No se ha podido descargar un archivo', e);
+      const texto = e && e.formato ? 'Este formato no se puede descargar.' : textoErrorGuardar(e, o.sesion);
+      poner(texto, 'mal', caducada(e) ? el('a', { href: 'acceso.html', texto: 'Iniciar sesión' }) : null);
+    } finally {
+      if (b) b.removeAttribute('aria-disabled');
+      if (etiqueta) etiqueta.textContent = antes;
+    }
+  }
+  // Botón "Descargar" de la barra y su línea de estado: se crean solo con descargable y se quitan al cerrar.
+  const ICONO_DESCARGA = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>';
+  function botonDescarga(clase) {
+    const b = el('button', { type: 'button', clase });
+    b.innerHTML = ICONO_DESCARGA; // constante, sin datos
+    b.appendChild(el('span', { clase: 'lector-etq', texto: 'Descargar' }));
+    return b;
+  }
+  let barraDescarga = null; // { boton, aviso }
+  function ponerDescarga() {
+    const boton = botonDescarga('lector-descargar');
+    const aviso = el('p', { clase: 'lector-descarga', role: 'status', 'aria-live': 'polite' });
+    aviso.hidden = true;
+    boton.addEventListener('click', () => {
+      const a = abierto; if (!a) return;
+      guardar({ almacen: a.almacen, ruta: a.ruta, extension: a.extension, nombre: a.nombre, titulo: tituloLector.textContent,
+        sesion: a.sesion, registro: a.registro, boton, aviso });
+    });
+    tituloLector.after(boton);
+    tituloLector.parentNode.after(aviso);
+    barraDescarga = { boton, aviso };
+  }
+  function quitarDescarga() {
+    if (!barraDescarga) return;
+    barraDescarga.boton.remove(); barraDescarga.aviso.remove();
+    barraDescarga = null;
+  }
+
   // ---------- Lector ----------
   let abierto = null;  // { almacen, ruta, extension, origen, sesion, registro, ctrl, tarea, worker, pdfWorker, observador, paginas, alCambiar }
   let turno = 0;       // cada apertura o reintento; lo que llega de un turno anterior se descarta
@@ -157,13 +251,20 @@ const Lector = (function () {
 
   // o: { almacen ('entregas'|'proyecto'), ruta, extension, titulo (texto de la barra), origen (elemento al que vuelve
   // el foco), estado (lo que se guarda en el historial, además de nivel: 'lector'), etiqueta (nombre accesible del
-  // texto), sesion (frase tras "Tu sesión ha caducado."), registro (texto del error en la consola, sin datos) }
+  // texto), sesion (frase tras "Tu sesión ha caducado."), registro (texto del error en la consola, sin datos),
+  // descargable (botón "Descargar" y sin bloqueo de copiar ni imprimir), nombre (nombre_archivo para guardarlo) }
   function abrirLector(o) {
     if (abierto) return;
-    abierto = { almacen: o.almacen, ruta: o.ruta, extension: o.extension, origen: o.origen, sesion: o.sesion, registro: o.registro };
+    abierto = { almacen: o.almacen, ruta: o.ruta, extension: o.extension, origen: o.origen, sesion: o.sesion, registro: o.registro,
+      descargable: o.descargable === true, nombre: o.nombre };
     tituloLector.textContent = o.titulo || '';
     cuerpo.setAttribute('aria-label', o.etiqueta || 'Texto');
     document.documentElement.classList.add('leyendo');
+    if (abierto.descargable) {
+      ponerDescarga();
+      document.documentElement.classList.add('lector-libre');
+      document.documentElement.classList.toggle('lector-con-pdf', String(o.extension || '').toLowerCase() === 'pdf');
+    }
     history.pushState(Object.assign({}, o.estado || {}, { nivel: 'lector' }), '');
     if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
     botonVolver.focus();
@@ -184,7 +285,8 @@ const Lector = (function () {
     liberar();
     abierto = null;
     if (dlg.open) { if (typeof dlg.close === 'function') dlg.close(); else dlg.removeAttribute('open'); }
-    document.documentElement.classList.remove('leyendo');
+    document.documentElement.classList.remove('leyendo', 'lector-libre', 'lector-con-pdf');
+    quitarDescarga();
     tituloLector.textContent = '';
     if (a.origen && a.origen.isConnected) a.origen.focus();
   }
@@ -407,9 +509,11 @@ const Lector = (function () {
   }
 
   // ---------- Solo lectura (comodidad, no seguridad) ----------
-  ['copy', 'cut', 'contextmenu', 'dragstart', 'selectstart'].forEach(t => dlg.addEventListener(t, e => e.preventDefault()));
+  // Con descargable no se bloquea nada (se puede descargar el archivo entero).
+  const libre = () => !!(abierto && abierto.descargable);
+  ['copy', 'cut', 'contextmenu', 'dragstart', 'selectstart'].forEach(t => dlg.addEventListener(t, e => { if (!libre()) e.preventDefault(); }));
   document.addEventListener('keydown', e => {
-    if (!abierto) return;
+    if (!abierto || libre()) return;
     // Imprimir, guardar, copiar, cortar y seleccionar todo
     if ((e.ctrlKey || e.metaKey) && /^[pscxa]$/i.test(e.key)) e.preventDefault();
   });

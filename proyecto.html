@@ -119,7 +119,8 @@
   </nav>
 </div>
 
-<!-- Lector a pantalla completa (lector.js). Solo lectura: sin descargar, imprimir ni copiar. -->
+<!-- Lector a pantalla completa (lector.js) con la opción descargable: botón "Descargar", y se puede copiar e imprimir.
+     El aviso de abajo solo se imprime con un PDF abierto (el Word se imprime entero). -->
 <dialog class="lector" id="lector" aria-labelledby="lector-titulo">
   <div class="lector-barra">
     <button type="button" class="lector-volver" id="lector-volver"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7"/></svg>Volver</button>
@@ -127,7 +128,7 @@
   </div>
   <div class="lector-cuerpo" id="lector-cuerpo" tabindex="0" aria-label="Texto"></div>
 </dialog>
-<p class="leer-sin-imprimir">La impresión no está disponible en el lector del proyecto.</p>
+<p class="leer-sin-imprimir">Para imprimir el PDF completo, descárgalo y ábrelo en tu visor.</p>
 
 <script src="supabase-config.js"></script>
 <script src="auth.js"></script>
