@@ -169,6 +169,17 @@ a.item:active,a.doc:active{transform:scale(.98)}
 .nav .on{color:var(--amber)}
 .nav .on svg{background:rgba(255,186,85,.16)}
 .nav a:focus-visible{outline-offset:-2px;box-shadow:none}
+/* Barra de socio con seis pestañas (Inicio, Calendario, Curso, Retos, Proyecto, Más): letra y pastilla algo más
+   estrechas para que «CALENDARIO» quepa a 360 px. Solo en el móvil (la barra lateral de escritorio no cambia) y nunca
+   en la barra de visitante. */
+@media (max-width:1023.98px){
+  .nav:not(.visitante) a{font-size:11px;letter-spacing:.02em;padding:4px 0}
+  .nav:not(.visitante) svg{padding:3px 12px}
+}
+@media (max-width:340px){
+  .nav:not(.visitante) a{font-size:10px;letter-spacing:0}
+  .nav:not(.visitante) svg{padding:3px 8px}
+}
 
 /* ---------- Páginas interiores ---------- */
 .pagehead{background:linear-gradient(180deg,var(--teal) 0,var(--teal-700) calc(64px + env(safe-area-inset-top,0px)));color:#fff;padding:calc(20px + env(safe-area-inset-top,0px)) 20px 28px;border-radius:0 0 28px 28px;box-shadow:0 6px 18px rgba(31,58,64,.18)}

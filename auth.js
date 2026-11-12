@@ -82,11 +82,13 @@ const Cueva = (function () {
     calendario: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
     curso: '<path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/>',
     retos: '<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
+    proyecto: '<path d="M20 4C12 4 7 9 6 16l-2 4 4-2c7-1 12-6 12-14z"/><path d="M6 16l7-7"/>',
     mas: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>'
   };
   // OJO: esta barra de socio está también escrita a mano en las páginas privadas (inicio, calendario, curso, biblioteca,
-  // perfil, leer y admin*): hay que mantenerlas a la par. Biblioteca vive en "Más" (tarjeta de mas.html).
-  const NAV_SOCIO = [['inicio', 'Inicio'], ['calendario', 'Calendario'], ['curso', 'Curso'], ['retos', 'Retos'], ['mas', 'Más']];
+  // perfil, leer, proyecto y admin*): hay que mantenerlas a la par. Biblioteca vive en "Más" (tarjeta de mas.html).
+  // Con seis pestañas, styles.css estrecha la barra de socio en el móvil (.nav:not(.visitante)).
+  const NAV_SOCIO = [['inicio', 'Inicio'], ['calendario', 'Calendario'], ['curso', 'Curso'], ['retos', 'Retos'], ['proyecto', 'Proyecto'], ['mas', 'Más']];
   // En las páginas públicas, la pestaña marcada para un socio es "Retos" en retos.html y "Más" en todas las demás
   // (en quiz.html, en escritorio, el resaltado pasa a «Juego»: ver pintarJuego).
   const navSocio = () => {
@@ -214,6 +216,7 @@ const Cueva = (function () {
     ['admin-socios', 'Socios', '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 010 7M18 14.3c2.2.7 3.5 2.8 3.5 5.7"/>'],
     ['admin-eventos', 'Charlas y Eventos', '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
     ['admin-retos', 'Retos', '<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>'],
+    ['admin-proyecto', 'Proyecto común', '<path d="M20 4C12 4 7 9 6 16l-2 4 4-2c7-1 12-6 12-14z"/><path d="M6 16l7-7"/>'],
     ['admin-libros', 'Libros', '<path d="M5 3h4v18H5zM11 3h4v18h-4zM17 5l3.5 1-4 15-3.5-1z"/>'],
     ['admin-publicaciones', 'Publicaciones', '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/>'],
     ['admin-informes', 'Informes', '<path d="M4 20h16M7 16v-5M12 16V6M17 16v-8"/>'],
@@ -420,7 +423,7 @@ const Cueva = (function () {
   const VISITAS = {
     index: 'publica', retos: 'publica', quiz: 'publica', 'nuestra-biblioteca': 'publica', club: 'publica', entidades: 'publica',
     contacto: 'publica', instalar: 'publica', privacidad: 'publica', acceso: 'publica',
-    inicio: 'socios', calendario: 'socios', curso: 'socios', biblioteca: 'socios', mas: 'socios', perfil: 'socios', leer: 'socios'
+    inicio: 'socios', calendario: 'socios', curso: 'socios', biblioteca: 'socios', mas: 'socios', perfil: 'socios', leer: 'socios', proyecto: 'socios'
   };
   // Para no contar dos veces una recarga inmediata: solo se guarda en esta pestaña la última página y la hora.
   const CLAVE_VISITA = 'cueva-visita', VENTANA_VISITA = 60000;

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Proyecto común · Administración · La Cueva del Narrador</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#528A93">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Estilos solo de esta página (prefijo .ap-). Reutiliza .card, .formulario, .campo, .entrada, .btn, .chip, .msg,
+   .empty, .pista, .botones-form y el interruptor de "Mi perfil" (.perfil-switch) de styles.css. */
+#contenido{display:grid;grid-template-columns:minmax(0,1fr);gap:20px}
+.ap-bloque h2{font-size:24px;letter-spacing:.02em;color:var(--title);margin-bottom:12px}
+.ap-bloque h3{font-size:18px;letter-spacing:.02em;color:var(--title);margin:18px 0 8px}
+.ap-switch{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px 12px;margin:4px 0 14px}
+.ap-lista{list-style:none;padding:0;margin:0}
+.ap-fila{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:12px 14px;margin-bottom:10px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh1)}
+.ap-fila .st{flex:1 1 220px}
+.ap-fila .st b{overflow-wrap:anywhere}
+.ap-fila .st small{overflow-wrap:anywhere}
+.ap-desc{font-size:14px;margin-top:2px;overflow-wrap:anywhere}
+.ap-botones{display:flex;flex-wrap:wrap;gap:8px}
+.ap-etq{display:inline-flex;align-items:center;align-self:flex-start;margin-top:6px;padding:2px 8px;border-radius:6px;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--line);color:var(--muted)}
+.ap-etq.pend{color:#14262A;background:var(--amber);border-color:var(--amber)}
+.ap-bloque .pista a{color:var(--link);text-decoration:underline;text-underline-offset:3px}
+.ap-borrar{border-color:#B3412B;color:#B3412B}
+@media (prefers-color-scheme:dark){ .ap-borrar{border-color:#E8A9A9;color:#E8A9A9} }
+.ap-form{margin:0 0 16px}
+.ap-form h3{margin-top:0}
+.ap-form h3:focus{outline:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="pagehead">
+    <div class="top">
+      <div class="brand">
+        <img src="img/logo-arco.png" alt="Logo de La Cueva del Narrador">
+        <span>La Cueva<br>del Narrador</span>
+      </div>
+      <div class="avatar" aria-label="Tu perfil"></div>
+    </div>
+    <nav class="migas" aria-label="Ruta"><ol><li><a class="migas-admin" href="admin.html"><svg class="migas-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><span>Administración</span></a></li><li aria-current="page">Proyecto común</li></ol></nav>
+    <h1 class="largo">Proyecto común</h1>
+    <p class="sub">Ajustes, documentación y capítulos de la novela del club.</p>
+  </header>
+
+  <main class="panel">
+    <a class="volver" href="admin.html">&#8249; Volver al panel</a>
+    <div id="estado"></div>
+
+    <div id="contenido" hidden>
+      <!-- 1. Ajustes -->
+      <section class="card ap-bloque" aria-labelledby="t-ajustes" id="caja-ajustes">
+        <h2 id="t-ajustes">Ajustes</h2>
+        <p class="msg" data-estado hidden></p>
+        <div class="ap-switch">
+          <span class="perfil-switch-et" id="et-abierto">Subidas de capítulos abiertas</span>
+          <button type="button" class="perfil-switch" role="switch" id="abierto" aria-checked="false" aria-labelledby="et-abierto"><span class="perfil-switch-pista" aria-hidden="true"><span></span></span><span class="perfil-switch-texto" aria-hidden="true">No</span></button>
+          <p class="pista">Si están cerradas, los socios pueden leer, pero no subir capítulos nuevos ni versiones nuevas.</p>
+        </div>
+        <form class="formulario" id="form-ajustes" novalidate>
+          <p class="msg" data-estado hidden></p>
+          <div class="campo">
+            <label for="aj-titulo">Título del proyecto</label>
+            <input class="entrada" id="aj-titulo" name="titulo" type="text" maxlength="100" autocomplete="off">
+          </div>
+          <div class="campo">
+            <label for="aj-descripcion">Descripción</label>
+            <textarea class="entrada" id="aj-descripcion" name="descripcion" maxlength="1000"></textarea>
+            <p class="pista">Se ve en la cabecera de la página del proyecto. Si la dejas vacía, se muestra un texto general.</p>
+          </div>
+          <div class="botones-form"><button type="submit" class="btn">Guardar ajustes</button></div>
+        </form>
+      </section>
+
+      <!-- 2. Documentación -->
+      <section class="card ap-bloque" aria-labelledby="t-docs" id="caja-docs">
+        <h2 id="t-docs">Documentación</h2>
+        <p class="msg" data-estado hidden></p>
+        <div class="botones-form" id="docs-acciones"><button type="button" class="btn" id="doc-nuevo">+ Subir documento</button></div>
+        <form class="formulario ap-form" id="form-doc" novalidate hidden>
+          <h3 id="form-doc-titulo" tabindex="-1">Subir documento</h3>
+          <p class="msg" data-estado hidden></p>
+          <div class="campo">
+            <label for="doc-categoria">Categoría</label>
+            <select class="entrada" id="doc-categoria" name="categoria" required>
+              <option value="escaleta">Escaleta</option>
+              <option value="ideas">Ideas iniciales</option>
+              <option value="personajes">Personajes</option>
+              <option value="mundo">Mundo y ambientación</option>
+              <option value="estilo">Estilo</option>
+              <option value="otros">Otros</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="doc-titulo">Título</label>
+            <input class="entrada" id="doc-titulo" name="titulo" type="text" minlength="3" maxlength="100" required autocomplete="off">
+          </div>
+          <div class="campo">
+            <label for="doc-descripcion">Descripción (opcional)</label>
+            <textarea class="entrada" id="doc-descripcion" name="descripcion" maxlength="300"></textarea>
+            <p class="pista">Hasta 300 caracteres.</p>
+          </div>
+          <div class="campo">
+            <label for="doc-orden">Orden dentro de su categoría</label>
+            <input class="entrada" id="doc-orden" name="orden" type="number" inputmode="numeric" step="1" value="0">
+            <p class="pista">Los números más bajos salen antes.</p>
+          </div>
+          <div class="campo" id="campo-doc-archivo">
+            <label for="doc-archivo">Archivo (PDF o Word .docx, hasta 3 MB)</label>
+            <input class="entrada" id="doc-archivo" name="archivo" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required>
+          </div>
+          <div class="botones-form">
+            <button type="submit" class="btn" id="doc-enviar">Subir documento</button>
+            <button type="button" class="btn sec" id="doc-cancelar">Cancelar</button>
+          </div>
+        </form>
+        <div id="lista-docs"></div>
+      </section>
+
+      <!-- 3. Capítulos -->
+      <section class="card ap-bloque" aria-labelledby="t-caps" id="caja-caps">
+        <h2 id="t-caps">Capítulos</h2>
+        <p class="msg" data-estado hidden></p>
+        <p class="pista">Todos los capítulos, también los que tienen una subida sin terminar. Para leerlos, entra en la página del <a href="proyecto.html">Proyecto</a>.</p>
+        <div id="lista-caps"></div>
+      </section>
+    </div>
+  </main>
+
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="inicio.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0116 0v10M9 21v-6a3 3 0 016 0v6"/></svg>Inicio</a>
+    <a href="calendario.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a>
+    <a href="curso.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v13c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v13"/></svg>Curso</a>
+    <a href="retos.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>Retos</a>
+    <a href="proyecto.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4C12 4 7 9 6 16l-2 4 4-2c7-1 12-6 12-14z"/><path d="M6 16l7-7"/></svg>Proyecto</a>
+    <a href="mas.html" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a>
+  </nav>
+</div>
+
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script src="admin.js"></script>
+<script src="admin-proyecto.js"></script>
+<script>
+if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+</script>
+</body>
+</html>
